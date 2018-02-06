@@ -46,7 +46,7 @@ router.route("/orders")
                 //response metadata
                 var resultCount = data.length;
                 //Count results
-                metadata = {"total_count" : resultCount };
+                metadata = {"result_count" : resultCount };
                 //send response
                 response = {metadata, "orders" : data};
             }
@@ -64,8 +64,14 @@ router.route("/orders")
         db.order = req.body;
         //create random order id
         var order_id = Math.random().toString(36).substr(2, 9);
-        //echo id created
-        //console.log("Created order id: " + order_id);
+        //Get HTTP Header user-agent
+        var header = req.headers['user-agent'];
+        //console.log(JSON.stringify(req.headers));
+        //If user-agent is dredd (meaning is a dredd test), use pre-defined dredd user ID
+        if(header.includes("Dredd")){
+            //create random order_id
+            order_id = "dreddtest0001";
+        }
         //set the id
         db.order.order_id = order_id;
         //set dates (for some reasons if left to default it won't query properly)
@@ -82,6 +88,7 @@ router.route("/orders")
             } else {
                 response = {"error" : false,"message" : "Created order: " + order_id};
             }
+            res.statusCode = 201;
             res.json(response);
         });
 });

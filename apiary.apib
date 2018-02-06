@@ -34,7 +34,7 @@ Returns Orders that match the specified criteria.
 
             api-key: ac108161-d3a5-427d-b814-ff977728395b
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     + Attributes
 
@@ -100,7 +100,7 @@ Creates an Order.
                ]
             }
 
-+ Response 201 (application/json)
++ Response 201 (application/json; charset=utf-8)
 
     + Attributes (Response Metadata)
 
@@ -108,7 +108,7 @@ Creates an Order.
 
 + Parameters
 
-    + order_id: dp59cii7t (number, required)
+    + order_id: dreddtest0001 (string, required)
 
 ### Read Order [GET]
 Returns the details for a specific Order
@@ -119,21 +119,20 @@ Returns the details for a specific Order
 
             api-key: ac108161-d3a5-427d-b814-ff977728395b
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     + Attributes (Order)
 
 ### Update Order [PUT]
 Updates only those details which are allowed to be updated.
 
-+ Request (application/json)
++ Request (application/json; charset=utf-8)
 
     + Headers
 
             api-key: ac108161-d3a5-427d-b814-ff977728395b
 
     + Attributes (Order)
-
 
     + Body
 
@@ -141,22 +140,20 @@ Updates only those details which are allowed to be updated.
                 "status":"DELIVERING"
             }
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     + Attributes (Response Metadata)
 
 ### Delete Order [DELETE]
 ONLY FOR INTERNAL USE. Deletes an Order.
 
-+ Request (application/json)
++ Request (text/plain)
 
     + Headers
 
             api-key: ac108161-d3a5-427d-b814-ff977728395b
 
-    + Attributes (Order)
-
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     + Attributes (Response Metadata)
 
@@ -205,7 +202,7 @@ ONLY FOR INTERNAL USE. Deletes an Order.
 
 ## Order (object)
 - _id: `59d0966c2d57fd00125548a6` (string, optional) - Database generated record ID
-- order_id: `dp59cii7t` (string, optional) - System generated Order ID
+- order_id: `dreddtest0001` (string, optional) - System generated Order ID
 - status (enum, required)
   - `PROCESSING` (string) - Order has been received but is being processed
   - `CREATED` (string) - Sales Order has been created
