@@ -1,0 +1,225 @@
+
+FORMAT: 1A
+HOST: http://private-af36c5-ordersapi12.apiary-mock.com
+
+# Orders
+Orders API allows to search, read, create and delete orders.
+This service is part of the Soaring Through The Clouds Sequel
+
+# Group Orders Resources
+Orders related resources.
+
+## Search and Create Orders [/orders{?customer_id,date_from,date_to}]
+
++ Parameters
+
+    + customer_id (string, optional)
+
+        Filter by Customer ID
+
+    + date_from (string, optional)
+
+        Filter by oders created greater or equal to date provided
+
+    + date_to (string, optional)
+
+        Filter by oders created before or equal to date provided
+
+### Search Orders [GET]
+Returns Orders that match the specified criteria.
+
++ Request (text/plain)
+
+    + Headers
+
+            api-key: ac108161-d3a5-427d-b814-ff977728395b
+
++ Response 200 (application/json)
+
+    + Attributes
+
+        + metadata (Search Metadata)
+
+        + orders (array[Order])
+
+### Create Order [POST]
+Creates an Order.
+
++ Request (application/json)
+
+    + Headers
+
+            api-key: ac108161-d3a5-427d-b814-ff977728395b
+
+    + Attributes (Order)
+
+    + Body
+
+            {
+               "total_price":100,
+               "currency":"GBP",
+               "customer":{
+                  "customer_id":"CUST0001",
+                  "first_name":"Luis",
+                  "last_name":"Weir",
+                  "phone":"+44 (0) 757 5333 777",
+                  "email":"myemail@email.com"
+               },
+               "address":[
+                  {
+                     "name":"BILLING",
+                     "line_1":"22",
+                     "line_2":"King street",
+                     "city":"Leamington Spa",
+                     "county":"Warkwickshire",
+                     "postcode":"CV31",
+                     "country":"GB"
+                  },
+                  {
+                     "name":"DELIVERY",
+                     "line_1":"31",
+                     "line_2":"Queen street",
+                     "city":"Solihull",
+                     "county":"West Midlands",
+                     "postcode":"B90 2NN",
+                     "country":"GB"
+                  }
+               ],
+               "line_items":[
+                  {
+                     "line_id":1,
+                     "product_id":"502.638.38",
+                     "product_name":"Billy Bookcase",
+                     "description":"Billy Bookcase description",
+                     "quantity":2,
+                     "price":20,
+                     "dimensions":"40x28x202 cm",
+                     "colour":"White",
+                     "sku":"String"
+                  }
+               ]
+            }
+
++ Response 201 (application/json)
+
+    + Attributes (Response Metadata)
+
+## Read and Update Orders [/orders/{order_id}]
+
++ Parameters
+
+    + order_id: dp59cii7t (number, required)
+
+### Read Order [GET]
+Returns the details for a specific Order
+
++ Request (text/plain)
+
+    + Headers
+
+            api-key: ac108161-d3a5-427d-b814-ff977728395b
+
++ Response 200 (application/json)
+
+    + Attributes (Order)
+
+### Update Order [PUT]
+Updates only those details which are allowed to be updated.
+
++ Request (application/json)
+
+    + Headers
+
+            api-key: ac108161-d3a5-427d-b814-ff977728395b
+
+    + Attributes (Order)
+
+
+    + Body
+
+            {
+                "status":"DELIVERING"
+            }
+
++ Response 200 (application/json)
+
+    + Attributes (Response Metadata)
+
+### Delete Order [DELETE]
+ONLY FOR INTERNAL USE. Deletes an Order.
+
++ Request (text/plain)
+
+    + Headers
+
+            api-key: ac108161-d3a5-427d-b814-ff977728395b
+
++ Response 200 (application/json)
+
+    + Attributes (Response Metadata)
+
+# Data Structures
+
+## Search Metadata (object)
+- result_count: 1 (number, required)
+
+## Response Metadata (object)
+- error (boolean, required)
+- message: `Outcome of transaction` (string, optional)
+
+## Address (object)
+- name (enum, required)
+  - `BILLING` (string) - Billing address
+  - `DELIVERY` (string) - Delivery
+- line_1: `22` (string, required)
+- line_2: `King street` (string, optional)
+- city: `Leamington Spa` (string, required)
+- county:  `Warkwickshire` (string, required)
+- postcode:  `CV31` (string, required)
+- country:  `GB` (string, required)
+
+  The country code an artists belongs to. Note that MRA uses ISO 3166-1 alpha-2 for country codes
+
+- _id: `59d0966c2d57fd00125548a6` (string, optional) - Database generated record ID
+
+## Order Lines (object)
+- line_id: 1 (number, required)
+- product_id: `502.638.38` (string, required)
+- product_name: `Billy Bookcase` (string, optional)
+- description: `Billy Bookcase description` (string, optional)
+- quantity: 2 (number, required)
+- price: 20 (number, required)
+- dimensions: `40x28x202 cm` (string, optional)
+- colour: `White` (string, optional)
+- sku: String
+- _id: `59d0966c2d57fd00125548a6` (string, optional) - Database generated record ID
+
+## Customer (object)
+- customer_id: `CUST0001` (string, required)
+- first_name: `Luis` (string, required)
+- last_name: `Weir` (string, required)
+- phone: `+44 (0) 757 5333 777` (string, optional)
+- email: `myemail@email.com` (string, required)
+
+## Order (object)
+- _id: `59d0966c2d57fd00125548a6` (string, optional) - Database generated record ID
+- order_id: `dp59cii7t` (string, optional) - System generated Order ID
+- status (enum, required)
+  - `PROCESSING` (string) - Order has been received but is being processed
+  - `CREATED` (string) - Sales Order has been created
+  - `DELIVERING` (string) - Order is being delivered
+  - `DELIVERED` (string) - Order has been delivered
+  - `CANCELED` (string) - Order has been canceled
+- created_at: `2018-02-05T07:17:00.442Z` (string, optional)
+- updated_at: `2018-02-05T07:17:00.442Z` (string, optional)
+- total_price: 100 (number, optional)
+- currency (enum, optional)
+  - `GBP` (string) - British Pounds
+  - `USD` (string) - US Dollars
+  - `EUR` (string) - Euros
+- customer (Customer, optional)
+- address (Address, optional)
+- line_items (Order Lines, optional)
+- _links (optional)
+    - self
+        - href: /orders/OR00001 (string, required)

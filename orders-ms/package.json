@@ -1,0 +1,27 @@
+{
+  "name": "y",
+  "version": "1.0.0",
+  "description": "Soaring Throught The Clouds Orders API",
+  "main": "server.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luisw19/node.git"
+  },
+  "keywords": [
+    "API"
+  ],
+  "author": "Luis Weir",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/luisw19/node/issues"
+  },
+  "homepage": "https://github.com/luisw19/node#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "mongoose": "^4.13.10"
+  }
+}
