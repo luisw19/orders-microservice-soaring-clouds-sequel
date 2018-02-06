@@ -5,15 +5,12 @@ FROM node:4-onbuild
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-# Install app dependencies
-COPY package.json /usr/src/app/
-RUN npm install
-
 # Bundle app source
-COPY . /usr/src/app
+COPY ./orders-ms/ /usr/src/app
 
 # Install Curl so registration script can be run
 RUN apt-get update && apt-get install -y curl
+# Copy command to self-register service in API Platform
 COPY ./scripts/register.sh /usr/src/app
 
 EXPOSE 8080
