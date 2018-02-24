@@ -12,5 +12,5 @@ RUN apk add --update --no-cache curl
 # Copy command to self-register service in API Platform
 COPY scripts/register.sh /usr/src/app
 
-EXPOSE 8080
+EXPOSE 3000
 CMD [ "npm", "start" ]

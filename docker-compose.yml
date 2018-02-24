@@ -1,10 +1,10 @@
 version: '2'
 services:
   oders-ms:
+      #Image
+      image: localhost:3000/orders-ms:0.1.0
       #Uncomment if you wish to build from source code
       build: .
-      #Uncomment if you wish to run from docker-hub image
-      #image: luisw19/orders-ms
       depends_on:
         - mongo_db
       ports:

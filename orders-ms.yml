@@ -1,0 +1,44 @@
+# APP DEPLOYMENT
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: orders-ms
+  name: orders-ms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: orders-ms-exposed
+  template:
+    metadata:
+      labels:
+        run: orders-ms-exposed
+    spec:
+      containers:
+      - image: localhost:3000/orders-ms:0.1.0
+        name: orders-ms
+        ports:
+        - containerPort: 3000
+          hostPort: 3000
+          protocol: TCP
+
+---
+
+# APP SERVICE
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: orders-ms
+  name: orders-ms
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    run: orders-ms-exposed
+  type: NodePort
