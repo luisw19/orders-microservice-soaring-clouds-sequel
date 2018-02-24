@@ -17,7 +17,7 @@ npm install -g dredd
 3) Run
 dredd
 
-## To run in Kubernetes
+## To create Deployment/Service in Kubernetes (tested locally with minikube)
 
 1) Build the docker image
 
@@ -43,7 +43,7 @@ dredd
 6) To delete the services (if required)
 
   kubectl delete deploy orders-mongo-db
-	kubectl delete service orders-mongo-db 
+	kubectl delete service orders-mongo-db
 
 	kubectl delete deploy orders-ms
 	kubectl delete service orders-ms
