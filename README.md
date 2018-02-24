@@ -38,12 +38,12 @@ dredd
 
 5) Get the application URL
 
-  minikube service orders-ms --url
+    minikube service orders-ms --url
 
 6) To delete the services (if required)
 
-  kubectl delete deploy orders-mongo-db
-	kubectl delete service orders-mongo-db
+    kubectl delete deploy orders-mongo-db
+    kubectl delete service orders-mongo-db
 
-	kubectl delete deploy orders-ms
-	kubectl delete service orders-ms
+    kubectl delete deploy orders-ms
+    kubectl delete service orders-ms
