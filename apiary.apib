@@ -92,6 +92,7 @@ Returns the details for a specific Order
 
 ### Update Order [PUT]
 Updates only those details which are allowed to be updated.
+At present only Order Status and Payment Detailsadd
 
 + Request (application/json; charset=utf-8)
 
@@ -104,7 +105,15 @@ Updates only those details which are allowed to be updated.
     + Body
 
             {
-                "status":"PROCESSING"
+                "status":"PROCESSING",
+                "payment": {
+                    "card_type": "VISA_CREDIT",
+                    "card_number": "**** **** **** 1111",
+                    "start_year": 2018,
+                    "start_month": 1,
+                    "expiry_year": 2020,
+                    "expiry_month": 6
+              }
             }
 
 + Response 200 (application/json; charset=utf-8)
@@ -161,16 +170,66 @@ Add an individual line item.
                 "sku": "S15T-Flo-RS"
             }
 
-+ Response 200 (application/json; charset=utf-8)
++ Response 201 (application/json; charset=utf-8)
 
     + Attributes (Response Metadata)
 
 ### Remove Line Item [DELETE /orders/{order_id}/lines/{line_id}]
-Remove a speciic line item from the specific order
+Remove a line item from an order
 
 + Parameters
 
     + line_id: 1 (number, required)
+
++ Request (text/plain)
+
+    + Headers
+
+            api-key: ac108161-d3a5-427d-b814-ff977728395b
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Metadata)
+
+## Add and Remove Address [/orders/{order_id}/address]
+
++ Parameters
+
+    + order_id: dreddtest0001 (string, required)
+
+### Add Address [POST]
+Add an individual address.
+
++ Request (application/json; charset=utf-8)
+
+    + Headers
+
+            api-key: ac108161-d3a5-427d-b814-ff977728395b
+
+    + Attributes (Address)
+
+    + Body
+
+            {
+                "name": "BILLING",
+                "line_1": "22",
+                "line_2": "King street",
+                "city": "Leamington Spa",
+                "county": "Warkwickshire",
+                "postcode": "CV31",
+                "country": "GB"
+            }
+
++ Response 201 (application/json; charset=utf-8)
+
+    + Attributes (Response Metadata)
+
+### Remove Address [DELETE /orders/{order_id}/address/{address_name}]
+Remove address from an order
+
++ Parameters
+
+    + address_name: `BILLING` (string, required)
 
 + Request (text/plain)
 
