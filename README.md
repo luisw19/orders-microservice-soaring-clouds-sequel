@@ -1,21 +1,30 @@
 # orders-microservice-soaring-clouds-sequel
+
 Repository for the Orders Microservice, part of the Soaring Through The Clouds Sequel
 
 ## Run with Docker-Compose
+
 1) Install docker and docker-compose
+
 2) Run the following command
-docker-compose up
+
+	docker-compose up
+
 3) To bring down gratefully run:
-docker-compose down
+
+	docker-compose down
 
 ## To run Dredd unit tests execute
+
 1) Install Dredd locally
-npm install -g dredd
+
+	npm install -g dredd
 
 2) Start the Microservice (see previous steps)
 
-3) Run
-dredd
+3) Run Dredd as following (note that "--sorted" is important to ensure HTTP verbs are executed in the right order)
+
+	dredd --sorted
 
 ## To create Deployment/Service in Kubernetes (tested locally with minikube)
 

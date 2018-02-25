@@ -8,8 +8,15 @@ var router      =   express.Router();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({"extended" : false}));
 
-router.get("/",function(req,res){
-    res.json({"error" : false,"message" : "Hello World"});
+var PORT = process.env.APP_PORT || 3000;
+var APP_VERSION = "1.0.0";
+var APP_NAME = "OrdersMS";
+
+console.log("Running " + APP_NAME + "version " + APP_VERSION);
+
+router.get('/health', function (req, res) {
+    var response = { "status": "OK", "uptime": process.uptime(),"version": APP_VERSION };
+    res.json(response);
 });
 
 ////////////////////////////////
@@ -83,13 +90,13 @@ router.route("/orders")
         //If user-agent is dredd (meaning is a dredd test), use pre-defined ID
         if(header.includes("Dredd")){
             //create random order_id
-            order_id = "dreddtest0001";
+            order_id = "unittest";
         }
 
         //If user-agent is postman (meaning is a postman test), use pre-defined ID
         if(header.includes("Postman")){
             //create random order_id
-            order_id = "postmantest";
+            order_id = "unittest";
         }
 
         //set the id
@@ -209,6 +216,9 @@ router.route("/orders/:id")
     .delete(function(req,res){
       var response = {};
 
+      //Get HTTP Header user-agent
+      //var header = req.headers['user-agent'];
+
       //create query to check if order exists
       var query = mongoOp.findOne({ 'order.order_id': req.params.id });
 
@@ -219,15 +229,18 @@ router.route("/orders/:id")
           response = {"error" : true,"message" : "Error fetching data"};
         } else {
           if(data){
-            //order exists, remove it
-            mongoOp.remove({'order.order_id' : req.params.id},function(err){
-              if(err) {
-                response = {"error" : true,"message" : "Error deleting data"};
-              } else {
-                response = {"error" : true,"message" : "Order " + req.params.id + " deleted"};
-              }
-              res.json(response);
-            });
+            //if order exists remove it unless is a Dredd test
+            //console.log(header.includes("Dredd"));
+            //if(! header.includes("Dredd") ){
+              mongoOp.remove({'order.order_id' : req.params.id},function(err){
+                if(err) {
+                  response = {"error" : true,"message" : "Error deleting data"};
+                } else {
+                  response = {"error" : false,"message" : "Order " + req.params.id + " deleted"};
+                }
+                res.json(response);
+              });
+            //}
           }else{
             //order doesn't exist
             response = {"error" : true,"message" : "Order " + req.params.id + " does not exists"};
@@ -286,6 +299,7 @@ router.route("/orders/:id/lines")
                 } else {
                   response = {"error" : false,"message" : "Line item " + addLineItemId + " has been added to order "+ req.params.id};
                 }
+                res.statusCode = 201;
                 res.json(response);
               })
             }else{
@@ -410,6 +424,7 @@ router.route("/orders/:id/address")
                   } else {
                     response = {"error" : false,"message" : addAddress.name + " address has been added to order "+ req.params.id};
                   }
+                  res.statusCode = 201;
                   res.json(response);
                 })
               }else{
@@ -528,5 +543,5 @@ router.route("/orders/systemid/:id")
 
 app.use('/',router);
 
-app.listen(3000);
-console.log("Listening to PORT 3000");
+app.listen(PORT);
+console.log("Listening to PORT " + PORT);
