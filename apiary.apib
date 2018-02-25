@@ -1,10 +1,9 @@
-
 FORMAT: 1A
 HOST: http://private-af36c5-ordersapi12.apiary-mock.com
 
-# Orders
+# Orders MS
 Orders API allows to search, read, create and delete orders.
-This service is part of the Soaring Through The Clouds Sequel
+This service is part of the Soaring Through The Clouds Sequel.
 
 # Group Orders Resources
 Orders related resources.
@@ -200,12 +199,26 @@ ONLY FOR INTERNAL USE. Deletes an Order.
 - phone: `+44 (0) 757 5333 777` (string, optional)
 - email: `myemail@email.com` (string, required)
 
+## Payment (object)
+- Card Type (enum, required) - Credit card payment methods supported
+  - `VISA_CREDIT` (string)
+  - `VISA_DEBIT` (string)
+  - `MASTER_CREDIT` (string)
+  - `MASTER_DEBIT` (string)
+  - `AMEX_CREDIT` (string)
+- card_number: `**** **** **** 1111` (string, optional) - Credit card number
+- start_year: 2018 (number, required) - Credit Card issue year
+- start_month: 1 (number, required) - Credit Card issue month
+- expiry_year: 2020 (number, required) - Credit Card expiry year
+- expiry_month: 6 (number, required) - Credit Card expiry month
+
 ## Order (object)
 - _id: `59d0966c2d57fd00125548a6` (string, optional) - Database generated record ID
 - order_id: `dreddtest0001` (string, optional) - System generated Order ID
 - status (enum, required)
-  - `PROCESSING` (string) - Order has been received but is being processed
-  - `CREATED` (string) - Sales Order has been created
+  - `SHOPPING_CART` (string) - Order is in the store Shopping Cart
+  - `PROCESSING` (string) - Sales Order has been created, yayment is being processed
+  - `SUCCESS` (string) - Payment successfully processed and order is now created
   - `DELIVERING` (string) - Order is being delivered
   - `DELIVERED` (string) - Order has been delivered
   - `CANCELED` (string) - Order has been canceled
@@ -216,6 +229,7 @@ ONLY FOR INTERNAL USE. Deletes an Order.
   - `GBP` (string) - British Pounds
   - `USD` (string) - US Dollars
   - `EUR` (string) - Euros
+- payment (Payment, optional)
 - customer (Customer, optional)
 - address (Address, optional)
 - line_items (Order Lines, optional)
