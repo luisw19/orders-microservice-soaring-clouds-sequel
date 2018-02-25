@@ -9,15 +9,6 @@ var schema =   mongoose.Schema;
 
 // create schema: more info on http://mongoosejs.com/docs/schematypes.html
 
-//Customer object
-var customerVar = {
-  customer_id: String,
-  first_name: String,
-  last_name: String,
-  phone: String,
-  email: String
-};
-
 //Address object
 var addressVar = {
   //before used the "type" instead of "name" but mongo didn't like it as its a reserved name
@@ -31,6 +22,14 @@ var addressVar = {
 };
 
 //Order lines object
+var dimensionsVar = {
+  unit: String,
+  length: Number,
+  height: Number,
+  width: Number
+};
+
+//Order lines object
 var linesVar = {
   line_id: Number,
   product_id: String,
@@ -38,20 +37,44 @@ var linesVar = {
   description: String,
   quantity: Number,
   price: Number,
-  dimensions: String,
-  colour: String,
+  size: Number,
+  weight: Number,
+  dimensions: dimensionsVar,
+  color: String,
   sku: String
 };
+
+//Customer object
+var customerVar = {
+  customer_id: String,
+  first_name: String,
+  last_name: String,
+  phone: String,
+  email: String
+};
+
+//Payment object
+var paymentVar = {
+  card_type: String,
+  card_number: String,
+  start_year: Number,
+  start_month: Number,
+  expiry_year: Number,
+  expiry_month: Number
+};
+
 //Order schema
 var orderVar  = new schema(
   {
     order: {
       order_id: String,
-      status: { type: String, default: 'CREATED' },
+      shoppingCart_id: String,
+      status: { type: String, default: 'SHOPPING_CART' },
       created_at: { type: Date, default: Date.now },
       updated_at: { type: Date, default: Date.now },
       total_price: Number,
       currency: { type: String, default: 'GBP' },
+      payment: paymentVar,
       customer: customerVar,
       address: [addressVar],
       line_items: [linesVar]
