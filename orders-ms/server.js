@@ -40,6 +40,10 @@ router.route("/orders")
         if(req.query.customer !== undefined){
           query['order.customer.customer_id'] = req.query.customer;
         }
+        //search by shoppingCart_id
+        if(req.query.shoppingCart_id !== undefined){
+          query['order.shoppingCart_id'] = req.query.shoppingCart_id;
+        }
         //from
         if(req.query.date_from !== undefined){
           query['order.created_at'] =  {'$gte': new Date(req.query.date_from)};
@@ -292,6 +296,20 @@ router.route("/orders/:id/lines")
               //Add line item to array (note that array count start with zero hence the "- 1")
               data.order.line_items[addLineItemId - 1] = addLineItem;
 
+              //Re-calculate total price by summing up all lines
+              var totalLines = data.order.line_items.length;
+              var totalPrice = 0;
+              //Loop through all order lines and reset  the ids and recalculate total
+              for (var count = 0; count < totalLines; count++) {
+                //console.log("Count: " + data.order.line_items[count]);
+                data.order.line_items[count].line_id = count + 1;
+                //sum up all totals
+                totalPrice = totalPrice + data.order.line_items[count].price;
+              }
+
+              //update total totalPrice
+              data.order.total_price = totalPrice;
+
               //save the data
               data.save(function(err){
                 if(err) {
@@ -340,13 +358,19 @@ router.route("/orders/:id/lines/:lineid")
 
             //Redefine ID's for existing line items
             var totalLines = data.order.line_items.length;
+            var totalPrice = 0;
             if(totalLines > 0){
-              //Loop through all order lines and reset  the ids
+              //Loop through all order lines and reset  the ids and recalculate total
               for (var count = 0; count < totalLines; count++) {
                 //console.log("Count: " + data.order.line_items[count]);
                 data.order.line_items[count].line_id = count + 1;
+                //sum up all totals
+                totalPrice = totalPrice + data.order.line_items[count].price;
               }
             }
+
+            //update total totalPrice
+            data.order.total_price = totalPrice;
 
             //save the data
             data.save(function(err){
