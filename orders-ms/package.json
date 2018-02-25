@@ -1,24 +1,24 @@
 {
   "name": "y",
   "version": "1.0.0",
-  "description": "Soaring Throught The Clouds Orders API",
+  "description": "Soaring Throught The Clouds Orders Microservice",
   "main": "server.js",
   "scripts": {
     "test": "test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/luisw19/node.git"
+    "url": "git+https://github.com/luisw19/orders-microservice-soaring-clouds-sequel.git"
   },
   "keywords": [
     "API"
   ],
   "author": "Luis Weir",
-  "license": "",
+  "license": "ISC",
   "bugs": {
-    "url": "https://github.com/luisw19/node/issues"
+    "url": "https://github.com/luisw19/orders-microservice-soaring-clouds-sequel/issues"
   },
-  "homepage": "https://github.com/luisw19/node#readme",
+  "homepage": "https://github.com/luisw19/orders-microservice-soaring-clouds-sequel#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
