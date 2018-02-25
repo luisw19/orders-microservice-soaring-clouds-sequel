@@ -5,8 +5,8 @@ HOST: http://private-af36c5-ordersapi12.apiary-mock.com
 Orders API allows to search, read, create and delete orders.
 This service is part of the Soaring Through The Clouds Sequel.
 
-# Group Orders Resources
-Orders related resources.
+# Group Order Resources
+Order related resources.
 
 ## Search and Create Orders [/orders{?customer_id,date_from,date_to}]
 
@@ -240,6 +240,20 @@ Remove address from an order
 + Response 200 (application/json; charset=utf-8)
 
     + Attributes (Response Metadata)
+
+# Group Control Plane
+Control plane resources
+
+## Health Checks [/health]
+
+### Get AHealth Status [GET]
+Check the health status of the service
+
++ Request (text/plain)
+
++ Response 200 (application/json; charset=utf-8)
+
+            {"status":"OK","uptime":28.094,"version":"1.0.0"}
 
 # Data Structures
 
