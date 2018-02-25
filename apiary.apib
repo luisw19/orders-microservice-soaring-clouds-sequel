@@ -55,8 +55,8 @@ Creates an Order.
     + Body
 
             {
-               "shoppingCart_id": "luisweir-2018-02-25T09:53:00.442Z",
-               "total_price":100,
+               "shoppingCart_id": "luisweir",
+               "total_price":0,
                "currency":"GBP",
                "customer":{
                     "customer_id":"CUST0001",
@@ -64,52 +64,7 @@ Creates an Order.
                     "last_name":"Weir",
                     "phone":"+44 (0) 757 5333 777",
                     "email":"myemail@email.com"
-               },
-               "address":[
-                    {
-                        "name":"BILLING",
-                        "line_1":"22",
-                        "line_2":"King street",
-                        "city":"Leamington Spa",
-                        "county":"Warkwickshire",
-                        "postcode":"CV31",
-                        "country":"GB"
-                  },
-                  {
-                        "name":"DELIVERY",
-                        "line_1":"31",
-                        "line_2":"Queen street",
-                        "city":"Solihull",
-                        "county":"West Midlands",
-                        "postcode":"B90 2NN",
-                        "country":"GB"
-                  }
-               ],
-               "line_items":[
-                {
-                    "line_id": 1,
-                    "product_id": "AX330T",
-                    "product_name": "Light Brown Men Shoe 1",
-                    "description": "Light Brown Men Shoe 1",
-                    "quantity": 2,
-                    "price": 68.39,
-                    "size": 43,
-                    "weight": 0,
-                    "dimensions": {
-                        "unit": "cm",
-                        "length": 10.2,
-                        "height": 10.4,
-                        "width": 5.4
-                    },
-                    "color": "White",
-                    "sku": "S15T-Flo-RS",
-                    "_links": {
-                        "self": {
-                            "href": "/products/AX330T"
-                        }
-                    }
-                }
-                ]
+               }
             }
 
 + Response 201 (application/json; charset=utf-8)
@@ -137,6 +92,7 @@ Returns the details for a specific Order
 
 ### Update Order [PUT]
 Updates only those details which are allowed to be updated.
+At present only Order Status and Payment Detailsadd
 
 + Request (application/json; charset=utf-8)
 
@@ -149,7 +105,15 @@ Updates only those details which are allowed to be updated.
     + Body
 
             {
-                "status":"PROCESSING"
+                "status":"PROCESSING",
+                "payment": {
+                    "card_type": "VISA_CREDIT",
+                    "card_number": "**** **** **** 1111",
+                    "start_year": 2018,
+                    "start_month": 1,
+                    "expiry_year": 2020,
+                    "expiry_month": 6
+              }
             }
 
 + Response 200 (application/json; charset=utf-8)
@@ -203,24 +167,69 @@ Add an individual line item.
                     "width": 5.4
                 },
                 "color": "White",
-                "sku": "S15T-Flo-RS",
-                "_links": {
-                    "self": {
-                        "href": "/products/AX330T"
-                    }
-                }
+                "sku": "S15T-Flo-RS"
             }
+
++ Response 201 (application/json; charset=utf-8)
+
+    + Attributes (Response Metadata)
+
+### Remove Line Item [DELETE /orders/{order_id}/lines/{line_id}]
+Remove a line item from an order
+
++ Parameters
+
+    + line_id: 1 (number, required)
+
++ Request (text/plain)
+
+    + Headers
+
+            api-key: ac108161-d3a5-427d-b814-ff977728395b
 
 + Response 200 (application/json; charset=utf-8)
 
     + Attributes (Response Metadata)
 
-### Remove Line Item [DELETE /orders/{order_id}/lines/{line_id}]
-Remove a speciic line item from the specific order
+## Add and Remove Address [/orders/{order_id}/address]
 
 + Parameters
 
-    + line_id: 1 (number, required)
+    + order_id: dreddtest0001 (string, required)
+
+### Add Address [POST]
+Add an individual address.
+
++ Request (application/json; charset=utf-8)
+
+    + Headers
+
+            api-key: ac108161-d3a5-427d-b814-ff977728395b
+
+    + Attributes (Address)
+
+    + Body
+
+            {
+                "name": "BILLING",
+                "line_1": "22",
+                "line_2": "King street",
+                "city": "Leamington Spa",
+                "county": "Warkwickshire",
+                "postcode": "CV31",
+                "country": "GB"
+            }
+
++ Response 201 (application/json; charset=utf-8)
+
+    + Attributes (Response Metadata)
+
+### Remove Address [DELETE /orders/{order_id}/address/{address_name}]
+Remove address from an order
+
++ Parameters
+
+    + address_name: `BILLING` (string, required)
 
 + Request (text/plain)
 
@@ -257,7 +266,6 @@ Remove a speciic line item from the specific order
 - _id: `59d0966c2d57fd00125548a6` (string, optional) - Database generated record ID
 
 ## Order Lines (object)
-- _id: `59d0966c2d57fd00125548a6` (string, optional) - Database generated record ID
 - line_id: 1 (number, required)
 - product_id: `AX330T` (string, required)
 - product_name: `Light Brown Men Shoe 1` (string, optional)
@@ -276,6 +284,7 @@ Remove a speciic line item from the specific order
 - _links (optional)
     - self
         - href: /products/AX330T (string, required)
+- _id: `59d0966c2d57fd00125548a6` (string, optional) - Database generated record IDo
 
 ## Customer (object)
 - customer_id: `CUST0001` (string, required)
@@ -298,9 +307,8 @@ Remove a speciic line item from the specific order
 - expiry_month: 6 (number, required) - Credit Card expiry month
 
 ## Order (object)
-- _id: `59d0966c2d57fd00125548a6` (string, optional) - Database generated record ID
 - order_id: `dreddtest0001` (string, optional) - System generated Order ID
-- shoppingCart_id: `luisweir-2018-02-25T09:53:00.442Z` (string, optional)
+- shoppingCart_id: `luisweir` (string, optional)
 
         ID for the shopping cart. Should be a combination of user Id + timestamp 
         of the first item added to the cart.
@@ -326,3 +334,4 @@ Remove a speciic line item from the specific order
 - _links (optional)
     - self
         - href: /orders/OR00001 (string, required)
+- _id: `59d0966c2d57fd00125548a6` (string, optional) - Database generated record ID
