@@ -102,7 +102,7 @@ Creates an Order.
                         "width": 5.4
                     },
                     "color": "White",
-                    "sku": "S15T-Flo-RS",
+                    "sku": "S15T-Flo-RS"
                 }
                 ]
             }
@@ -198,7 +198,7 @@ Add an individual line item.
                     "width": 5.4
                 },
                 "color": "White",
-                "sku": "S15T-Flo-RS",
+                "sku": "S15T-Flo-RS"
             }
 
 + Response 200 (application/json; charset=utf-8)
@@ -247,7 +247,6 @@ Remove a speciic line item from the specific order
 - _id: `59d0966c2d57fd00125548a6` (string, optional) - Database generated record ID
 
 ## Order Lines (object)
-- _id: `59d0966c2d57fd00125548a6` (string, optional) - Database generated record ID
 - line_id: 1 (number, required)
 - product_id: `AX330T` (string, required)
 - product_name: `Light Brown Men Shoe 1` (string, optional)
@@ -266,6 +265,7 @@ Remove a speciic line item from the specific order
 - _links (optional)
     - self
         - href: /products/AX330T (string, required)
+- _id: `59d0966c2d57fd00125548a6` (string, optional) - Database generated record IDo
 
 ## Customer (object)
 - customer_id: `CUST0001` (string, required)
