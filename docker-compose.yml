@@ -6,12 +6,12 @@ services:
       #Uncomment if you wish to build from source code
       build: .
       depends_on:
-        - mongo_db
+        - orders-mongo-db
       ports:
         - "3000:3000"
       command: npm start
       links:
-        - mongo_db
+        - orders-mongo-db
 
-  mongo_db:
+  orders-mongo-db:
       image: mongo:3.2.9
