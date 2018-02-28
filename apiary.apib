@@ -257,9 +257,16 @@ Check the health status of the service
 
 + Response 200 (application/json; charset=utf-8)
 
-            {"status":"OK","uptime":28.094,"version":"1.0.0"}
+    + Attributes (Health Metadata)
+
 
 # Data Structures
+
+## Health Metadata (object)
+- status: `OK` (string, required)
+- uptime: 28.094 (number, required)
+- version: `1.0.0` (string, required)
+
 
 ## Search Metadata (object)
 - result_count: 1 (number, required)
