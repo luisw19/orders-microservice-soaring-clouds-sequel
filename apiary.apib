@@ -8,7 +8,7 @@ This service is part of the Soaring Through The Clouds Sequel.
 # Group Order Resources
 Order related resources.
 
-## Search and Create Orders [/orders{?customer_id,shoppingCart_id,date_from,date_to}]
+## Search and Create Orders [/orders{?customer_id,shoppingCart_id,status,date_from,date_to}]
 
 + Parameters
 
@@ -18,7 +18,15 @@ Order related resources.
         
     + shoppingCart_id (string, optional)
 
-        Filter by shoppingCart_idd 
+        Filter by shoppingCart_idd
+
+        + Sample: CUST0001
+        
+    + status (string, optional)
+
+        Filter by Order Status
+        
+        + Sample: SHOPPING_CART
 
     + date_from (string, optional)
 
@@ -59,7 +67,7 @@ Creates an Order.
     + Body
 
             {
-               "shoppingCart_id": "luisweir",
+               "shoppingCart_id": "CUST0001",
                "total_price":0,
                "currency":"GBP",
                "customer":{
@@ -267,7 +275,6 @@ Check the health status of the service
 - uptime: 28.094 (number, required)
 - version: `1.0.0` (string, required)
 
-
 ## Search Metadata (object)
 - result_count: 1 (number, required)
 
@@ -333,11 +340,7 @@ Check the health status of the service
 
 ## Order (object)
 - order_id: `unittest` (string, optional) - System generated Order ID
-- shoppingCart_id: `luisweir` (string, optional)
-
-        ID for the shopping cart. Should be a combination of user Id + timestamp 
-        of the first item added to the cart.
-
+- shoppingCart_id: `CUST0001` (string, optional) - ID for the shopping cart. At present is the same as the customerID. 
 - status (enum, optional)
   - `SHOPPING_CART` (string) - Order is in the store Shopping Cart
   - `PROCESSING` (string) - Sales Order has been created, yayment is being processed
