@@ -67,16 +67,17 @@ Creates an Order.
     + Body
 
             {
-               "shoppingCart_id": "CUST0001",
-               "total_price":0,
-               "currency":"GBP",
-               "customer":{
-                    "customer_id":"CUST0001",
-                    "first_name":"Luis",
-                    "last_name":"Weir",
-                    "phone":"+44 (0) 757 5333 777",
-                    "email":"myemail@email.com"
-               }
+              "shoppingCart_id": "CUST0001",
+              "total_price": 0,
+              "currency":"GBP",
+              "status":"SHOPPING_CART",
+              "customer":{
+                "customer_id":"CUST0001",
+                "first_name":"Luis",
+                "last_name":"Weir",
+                "phone":"+44 (0) 757 5333 777",
+                "email":"myemail@email.com"
+              }
             }
 
 + Response 201 (application/json; charset=utf-8)
