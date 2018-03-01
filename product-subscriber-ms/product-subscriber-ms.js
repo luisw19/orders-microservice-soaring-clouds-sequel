@@ -1,4 +1,4 @@
-//kafka vars
+//kafka vars - more info on https://www.npmjs.com/package/kafka-avro
 var KafkaAvro = require('kafka-avro');
 var fmt = require('bunyan-format');
 var kafkaLog  = KafkaAvro.getLogger();
@@ -158,7 +158,8 @@ kafkaAvro.getConsumer({
 
         //start streaming data
         stream.on('data', function(message) {
-            console.log('Received message:', message.parsed);
+            //console.log('Received message:', message.parsed);
+            console.log('Received message:', JSON.stringify(message.parsed));
             /* Then at this point we can create the order with
             status = SHOPPING_CART and add the product or just
             add the product line*/
@@ -166,11 +167,11 @@ kafkaAvro.getConsumer({
             var orderStatus = 'SHOPPING_CART';
             //set Order Header Details
             order = {
-              shoppingCart_id: message.customerId,
-              currency: message.currency,
+              shoppingCart_id: message.parsed.customerId,
+              currency: message.parsed.priceInCurrency,
               status: orderStatus,
               customer: {
-                customer_id: message.customerId
+                customer_id: message.parsed.customerId
                 //first_name: 'Luis',
                 //last_name: 'Weir',
                 //phone: '+44 (0) 757 5333 777',
@@ -178,33 +179,36 @@ kafkaAvro.getConsumer({
               }
             };
 
+            console.log(order);
+
             //Set Order Query
             orderCheck = {
-              shoppingCart_id: message.customerId,
+              shoppingCart_id: message.parsed.customerId,
               status: orderStatus
             };
 
             //Set Product line item
             productItem = {
-            	product_id: message.product.Product.productCode,
-            	product_name: message.product.Product.productName,
-            	description: message.product.Product.productName,
+            	product_id: message.parsed.product.productId,
+            	product_name: message.parsed.product.productName.string,
+            	description: message.parsed.product.productName.string,
             	quantity: 2,
-            	price: message.product.Product.price,
-            	size: message.product.Product.size,
-            	weight: message.product.Product.weight,
+            	price: message.parsed.product.price.double,
+            	size: message.parsed.product.size.int,
+            	weight: message.parsed.product.weight.double,
             	dimensions: {
-            		unit: message.product.Product.dimension.Dimension,
-            		length: message.product.Product.dimension.Dimension.length,
-            		height: message.product.Product.dimension.Dimension.height,
-            		width: message.product.Product.dimension.Dimension.width
+            		unit: message.parsed.product.dimension.unit.string,
+            		length: message.parsed.product.dimension.length.double,
+            		height: message.parsed.product.dimension.height.double,
+            		width: message.parsed.product.dimension.width.double,
             	},
-            	color: message.product.Product.color
+            	color: message.parsed.product.color.string
             };
 
+            //curl to create shopping Cart items
             //curl -X POST http://129.150.114.134:8080/shoppingCart -H "Content-Type: application/json" -d '{"sessionId":"abbfc4f9-83d5-49ac-9fa5-2909c5dc86e6","customerId":"232422","currency":"USD","quantity":1,"product":{"productId":"abbfc4f9-83d5-49ac-9fa5-2909c5dc86e6","code":"AX329T","name":"Light Brown Men Shoe 1","imageUrl":"01_men_one.jpg","price":68.39,"size":43,"weight":0.0,"dimension":{"unit":"cm","length":10.2,"height":10.4,"width":5.4},"color":"lightbrown","tags":["tag"],"categories":["men"]}}'
-            //call function to create or update Shopping Cart
 
+            //call function to create or update Shopping Cart
             upsertShoppingCart();
 
         });
