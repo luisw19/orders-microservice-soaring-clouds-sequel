@@ -1,0 +1,29 @@
+{
+  "name": "product-subscriber-ms",
+  "version": "1.0.0",
+  "description": "This service subscribe to product events and add items to the shopping cart",
+  "main": "product-subscriber-ms.js",
+  "dependencies": {
+    "kafka-avro": "^0.8.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luisw19/orders-microservice-soaring-clouds-sequel.git"
+  },
+  "keywords": [
+    "Node",
+    "Kafka",
+    "Orders",
+    "Shopping-cart"
+  ],
+  "author": "Luis  Weir",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/luisw19/orders-microservice-soaring-clouds-sequel/issues"
+  },
+  "homepage": "https://github.com/luisw19/orders-microservice-soaring-clouds-sequel#readme"
+}

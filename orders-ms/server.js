@@ -12,7 +12,7 @@ var PORT = process.env.APP_PORT || 3000;
 var APP_VERSION = "1.0.0";
 var APP_NAME = "OrdersMS";
 
-console.log("Running " + APP_NAME + "version " + APP_VERSION);
+console.log("Running " + APP_NAME + " version: " + APP_VERSION);
 
 router.get('/health', function (req, res) {
     var response = { "status": "OK", "uptime": process.uptime(),"version": APP_VERSION };
@@ -43,6 +43,10 @@ router.route("/orders")
         //search by shoppingCart_id
         if(req.query.shoppingCart_id !== undefined){
           query['order.shoppingCart_id'] = req.query.shoppingCart_id;
+        }
+        //search by shoppingCart_id
+        if(req.query.status !== undefined){
+          query['order.status'] = req.query.status;
         }
         //from
         if(req.query.date_from !== undefined){
@@ -77,6 +81,8 @@ router.route("/orders")
         var response = {};
         // fetch order from REST request.
         // Ideally we should add validation here
+        //console.log(req.headers);
+        //console.log(req.body);
         db.order = req.body;
 
         //Order Address, Payment, and Line arrays should be empty
@@ -87,20 +93,22 @@ router.route("/orders")
         //create random order id
         var order_id = Math.random().toString(36).substr(2, 9);
 
-        //Get HTTP Header user-agent
-        var header = req.headers['user-agent'];
-        //console.log(JSON.stringify(req.headers));
+        if(req.headers['user-agent']!==undefined){
+          //Get HTTP Header user-agent
+          var header = req.headers['user-agent'];
+          //console.log(JSON.stringify(req.headers));
 
-        //If user-agent is dredd (meaning is a dredd test), use pre-defined ID
-        if(header.includes("Dredd")){
-            //create random order_id
-            order_id = "unittest";
-        }
+          //If user-agent is dredd (meaning is a dredd test), use pre-defined ID
+          if(header.includes("Dredd")){
+              //create random order_id
+              order_id = "unittest";
+          }
 
-        //If user-agent is postman (meaning is a postman test), use pre-defined ID
-        if(header.includes("Postman")){
-            //create random order_id
-            order_id = "unittest";
+          //If user-agent is postman (meaning is a postman test), use pre-defined ID
+          if(header.includes("Postman")){
+              //create random order_id
+              order_id = "unittest";
+          }
         }
 
         //set the id
@@ -111,6 +119,13 @@ router.route("/orders")
         db.order.created_at = now.toJSON();
         db.order.updated_at = now.toJSON();
 
+        //set HATEOAS. Note that it's more performing to store it than creating it at runtime... but it has cons!
+        db.order._links = {
+            self: {
+                href: req.originalUrl + "/" + db.order.order_id
+            }
+        };
+
         //save the data
         db.save(function(err){
         // save() will run insert() command of MongoDB.
@@ -119,7 +134,10 @@ router.route("/orders")
                 console.log(err);
                 response = {"error" : true,"message" : "Error adding data"};
             } else {
-                response = {"error" : false,"message" : "Created order: " + order_id};
+                response = {
+                  "error" : false,
+                  "message" : "Created order: " + order_id,
+                  "_links" : db.order._links};
             }
             res.statusCode = 201;
             res.json(response);

@@ -1,24 +1,32 @@
 FORMAT: 1A
 HOST: http://private-af36c5-ordersapi12.apiary-mock.com
 
-# Orders MS
-Orders API allows to search, read, create and delete orders.
+# STTC Orders MS
+The Soaring Through The Clouds Orders Microservice allows to search, read, create and delete orders.
 This service is part of the Soaring Through The Clouds Sequel.
 
 # Group Order Resources
 Order related resources.
 
-## Search and Create Orders [/orders{?customer_id,shoppingCart_id,date_from,date_to}]
+## Search and Create Orders [/orders{?customer_id,shoppingCart_id,orderStatus,date_from,date_to}]
 
 + Parameters
 
     + customer_id (string, optional)
 
         Filter by Customer ID
-        
+
     + shoppingCart_id (string, optional)
 
-        Filter by shoppingCart_idd 
+        Filter by shoppingCart_idd
+
+        + Sample: CUST0001
+
+    + orderStatus (string, optional)
+
+        Filter by Order Status
+
+        + Sample: SHOPPING_CART
 
     + date_from (string, optional)
 
@@ -59,16 +67,17 @@ Creates an Order.
     + Body
 
             {
-               "shoppingCart_id": "luisweir",
-               "total_price":0,
-               "currency":"GBP",
-               "customer":{
-                    "customer_id":"CUST0001",
-                    "first_name":"Luis",
-                    "last_name":"Weir",
-                    "phone":"+44 (0) 757 5333 777",
-                    "email":"myemail@email.com"
-               }
+              "shoppingCart_id": "CUST0001",
+              "total_price": 0,
+              "currency":"GBP",
+              "status":"SHOPPING_CART",
+              "customer":{
+                "customer_id":"CUST0001",
+                "first_name":"Luis",
+                "last_name":"Weir",
+                "phone":"+44 (0) 757 5333 777",
+                "email":"myemail@email.com"
+              }
             }
 
 + Response 201 (application/json; charset=utf-8)
@@ -257,9 +266,15 @@ Check the health status of the service
 
 + Response 200 (application/json; charset=utf-8)
 
-            {"status":"OK","uptime":28.094,"version":"1.0.0"}
+    + Attributes (Health Metadata)
+
 
 # Data Structures
+
+## Health Metadata (object)
+- status: `OK` (string, required)
+- uptime: 28.094 (number, required)
+- version: `1.0.0` (string, required)
 
 ## Search Metadata (object)
 - result_count: 1 (number, required)
@@ -267,6 +282,9 @@ Check the health status of the service
 ## Response Metadata (object)
 - error (boolean, required)
 - message: `success` (string, optional)
+- _links (optional)
+    - self
+        - href: /orders/unittest (string, required)
 
 ## Address (object)
 - name (enum, required)
@@ -326,12 +344,8 @@ Check the health status of the service
 
 ## Order (object)
 - order_id: `unittest` (string, optional) - System generated Order ID
-- shoppingCart_id: `luisweir` (string, optional)
-
-        ID for the shopping cart. Should be a combination of user Id + timestamp 
-        of the first item added to the cart.
-
-- status (enum, optional)
+- shoppingCart_id: `CUST0001` (string, optional) - ID for the shopping cart. At present is the same as the customerID.
+- status (enum, optional)to
   - `SHOPPING_CART` (string) - Order is in the store Shopping Cart
   - `PROCESSING` (string) - Sales Order has been created, yayment is being processed
   - `SUCCESS` (string) - Payment successfully processed and order is now created
@@ -351,5 +365,5 @@ Check the health status of the service
 - line_items (array[Order Lines], optional)
 - _links (optional)
     - self
-        - href: /orders/OR00001 (string, required)
+        - href: /orders/unittest (string, required)
 - _id: `59d0966c2d57fd00125548a6` (string, optional) - Database generated record ID

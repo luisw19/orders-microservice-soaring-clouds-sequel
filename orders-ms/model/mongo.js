@@ -18,7 +18,7 @@ var addressVar = {
   city: String,
   county: String,
   postcode: String,
-  country: { type: String, default: 'GB' }
+  country: { type: String, default: "GB" }
 };
 
 //Order lines object
@@ -63,21 +63,31 @@ var paymentVar = {
   expiry_month: Number
 };
 
+//HATEOAS links
+var hrefVar = {
+  href: String
+}
+
+var linksVar = {
+    self: hrefVar
+}
+
 //Order schema
 var orderVar  = new schema(
   {
     order: {
       order_id: String,
       shoppingCart_id: String,
-      status: { type: String, default: 'SHOPPING_CART' },
+      status: { type: String, default: "SHOPPING_CART" },
       created_at: { type: Date, default: Date.now },
       updated_at: { type: Date, default: Date.now },
       total_price: Number,
-      currency: { type: String, default: 'GBP' },
+      currency: { type: String, default: "GBP" },
       payment: paymentVar,
       customer: customerVar,
       address: [addressVar],
-      line_items: [linesVar]
+      line_items: [linesVar],
+      _links: linksVar
     }
   }
 );
