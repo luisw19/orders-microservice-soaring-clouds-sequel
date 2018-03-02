@@ -2,10 +2,11 @@
 var KafkaAvro = require('kafka-avro');
 var fmt = require('bunyan-format');
 var kafkaLog  = KafkaAvro.getLogger();
-var kafkaHost = "129.150.77.116:6667";
-//var kafkaHost = "kafka_host:6667";
+//Read environment variable KAFKA_HOST
+var kafkaBroker = process.env.KAFKA_BROKER;
+//var kafkaBroker = "129.150.77.116:6667";
 //var kafkaRegistry = "http://129.150.114.134:8081";
-var kafkaRegistry = "http://kafka_registry:8081";
+var kafkaRegistry = process.env.KAFKA_REGISTRY;
 var kafkaConsumerGroup = "librd-test2";
 var topicName = 'a516817-soaring-add-to-shopping-cart';
 
@@ -14,8 +15,9 @@ var querystring = require('querystring');
 //var https = require('https');
 var http = require('http');
 //var apiHost = "127.0.0.1";
-var apiHost = "orders_api_host";
-var apiPort = 3000;
+var apiHost = process.env.ORDERSAPI_HOST;
+//var apiPort = 3000;
+var apiPort = process.env.ORDERSAPI_PORT;
 var response = {};
 var order = {};
 var orderCheck = {};
@@ -111,7 +113,7 @@ function addProductItem(href) {
 ////////////////////////////////////////////////////////////////
 //set values for kafkaAvro with details of the
 var kafkaAvro = new KafkaAvro({
-    kafkaBroker: kafkaHost,
+    kafkaBroker: kafkaBroker,
     schemaRegistry: kafkaRegistry,
     parseOptions: { wrapUnions: true }
 });

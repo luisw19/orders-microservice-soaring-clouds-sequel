@@ -11,6 +11,15 @@ https://github.com/gschmutz/product-soaring-clouds-sequel/tree/master/example/no
 
 2) Make sure Orders MS is up and running (check out following link for instructions on how to start it up: https://github.com/luisw19/orders-microservice-soaring-clouds-sequel/blob/master/README.md)
 
+2) Set environment variables as following:
+
+```bash
+export KAFKA_BROKER=129.150.77.116:6667
+export KAFKA_REGISTRY=http://129.150.114.134:8081
+export ORDERSAPI_HOST=127.0.0.1
+export ORDERSAPI_PORT=3000
+```
+
 2) Then run:
 
 ```bash
@@ -26,7 +35,7 @@ curl -X POST http://129.150.114.134:8080/shoppingCart -H "Content-Type: applicat
 4) Check that the Shopping Cart Order was created by running the following command (replace HOST and PORT accordingly)
 
 ```bash
-curl http://{{HOST}}:{{PORT}}/orders?shoppingCart_id=232422&status=SHOPPING_CART
+curl http://$ORDERSAPI_HOST:$ORDERSAPI_PORT/orders?shoppingCart_id=232422&status=SHOPPING_CART
 ```
 
 5) Add more products to Shopping Cart with same "customerId" and read again the order. See how new lines are added.
