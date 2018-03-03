@@ -17,7 +17,8 @@ spec:
         run: orders-ms-exposed
     spec:
       containers:
-      - image: localhost:3000/orders-ms:0.1.0
+      #- image: localhost:3000/orders-ms:0.1.0
+      - image: luisw19/orders-ms:0.1.0      
         name: orders-ms
         ports:
         - containerPort: 3000

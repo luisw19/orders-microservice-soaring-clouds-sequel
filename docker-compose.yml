@@ -2,8 +2,9 @@ version: '2'
 services:
   product-subscriber:
       #Image
-      image: localhost:3000/product-sub-ms:0.1.0
-      #Uncomment if you wish to build from source code
+      #image: localhost/product-sub-ms:0.1.0
+      image: luisw19/product-sub-ms:0.1.0
+      #Uncomment "build" if you wish to build from source code, otherwise it'll pull from registry
       build: ./product-subscriber-ms
       environment:
         KAFKA_BROKER: '129.150.77.116:6667'
@@ -16,8 +17,9 @@ services:
 
   oders-ms:
       #Image
-      image: localhost:3000/orders-ms:0.1.0
-      #Uncomment if you wish to build from source code
+      #image: localhost:3000/orders-ms:0.1.0
+      image: luisw19/orders-ms:0.1.0
+      #Uncomment "build" if you wish to build from source code, otherwise it'll pull from registry
       build: .
       depends_on:
         - orders-mongo-db

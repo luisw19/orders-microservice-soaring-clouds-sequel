@@ -13,7 +13,8 @@ spec:
         run: orders-mongo-db
     spec:
       containers:
-      - image: localhost:27017/mongo:3.2.9
+      #- image: localhost:27017/mongo:3.2.9
+      - image: mongo:3.2.9
         name: orders-mongo-db
         ports:
         - name: orders-mongo-db
