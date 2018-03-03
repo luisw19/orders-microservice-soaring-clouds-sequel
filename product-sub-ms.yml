@@ -1,0 +1,53 @@
+# APP DEPLOYMENT
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: product-sub-ms
+  name: product-sub-ms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: product-sub-ms-exposed
+  template:
+    metadata:
+      labels:
+        run: product-sub-ms-exposed
+    spec:
+      containers:
+      - args:
+        - node
+        - product-subscriber-ms.js
+        env:
+        - name: KAFKA_BROKER
+          value: 129.150.77.116:6667
+        - name: KAFKA_REGISTRY
+          value: http://129.150.114.134:8081
+        - name: ORDERSAPI_HOST
+          value: orders-ms
+        - name: ORDERSAPI_PORT
+          value: "3000"
+        #image: localhost:3000/product-sub-ms:0.1.0
+        image: luisw19/product-sub-ms:0.1.0
+        name: product-sub-ms
+      restartPolicy: Always
+
+#---
+
+# APP SERVICE
+
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  labels:
+#    run: product-sub-ms
+#  name: product-sub-ms
+#spec:
+#  ports:
+#  - name: headless
+#    port: 55555
+#    targetPort: 0
+#  selector:
+#    run: product-sub-ms-exposed
