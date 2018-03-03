@@ -1,7 +1,7 @@
 reporter: apiary
 custom:
   apiaryApiKey: 7454fbe5494028587de670a606da0c7b
-  apiaryApiName: mramediacatalogueapi
+  apiaryApiName: sttcordersms
 dry-run: null
 hookfiles: null
 language: nodejs
