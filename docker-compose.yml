@@ -1,5 +1,19 @@
 version: '2'
 services:
+  product-subscriber:
+      #Image
+      image: localhost:3000/product-sub-ms:0.1.0
+      #Uncomment if you wish to build from source code
+      build: ./product-subscriber-ms
+      environment:
+        KAFKA_BROKER: '129.150.77.116:6667'
+        KAFKA_REGISTRY: 'http://129.150.114.134:8081'
+        ORDERSAPI_HOST: 'oders-ms'
+        ORDERSAPI_PORT: 3000
+      command: node product-subscriber-ms.js
+      links:
+        - oders-ms
+
   oders-ms:
       #Image
       image: localhost:3000/orders-ms:0.1.0
@@ -12,17 +26,6 @@ services:
       command: npm start
       links:
         - orders-mongo-db
-
-  product-subscriber:
-      #Image
-      image: localhost:3000/product-sub-ms:0.1.0
-      #Uncomment if you wish to build from source code
-      build: .
-      extra_hosts:
-        - "kafka_host:129.150.114.134"
-        - "kafka_registry:129.150.114.134"
-        - "orders_api_host:127.0.0.1"
-      command: node sub/product-subscriber-ms.js
 
   orders-mongo-db:
       image: mongo:3.2.9
