@@ -15,6 +15,9 @@ var kafkaAvro = new KafkaAvro({
 var inOrder = {};
 //Variable containing the Order that will be produced
 var outOrder = {};
+//Counter for delivery report
+var counter = 0;
+var maxMessages = 1;
 
 kafkaAvro.init()
     .then(function() {
@@ -40,10 +43,11 @@ kafkaAvro.init()
 
                 producer.on('delivery-report', function (err, report) {
                     console.log('in delivery report');
+                    counter++;
                     if (err) {
                         console.error('error occurred: ' + err);
                     } else {
-                        console.log('delivery-report: ' + JSON.stringify(report));
+                        console.log('message-delivered: ' + JSON.stringify(report));
                     }
                 });
 
@@ -218,15 +222,14 @@ kafkaAvro.init()
       	        producer.produce(topic, partition, outOrder, key);
 
                 //need to keep polling for a while to ensure the delivery reports are received
-                /*var counter = 0;
-                var maxMessages = 1;
                 var pollLoop = setInterval(function() {
                       producer.poll();
+                      console.log(counter);
                       if (counter === maxMessages) {
                         clearInterval(pollLoop);
                         producer.disconnect();
                       }
-                    }, 1000);*/
+                    }, 1000);
 
       	    });
     });
