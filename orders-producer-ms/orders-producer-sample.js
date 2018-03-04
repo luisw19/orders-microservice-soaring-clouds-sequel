@@ -218,7 +218,7 @@ kafkaAvro.init()
       	        producer.produce(topic, partition, outOrder, key);
 
                 //need to keep polling for a while to ensure the delivery reports are received
-                var counter = 0;
+                /*var counter = 0;
                 var maxMessages = 1;
                 var pollLoop = setInterval(function() {
                       producer.poll();
@@ -226,7 +226,7 @@ kafkaAvro.init()
                         clearInterval(pollLoop);
                         producer.disconnect();
                       }
-                    }, 1000);
+                    }, 1000);*/
 
       	    });
     });
