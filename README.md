@@ -2,6 +2,12 @@
 
 Repository for the Orders Microservice, part of the Soaring Through The Clouds Sequel
 
+## Clone the repository locally as following:
+
+```bash
+	git clone https://github.com/luisw19/orders-microservice-soaring-clouds-sequel.git
+```
+
 ## Run with Docker-Compose
 
 1) Install docker and docker-compose
@@ -60,14 +66,13 @@ curl http://localhost:3000/orders?shoppingCart_id=232422&status=SHOPPING_CART
 1) Build the docker image
 
 ```bash
-	docker build . -t localhost:3000/orders-ms:0.1.0
+	docker-compose build
 ```
 
-2) Pull mongo and tag locally
+2) Set Dockerconfig to match your target Kubernetes environment e.g.
 
 ```bash
-  	docker pull mongo:3.2.9
-  	docker tag mongo:3.2.9 localhost:27017/mongo:3.2.9
+	export KUBECONFIG=$HOME/kubeconfig
 ```
 
 3) Create mongo Deployment and Service
@@ -76,24 +81,33 @@ curl http://localhost:3000/orders?shoppingCart_id=232422&status=SHOPPING_CART
     kubectl create -f orders-mongo-db.yml
 ```
 
-4) Create orders Deployment and Service
+4) Create Deployments and Services
 
 ```bash
+	kubectl create -f orders-mongo-db.yml
 	kubectl create -f orders-ms.yml
+	kubectl create -f product-sub-ms.yml
+```
+Verify pods were created width
+
+```bash
+	kubectl get pods
 ```
 
-5) Get the application URL
+5) 4. To get the external IP Orders Microservice is listening to the following commands:
 
 ```bash
-    minikube service orders-ms --url
+    kubectl get pods -o wide
+```
+ Take note of the "Node" IP for "orders-ms-xxx". Then run the following command to obtain the port:
+
+```bash
+ 	kubectl get services orders-ms
 ```
 
 6) To delete the services (if required)
 
 ```bash
-    kubectl delete deploy orders-mongo-db
-    kubectl delete service orders-mongo-db
-
-    kubectl delete deploy orders-ms
-    kubectl delete service orders-ms
+    kubectl delete deploy <e.g. orders-mongo-db>
+    kubectl delete service <e.g. orders-mongo-db>
 ```

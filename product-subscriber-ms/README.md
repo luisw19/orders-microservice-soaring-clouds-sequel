@@ -9,6 +9,10 @@ https://github.com/gschmutz/product-soaring-clouds-sequel/tree/master/example/no
 
 1) Clone locally all the content of this folder locally
 
+```bash
+	git clone https://github.com/luisw19/orders-microservice-soaring-clouds-sequel.git
+```
+
 2) Make sure Orders MS is up and running (check out following link for instructions on how to start it up: https://github.com/luisw19/orders-microservice-soaring-clouds-sequel/blob/master/README.md)
 
 3) Install kafka-avro:
