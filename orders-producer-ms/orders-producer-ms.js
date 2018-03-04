@@ -2,7 +2,7 @@ var KafkaAvro = require('kafka-avro');
 var avro = require('avsc');
 var fmt = require('bunyan-format');
 var kafkaLog  = KafkaAvro.getLogger();
-var topicName = 'a516817-soaring-order-created-value';
+var topicName = 'a516817-soaring-order-created';
 //Get Kafka infrastructure  details from environment variables
 var kafkaAvro = new KafkaAvro({
     //kafkaBroker: '129.150.77.116:6667',
@@ -76,63 +76,71 @@ kafkaAvro.init()
 				    	    	"color":{"string":"blue"}
 				    	  };*/
                 inOrder = {
-                    "_id": "5a9b9ebb53d65b00116606a6",
-                    "__v": 2,
-                    "order": {
-                        "order_id": "unittest",
-                        "shoppingCart_id": "CUST0001",
-                        "total_price": 68.39,
-                        "_links": {
-                            "self": {
-                                "href": "/orders/unittest"
-                            }
-                        },
-                        "line_items": [
-                            {
-                                "product_id": "AX330T",
-                                "product_name": "Light Brown Men Shoe 1",
-                                "description": "Light Brown Men Shoe 1",
-                                "quantity": 2,
-                                "price": 68.39,
-                                "size": 43,
-                                "weight": 0,
-                                "color": "White",
-                                "sku": "S15T-Flo-RS",
-                                "line_id": 1,
-                                "_id": "5a9b9ec653d65b00116606a7",
-                                "dimensions": {
-                                    "unit": "cm",
-                                    "length": 10.2,
-                                    "height": 10.4,
-                                    "width": 5.4
-                                }
-                            }
-                        ],
-                        "address": [
-                            {
-                                "name": "BILLING",
-                                "line_1": "22",
-                                "line_2": "King street",
-                                "city": "Leamington Spa",
-                                "county": "Warkwickshire",
-                                "postcode": "CV31",
-                                "_id": "5a9b9eca53d65b00116606a8",
-                                "country": "GB"
-                            }
-                        ],
-                        "customer": {
-                            "customer_id": "CUST0001",
-                            "first_name": "Luis",
-                            "last_name": "Weir",
-                            "phone": "+44 (0) 757 5333 777",
-                            "email": "myemail@email.com"
-                        },
-                        "currency": "GBP",
-                        "updated_at": "2018-03-04T07:23:47.008Z",
-                        "created_at": "2018-03-04T07:22:35.718Z",
-                        "status": "SUCCESS"
-                    }
-                }
+                      "_id": "5a9b9ebb53d65b00116606a6",
+                      "__v": 2,
+                      "order": {
+                          "order_id": "unittest",
+                          "shoppingCart_id": "CUST0001",
+                          "total_price": 68.39,
+                          "_links": {
+                              "self": {
+                                  "href": "/orders/unittest"
+                              }
+                          },
+                          "line_items": [
+                              {
+                                  "product_id": "AX330T",
+                                  "product_name": "Light Brown Men Shoe 1",
+                                  "description": "Light Brown Men Shoe 1",
+                                  "quantity": 2,
+                                  "price": 68.39,
+                                  "size": 43,
+                                  "weight": 0,
+                                  "color": "White",
+                                  "sku": "S15T-Flo-RS",
+                                  "line_id": 1,
+                                  "_id": "5a9b9ec653d65b00116606a7",
+                                  "dimensions": {
+                                      "unit": "cm",
+                                      "length": 10.2,
+                                      "height": 10.4,
+                                      "width": 5.4
+                                  }
+                              }
+                          ],
+                          "address": [
+                              {
+                                  "name": "BILLING",
+                                  "line_1": "22",
+                                  "line_2": "King street",
+                                  "city": "Leamington Spa",
+                                  "county": "Warkwickshire",
+                                  "postcode": "CV31",
+                                  "_id": "5a9b9eca53d65b00116606a8",
+                                  "country": "GB"
+                              }
+                          ],
+                          "customer": {
+                              "customer_id": "CUST0001",
+                              "first_name": "Luis",
+                              "last_name": "Weir",
+                              "phone": "+44 (0) 757 5333 777",
+                              "email": "myemail@email.com"
+                          },
+                          "payment": {
+                              "expiry_month": 6,
+                              "expiry_year": 2020,
+                              "start_month": 1,
+                              "start_year": 2018,
+                              "card_number": "**** **** **** 1111",
+                              "card_type": "VISA_CREDIT"
+                          },
+                          "currency": "GBP",
+                          "updated_at": "2018-03-04T09:00:58.984Z",
+                          "created_at": "2018-03-04T07:22:35.718Z",
+                          "status": "SUCCESS"
+                      }
+                  };
 
                 outOrder = {
                     "orderId": inOrder.order.order_id,
@@ -141,10 +149,46 @@ kafkaAvro.init()
                     "createdAt": inOrder.order.created_at,
                     "updatedAt": inOrder.order.updated_at,
                     "totalPrice": inOrder.order.total_price,
-                    "currency": inOrder.order.currency
+                    "currency": inOrder.order.currency,
+                    "payment": {
+                      "cardType": inOrder.order.payment.card_type,
+                      "cardNumber": {"string": inOrder.order.payment.card_number},
+                      "startYear": {"int": inOrder.order.payment.start_year},
+                      "startMonth": {"int": inOrder.order.payment.start_month},
+                      "expiryYear": {"int": inOrder.order.payment.expiry_year},
+                      "expiryMonth": {"int": inOrder.order.payment.expiry_month}
+                    },
+                    "customer": {
+                      "customerId": {"string": inOrder.order.customer.customer_id},
+                      "firstName": {"string": inOrder.order.customer.first_name},
+                      "lastName": {"string": inOrder.order.customer.last_name},
+                      "phone": {"string": inOrder.order.customer.phone},
+                      "email": {"string": inOrder.order.customer.email}
+                    },
+                    "addresses": [
+                      {
+                        "name": {"string": inOrder.order.address[0].name},
+                        "line1": {"string": inOrder.order.address[0].line_1},
+                        "line2": {"string": inOrder.order.address[0].line_2},
+                        "city": {"string": inOrder.order.address[0].city},
+                        "county": {"string": inOrder.order.address[0].county},
+                        "postcode": {"string": inOrder.order.address[0].postcode},
+                        "country": {"string": inOrder.order.address[0].country}
+                      }
+                    ],
+                    "items": [
+                      {
+                        "productId": inOrder.order.line_items[0].product_id,
+                        "productCode": inOrder.order.line_items[0].product_id,
+                        "productName": inOrder.order.line_items[0].product_name,
+                        "description": inOrder.order.line_items[0].description,
+                        "quantity"
+
+                      }
+                    ]
                 };
 
-                console.log(JSON.stringify(outOrder));
+                console.log("Producing Order: " + JSON.stringify(outOrder));
 
       	        //console.log(bufVal);
       	        //var buf = kafkaAvro.serialize(kafkaAvro.sr.valueSchemas[topicName], kafkaAvro.sr.schemaMeta[topicName].id, bufVal);

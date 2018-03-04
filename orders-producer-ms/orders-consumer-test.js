@@ -2,7 +2,7 @@ var KafkaAvro = require('kafka-avro');
 var fmt = require('bunyan-format');
 var kafkaLog  = KafkaAvro.getLogger();
 // Topic Name can be a string, or an array of strings
-var topicName = 'a516817-soaring-order-created-value';
+var topicName = 'a516817-soaring-order-created';
 
 var kafkaAvro = new KafkaAvro({
   //kafkaBroker: '129.150.77.116:6667',

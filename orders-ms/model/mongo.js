@@ -33,6 +33,7 @@ var dimensionsVar = {
 var linesVar = {
   line_id: Number,
   product_id: String,
+  product_code: String,
   product_name: String,
   description: String,
   quantity: Number,

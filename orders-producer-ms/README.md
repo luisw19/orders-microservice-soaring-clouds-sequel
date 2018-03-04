@@ -1,5 +1,5 @@
 # Orders Producer Service
-This service is responsible for producing "order created" events to "topic a516817-soaring-order-created-value".
+This service is responsible for producing "order created" events to "topic a516817-soaring-order-created".
 Events are produced as user completes Orders through the web application.
 
 The code is based on the example from Guido Schmutz:
