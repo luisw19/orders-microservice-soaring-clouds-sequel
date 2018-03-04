@@ -1,0 +1,28 @@
+{
+  "name": "orders-producer-ms",
+  "version": "1.0.0",
+  "description": "This is the Orders Producers Microservice. It will add completed Oders to topic a516817-soaring-order-created-value",
+  "main": "orders-producer-ms",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luisw19/orders-microservice-soaring-clouds-sequel.git"
+  },
+  "keywords": [
+    "Node",
+    "Kafka",
+    "Orders",
+    "a516817-soaring-order-created-value"
+  ],
+  "author": "Luis Weir",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/luisw19/orders-microservice-soaring-clouds-sequel/issues"
+  },
+  "homepage": "https://github.com/luisw19/orders-microservice-soaring-clouds-sequel#readme",
+  "dependencies": {
+    "kafka-avro": "^0.8.1"
+  }
+}
