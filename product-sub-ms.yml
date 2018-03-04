@@ -29,8 +29,8 @@ spec:
           value: orders-ms
         - name: ORDERSAPI_PORT
           value: "3000"
-        #image: localhost:3000/product-sub-ms:0.1.0
-        image: luisw19/product-sub-ms:0.1.0
+        #image: localhost:3000/product-sub-ms:0.1.1
+        image: luisw19/product-sub-ms:0.1.1
         name: product-sub-ms
       restartPolicy: Always
 

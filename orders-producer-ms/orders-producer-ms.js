@@ -179,16 +179,26 @@ kafkaAvro.init()
                     ],
                     "items": [
                       {
-                        "productId": inOrder.order.line_items[0].product_id,
-                        "productCode": inOrder.order.line_items[0].product_id,
-                        "productName": inOrder.order.line_items[0].product_name,
-                        "description": inOrder.order.line_items[0].description,
-                        "quantity":
-
+                        "productId": {"string": inOrder.order.line_items[0].product_id},
+                        "productCode": {"string": inOrder.order.line_items[0].product_code},
+                        "productName": {"string": inOrder.order.line_items[0].product_name},
+                        "description": {"string": inOrder.order.line_items[0].description},
+                        "quantity": {"int": inOrder.order.line_items[0].quantity},
+                        "price": {"double": inOrder.order.line_items[0].price},
+                        "size": {"int": inOrder.order.line_items[0].size},
+                        "weight": {"double": inOrder.order.line_items[0].weight},
+                        "dimension": {
+                          "unit": {"string": inOrder.order.line_items[0].dimensions.unit},
+                          "length": {"double": inOrder.order.line_items[0].dimensions.length},
+                          "height": {"double": inOrder.order.line_items[0].dimensions.height},
+                          "width": {"double": inOrder.order.line_items[0].dimensions.width}
+                        },
+                        "color": {"string": inOrder.order.line_items[0].color},
+                        "sku": {"string": inOrder.order.line_items[0].sku}
                       }
                     ]
                 };
-
+                
                 console.log("Producing Order: " + JSON.stringify(outOrder));
 
       	        //console.log(bufVal);
@@ -215,5 +225,4 @@ kafkaAvro.init()
                     }, 1000);
 
       	    });
-
     });
