@@ -22,6 +22,16 @@ https://github.com/gschmutz/product-soaring-clouds-sequel/tree/master/example/no
 3) Set environment variables as following:
 
 ```bash
-export KAFKA_BROKER=129.150.77.116:6667
-export KAFKA_REGISTRY=http://129.150.114.134:8081
+	export KAFKA_BROKER=129.150.77.116:6667
+	export KAFKA_REGISTRY=http://129.150.114.134:8081
+```
+4) To produce events run:
+
+```bash
+	node orders-producer-ms.js
+```
+5) To consume events run:
+
+```bash
+	node orders-consumer-test.js
 ```
