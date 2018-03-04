@@ -21,7 +21,7 @@ https://community.hortonworks.com/articles/91250/validating-avro-schema-and-json
 ```bash
   java -jar ./avro-tools-1.8.2.jar fromjson --schema-file xx.avsc yy.json > zz.avro
 ```
-for exmaple:
+for example:
 
 ```bash
   java -jar ./avro-tools-1.8.2.jar fromjson --schema-file order-created.avsc order-created.json > order-created.avro
