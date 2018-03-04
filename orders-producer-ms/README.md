@@ -28,10 +28,10 @@ https://github.com/gschmutz/product-soaring-clouds-sequel/tree/master/example/no
 4) To produce events run:
 
 ```bash
-	node orders-producer-ms.js
+	node orders-producer-sample.js
 ```
 5) To consume events run:
 
 ```bash
-	node orders-consumer-test.js
+	node orders-consumer-sample.js
 ```
