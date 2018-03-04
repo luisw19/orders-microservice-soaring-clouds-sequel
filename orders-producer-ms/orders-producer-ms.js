@@ -89,7 +89,8 @@ kafkaAvro.init()
                           },
                           "line_items": [
                               {
-                                  "product_id": "AX330T",
+                                  "product_id": "abbfc4f9-83d5-49ac-9fa5-2909c5dc86e6",
+                                  "product_code": "AX330T",
                                   "product_name": "Light Brown Men Shoe 1",
                                   "description": "Light Brown Men Shoe 1",
                                   "quantity": 2,
@@ -182,7 +183,7 @@ kafkaAvro.init()
                         "productCode": inOrder.order.line_items[0].product_id,
                         "productName": inOrder.order.line_items[0].product_name,
                         "description": inOrder.order.line_items[0].description,
-                        "quantity"
+                        "quantity":
 
                       }
                     ]

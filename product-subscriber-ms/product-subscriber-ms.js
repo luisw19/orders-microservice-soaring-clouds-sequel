@@ -121,7 +121,7 @@ var kafkaAvro = new KafkaAvro({
 // Initiate Kafka Consumer
 kafkaAvro.init()
     .then(function() {
-        console.log('Ready to use');
+        console.log('Ready to consume messages from: ' + topicName);
     });
 
 //create Stream
@@ -184,7 +184,7 @@ kafkaAvro.getConsumer({
               }
             };
 
-            console.log(order);
+            console.log("Ready to create order: " + order);
 
             //Set Order Query
             orderCheck = {
@@ -195,6 +195,7 @@ kafkaAvro.getConsumer({
             //Set Product line item
             productItem = {
             	product_id: message.parsed.product.productId,
+              product_code: message.parsed.product.productCode.string,
             	product_name: message.parsed.product.productName.string,
             	description: message.parsed.product.productName.string,
             	quantity: 2,
@@ -210,8 +211,7 @@ kafkaAvro.getConsumer({
             	color: message.parsed.product.color.string
             };
 
-            //curl to create shopping Cart items and test the code
-            //curl -X POST http://129.150.114.134:8080/shoppingCart -H "Content-Type: application/json" -d '{"sessionId":"abbfc4f9-83d5-49ac-9fa5-2909c5dc86e6","customerId":"232422","currency":"USD","quantity":1,"product":{"productId":"abbfc4f9-83d5-49ac-9fa5-2909c5dc86e6","code":"AX329T","name":"Light Brown Men Shoe 1","imageUrl":"01_men_one.jpg","price":68.39,"size":43,"weight":0.0,"dimension":{"unit":"cm","length":10.2,"height":10.4,"width":5.4},"color":"lightbrown","tags":["tag"],"categories":["men"]}}'
+            console.log("Ready to create order line: " + productItem);
 
             //call function to create or update Shopping Cart
             upsertShoppingCart();
