@@ -1,0 +1,52 @@
+# APP DEPLOYMENT
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: orders-prod-ms
+  name: orders-prod-ms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: orders-prod-ms-exposed
+  template:
+    metadata:
+      labels:
+        run: orders-prod-ms-exposed
+    spec:
+      containers:
+      - args:
+        - node
+        - product-subscriber-ms.js
+        env:
+        - name: KAFKA_BROKER
+          value: 129.150.77.116:6667
+        - name: KAFKA_REGISTRY
+          value: http://129.150.114.134:8081
+        - name: APP_PORT
+          value: "4000"
+        #image: localhost:3000/orders-prod-ms:0.1.1
+        image: luisw19/orders-prod-ms:1.0.0
+        name: orders-prod-ms
+      restartPolicy: Always
+
+---
+
+# APP SERVICE
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: orders-prod-ms
+  name: orders-prod-ms
+spec:
+  ports:
+  - port: 4000
+    protocol: TCP
+    targetPort: 4000
+  selector:
+    run: orders-prod-ms-exposed
+  type: NodePort

@@ -343,11 +343,21 @@ Check the health status of the service
 - result_count: 1 (number, required)
 
 ## Response Metadata (object)
-- error (boolean, required)
+- error: false (boolean, required)
 - message: `success` (string, optional)
 - _links (optional)
     - self
         - href: /orders/unittest (string, required)
+
+## Process Event Metadata (object)
+- error: false (boolean, required)
+- message (required)
+  - report: `message delivery report` (required)
+    - topic: `a516817-soaring-order-created` (string, optional)
+    - partition: 0 (number, optional)
+    - offset: 47 (number, optional)
+    - key: `unittest` (string, optional)
+    - size: 649 (number, optional)
 
 ## Address (object)
 - name (enum, required)
