@@ -27,7 +27,7 @@ spec:
           value: 129.150.77.116:6667
         - name: KAFKA_REGISTRY
           value: http://129.150.114.134:8081
-        image: luisw19/orders-prod-ms:1.0.0
+        image: luisw19/orders-prod-ms:1.0.1
         name: orders-prod-ms
         ports:
         - containerPort: 4000

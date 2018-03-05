@@ -173,7 +173,7 @@ kafkaAvro.getConsumer({
             //set Order Header Details
             order = {
               shoppingCart_id: message.parsed.customerId,
-              currency: message.parsed.priceInCurrency,
+              currency: message.parsed.currency,
               status: orderStatus,
               customer: {
                 customer_id: message.parsed.customerId
