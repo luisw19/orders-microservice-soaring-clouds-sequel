@@ -145,46 +145,6 @@ ONLY FOR INTERNAL USE. Deletes an Order.
 
     + Attributes (Response Metadata)
 
-## Process or Cancel Order [/orders/{order_id}]
-Resources for processing an order or cancelling an existing order.
-
-+ Parameters
-
-    + order_id: `unittest` (string, required)
-
-### Process [POST /orders/{order_id}/process]
-Submits an Order of status = SHOPPING_CART for processing. Several validations will take place
-so if the Order doesn't have all required details, it will error.
-
-+ Request (application/json)
-
-    + Headers
-
-            api-key: 73f1c312-64e1-4069-92d8-0179ac056e90
-
-+ Response 201 (application/json; charset=utf-8)
-
-    + Attributes (Response Metadata)
-
-    ## Process Order [/orders/{order_id}/process]
-
-    + Parameters
-
-        + order_id: `unittest` (string, required)
-
-### Cancel [POST /orders/{order_id}/cancel]
-Cancels an existing Order that has status = SUCCESS
-
-    + Request (application/json)
-
-        + Headers
-
-                api-key: 73f1c312-64e1-4069-92d8-0179ac056e90
-
-    + Response 201 (application/json; charset=utf-8)
-
-        + Attributes (Response Metadata)
-
 ## Add and Remove Line Items [/orders/{order_id}/lines]
 
 + Parameters
@@ -314,6 +274,48 @@ Remove address from an order
 
     + Attributes (Response Metadata)
 
+
+## Process Order [/orders/{order_id}/process]
+Resource for processing an order an existing order.
+
++ Parameters
+
+    + order_id: `unittest` (string, required)
+
+### Process [POST]
+Submits an Order of status = SHOPPING_CART for processing. Several validations will take place
+so if the Order doesn't have all required details, it will error.
+
++ Request (application/json)
+
+    + Headers
+
+            api-key: 73f1c312-64e1-4069-92d8-0179ac056e90
+
++ Response 201 (application/json; charset=utf-8)
+
+    + Attributes (Process Event Metadata)
+
+## Cancel Order [/orders/{order_id}/cancel]
+Resource for cancelling an order an existing order.
+
++ Parameters
+
+    + order_id: `unittest` (string, required)
+
+### Cancel [POST]
+Cancels an existing Order of status = SUCCESS
+
++ Request (application/json)
+
+    + Headers
+
+            api-key: 73f1c312-64e1-4069-92d8-0179ac056e90
+
++ Response 201 (application/json; charset=utf-8)
+
+    + Attributes (Process Event Metadata)
+
 # Group Control Plane
 Control plane resources
 
@@ -352,12 +354,12 @@ Check the health status of the service
 ## Process Event Metadata (object)
 - error: false (boolean, required)
 - message (required)
-  - report: `message delivery report` (required)
-    - topic: `a516817-soaring-order-created` (string, optional)
-    - partition: 0 (number, optional)
-    - offset: 47 (number, optional)
-    - key: `unittest` (string, optional)
-    - size: 649 (number, optional)
+  - message delivery report (required)
+        - topic: `a516817-soaring-order-created` (string, optional)
+        - partition: 0 (number, optional)
+        - offset: 47 (number, optional)
+        - key: `unittest` (string, optional)
+        - size: 649 (number, optional)
 
 ## Address (object)
 - name (enum, required)
