@@ -3,7 +3,7 @@ services:
   product-sub-ms:
       #Image
       #image: localhost/product-sub-ms:0.1.1
-      image: luisw19/product-sub-ms:1.0.0
+      image: luisw19/product-sub-ms:1.0.3
       #Uncomment "build" if you wish to build from source code, otherwise it'll pull from registry
       build: ./product-subscriber-ms
       environment:
@@ -20,7 +20,7 @@ services:
       #image: localhost:3000/orders-ms:0.1.0
       image: luisw19/orders-ms:1.0.0
       #Uncomment "build" if you wish to build from source code, otherwise it'll pull from registry
-      build: .
+      build: ./orders-ms
       environment:
         APP_PORT: 3000
         EVENTAPI_HOST: 'orders-prod-ms'

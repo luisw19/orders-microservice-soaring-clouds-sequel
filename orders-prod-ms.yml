@@ -18,18 +18,19 @@ spec:
     spec:
       containers:
       - args:
-        - node
-        - product-subscriber-ms.js
+        - npm
+        - start
         env:
+        - name: APP_PORT
+          value: "4000"
         - name: KAFKA_BROKER
           value: 129.150.77.116:6667
         - name: KAFKA_REGISTRY
           value: http://129.150.114.134:8081
-        - name: APP_PORT
-          value: "4000"
-        #image: localhost:3000/orders-prod-ms:0.1.1
         image: luisw19/orders-prod-ms:1.0.0
         name: orders-prod-ms
+        ports:
+        - containerPort: 4000
       restartPolicy: Always
 
 ---

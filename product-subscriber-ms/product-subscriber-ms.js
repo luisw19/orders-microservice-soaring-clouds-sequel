@@ -191,15 +191,19 @@ kafkaAvro.getConsumer({
               shoppingCart_id: message.parsed.customerId,
               status: orderStatus
             };
-
+            //if SKU not present set to N/A
+            var skuVal = "";
+            if(message.parsed.product.sku!==undefined){
+              skuVal = message.parsed.product.sku.string;
+            }
             //Set Product line item
             productItem = {
             	product_id: message.parsed.product.productId,
               product_code: message.parsed.product.productCode.string,
             	product_name: message.parsed.product.productName.string,
-            	description: message.parsed.product.productName.string,
-            	quantity: 2,
-            	price: message.parsed.product.price.double,
+            	description: message.parsed.product.description.string,
+            	quantity: message.parsed.quantity,
+            	price: message.parsed.priceInCurrency,
             	size: message.parsed.product.size.int,
             	weight: message.parsed.product.weight.double,
             	dimensions: {
@@ -208,10 +212,11 @@ kafkaAvro.getConsumer({
             		height: message.parsed.product.dimension.height.double,
             		width: message.parsed.product.dimension.width.double,
             	},
-            	color: message.parsed.product.color.string
+            	color: message.parsed.product.color.string,
+              sku: skuVal
             };
 
-            console.log("Ready to create order line: " + productItem);
+            console.log("Ready to create order line: " + JSON.stringify(productItem));
 
             //call function to create or update Shopping Cart
             upsertShoppingCart();

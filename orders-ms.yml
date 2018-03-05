@@ -16,29 +16,23 @@ spec:
       labels:
         run: orders-ms-exposed
     spec:
-      #containers:
-      #- image: localhost:3000/orders-ms:0.1.0
-      #- image: luisw19/orders-ms:1.0.0
-      #  name: orders-ms
-      #  ports:
-      #  - containerPort: 3000
-      #    hostPort: 3000
-      #    protocol: TCP
       containers:
       - args:
         - npm
         - start
         env:
+        - name: APP_PORT
+          value: "3000"
         - name: EVENTAPI_HOST
-          #name of service in orders-prod-ms manifest
           value: orders-prod-ms
         - name: EVENTAPI_PORT
-          value: 4000
-        #image: localhost:3000/orders-prod-ms:0.1.1
+          value: "4000"
         image: luisw19/orders-ms:1.0.0
-        name: orders-ms
+        name: oders-ms
+        ports:
+        - containerPort: 3000
       restartPolicy: Always
-
+      
 ---
 
 # APP SERVICE

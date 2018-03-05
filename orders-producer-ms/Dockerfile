@@ -5,7 +5,6 @@ FROM node:9
 RUN mkdir -p /usr/src/ms
 COPY . /usr/src/ms
 WORKDIR /usr/src/ms
-RUN rm -rf node_modules
 
 #Install kafka-avro dependencies e.g. Cyrus SASL, etc
 RUN apt-get update && apt-get install -y \
