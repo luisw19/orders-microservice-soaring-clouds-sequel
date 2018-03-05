@@ -98,7 +98,8 @@ Returns the details for a specific Order
 
 ### Update Order [PUT]
 Updates only those details which are allowed to be updated.
-At present only Order Status, Payment Details and Customer Details (excluding ID)
+At present only Order Status (excluding SUCCESS and CANCELLED), 
+Payment Details and Customer Details (excluding ID)
 
 + Request (application/json; charset=utf-8)
 
@@ -111,7 +112,6 @@ At present only Order Status, Payment Details and Customer Details (excluding ID
     + Body
 
             {
-                "status":"PROCESSING",
                 "customer": {
                     "first_name": "Luis",
                     "last_name": "Weir",
@@ -166,6 +166,7 @@ Add an individual line item.
 
             {
                 "product_id": "AX330T",
+                "product_code": "abbfc4f9-83d5-49ac-9fa5-2909c5dc86e6",
                 "product_name": "Light Brown Men Shoe 1",
                 "description": "Light Brown Men Shoe 1",
                 "quantity": 2,
