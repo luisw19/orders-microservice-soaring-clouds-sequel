@@ -4,25 +4,28 @@ var app         =   express();
 var bodyParser  =   require("body-parser");
 var mongoOp     =   require("./model/mongo");
 var router      =   express.Router();
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({"extended" : false}));
-
+var querystring = require('querystring');
 var PORT = process.env.APP_PORT || 3000;
 var APP_VERSION = "1.0.0";
 var APP_NAME = "OrdersMS";
-
+//Set variables for calling the Event Producer API
+var http = require('http');
+var apiHost = process.env.EVENTAPI_HOST || "localhost";
+var apiPort = process.env.EVENTAPI_PORT || 4000;
+//Set Body Parser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({"extended" : false}));
+//Log status
 console.log("Running " + APP_NAME + " version: " + APP_VERSION);
 
+////////////////////////////////////////////////////////////////
+// REST endpoints
+////////////////////////////////////////////////////////////////
+//Healthcheck endpoint
 router.get('/health', function (req, res) {
     var response = { "status": "OK", "uptime": process.uptime(),"version": APP_VERSION };
     res.json(response);
 });
-
-////////////////////////////////
-//route() will allow you to use same path for different HTTP operation.
-//So if you have same URL but with different HTTP OP such as POST,GET etc
-//Then use route() to remove redundant code./
 
 ////////////////////////////////
 //search and create oders
@@ -85,40 +88,55 @@ router.route("/orders")
         //console.log(req.body);
         db.order = req.body;
 
-        //Order Address, Payment, and Line arrays should be empty
-        db.order.address = [];
-        db.order.payment = {};
-        db.order.line_items = [];
+        //Validation that minimun details required are present
+        var valError = "";
+        var validation = true;
+        if(db.order.currency==undefined){
+          valError = valError + " currency";
+          validation = false;
+        }
+        if(db.order.customer.customer_id==undefined){
+          valError = valError + " customer_id";
+          validation = false;
+        }else{
+          //set shopping cart ID to same as the customer id
+          db.order.shoppingCart_id=db.order.customer.customer_id;
+        }
+        //if validation fails, then prepare error message
+        if(!validation){
+          response = {"error" : true,"message" : "Following details missing: " + valError};
+        }
 
         //create random order id
         var order_id = Math.random().toString(36).substr(2, 9);
-
+        //replace order ID if it's a testing agent (Postman or Dredd)
         if(req.headers['user-agent']!==undefined){
           //Get HTTP Header user-agent
           var header = req.headers['user-agent'];
           //console.log(JSON.stringify(req.headers));
-
           //If user-agent is dredd (meaning is a dredd test), use pre-defined ID
           if(header.includes("Dredd")){
               //create random order_id
               order_id = "unittest";
           }
-
           //If user-agent is postman (meaning is a postman test), use pre-defined ID
           if(header.includes("Postman")){
               //create random order_id
               order_id = "unittest";
           }
         }
-
         //set the id
         db.order.order_id = order_id;
-
+        //Order Address, Payment, and Line arrays should be empty
+        db.order.address = [];
+        db.order.payment = {};
+        db.order.line_items = [];
+        //When creating order for first time status must always be SHOPPING_CART
+        db.order.status="SHOPPING_CART";
         //set dates (for some reasons if left to default it won't query properly)
         var now = new Date();
         db.order.created_at = now.toJSON();
-        db.order.updated_at = now.toJSON();
-
+        db.order.updated_at = now.toJSON()
         //set HATEOAS. Note that it's more performing to store it than creating it at runtime... but it has cons!
         db.order._links = {
             self: {
@@ -126,22 +144,27 @@ router.route("/orders")
             }
         };
 
-        //save the data
-        db.save(function(err){
-        // save() will run insert() command of MongoDB.
-        // it will add new data in collection.
-            if(err) {
-                console.log(err);
-                response = {"error" : true,"message" : "Error adding data"};
-            } else {
-                response = {
-                  "error" : false,
-                  "message" : "Created order: " + order_id,
-                  "_links" : db.order._links};
-            }
-            res.statusCode = 201;
-            res.json(response);
-        });
+        //save the data if no errors in validation
+        if(validation){
+          db.save(function(err){
+          // save() will run insert() command of MongoDB.
+          // it will add new data in collection.
+              if(err) {
+                  console.log(err);
+                  response = {"error" : true,"message" : "Error adding data"};
+              } else {
+                  response = {
+                    "error" : false,
+                    "message" : "Created order: " + order_id,
+                    "_links" : db.order._links};
+              }
+              res.statusCode = 201;
+              res.json(response);
+          });
+        }else{
+          //send error back
+          res.json(response);
+        }
   });
 ////////////////////////////////
 
@@ -193,35 +216,84 @@ router.route("/orders/:id")
             if(req.body !== undefined) {
               //get the updated Order paylaod
               var updatedOrder = req.body;
-
-              //** Should add validation here **//
-
               //Update only fields that are allowed to be updated
-              //Update Order status
-              if(updatedOrder.status!==undefined){
-                data.order.status = updatedOrder.status;
-              }
-
+              //if validation = false it means there has been an error
+              var validation = true;
               //Update Payment Details
               if(updatedOrder.payment!==undefined){
-                data.order.payment = updatedOrder.payment;
+                //Card validation logic
+                var cardError = "";
+                var cardValidation = true;
+                if(updatedOrder.payment.card_type==undefined){
+                  cardError = cardError+ " card_type";
+                  cardValidation = false;
+                }
+                if(updatedOrder.payment.card_number==undefined){
+                  cardError = cardError+ " card_number";
+                  cardValidation = false;
+                }
+                if(updatedOrder.payment.expiry_year==undefined){
+                  cardError = cardError+ " expiry_year";
+                  cardValidation = false;
+                }
+                if(updatedOrder.payment.expiry_month==undefined){
+                  cardError = cardError+ " expiry_month";
+                  cardValidation = false;
+                }
+                //if any errors then set validation to false and prepare error message
+                if(cardValidation){
+                  data.order.payment = updatedOrder.payment;
+                }else {
+                  response = {"error" : true,"message" : "Invalid card details: " + cardError};
+                  validation = false;
+                }
               }else{
                 data.order.payment = {};
+              }
+
+              //Update Customer Details
+              if(updatedOrder.customer!==undefined){
+                if(updatedOrder.customer.first_name!==undefined){
+                  data.order.customer.first_name = updatedOrder.customer.first_name;
+                }
+                if(updatedOrder.customer.last_name!==undefined){
+                  data.order.customer.last_name = updatedOrder.customer.last_name;
+                }
+                if(updatedOrder.customer.phone!==undefined){
+                  data.order.customer.phone = updatedOrder.customer.phone;
+                }
+                if(updatedOrder.customer.email!==undefined){
+                  data.order.customer.email = updatedOrder.customer.email;
+                }
+              }
+
+              //Update Order status
+              if(updatedOrder.status!==undefined){
+                //If changed status to success then
+                if(updatedOrder.status==="SUCCESS"){
+                  //respond with error as only /orders/{orderId}/process can change status to success
+                  response = {"error" : true,"message" : "Changing Order Status to SUCCESS not allowed"};
+                  validation = false;
+                }
+                data.order.status = updatedOrder.status;
               }
 
               //update updated date
               var now = new Date();
               data.order.updated_at = now.toJSON();
-
-              //save the data
-              data.save(function(err){
-                if(err) {
-                  response = {"error" : true,"message" : "Error updating order"};
-                } else {
-                  response = {"error" : false,"message" : "Order " + req.params.id + " has been updated"};
-                }
+              //save the data if validation is ok (true)
+              if(validation){
+                data.save(function(err){
+                  if(err) {
+                    response = {"error" : true,"message" : "Error updating order"};
+                  } else {
+                    response = {"error" : false,"message" : "Order " + req.params.id + " has been updated"};
+                  }
+                  res.json(response);
+                })
+              }else {
                 res.json(response);
-              })
+              }
             }else{
               response = {"error" : false,"message" : "No payload"};
             }
@@ -322,7 +394,7 @@ router.route("/orders/:id/lines")
                 //console.log("Count: " + data.order.line_items[count]);
                 data.order.line_items[count].line_id = count + 1;
                 //sum up all totals
-                totalPrice = totalPrice + data.order.line_items[count].price;
+                totalPrice = totalPrice + (data.order.line_items[count].price * data.order.line_items[count].quantity);
               }
 
               //update total totalPrice
@@ -354,6 +426,72 @@ router.route("/orders/:id/lines")
 ////////////////////////////////
 //Remove order line items
 router.route("/orders/:id/lines/:lineid")
+  //Update quantity of an order line
+  .put(function(req,res){
+    var response = {};
+
+    //create query to check if order exists
+    var query = mongoOp.findOne({ 'order.order_id': req.params.id });
+
+    //execute the query to check that order exists before deleting
+    query.exec(function (err, data) {
+      if(err) {
+        //error fetching data
+        response = {"error" : true,"message" : "Error fetching data"};
+      } else {
+        if(data){
+          //Update line item
+          console.log("Line item to be updated: " + JSON.stringify(data.order.line_items[req.params.lineid - 1]) );
+          if(data.order.line_items[req.params.lineid - 1] !== undefined){
+
+            //Validation that minimun details required are present
+            var validation = true;
+            // update quantity
+            if(req.body.quantity<=0){
+              response = {"error" : true,"message" : "Error updating line item. Quantity must be greater than 0"};
+              validation = false;
+            }else {
+              data.order.line_items[req.params.lineid - 1].quantity = req.body.quantity;
+              //Re-calculate total price by summing up all lines
+              var totalLines = data.order.line_items.length;
+              var totalPrice = 0;
+              //Loop through all order lines and reset  the ids and recalculate total
+              for (var count = 0; count < totalLines; count++) {
+                //console.log("Count: " + data.order.line_items[count]);
+                data.order.line_items[count].line_id = count + 1;
+                //sum up all totals
+                totalPrice = totalPrice + (data.order.line_items[count].price * data.order.line_items[count].quantity);
+              }
+              data.order.total_price = totalPrice;
+            }
+            //update order if no errors in validation
+            if(validation){
+              //save the data
+              data.save(function(err){
+                if(err) {
+                  response = {"error" : true,"message" : "Error updating line item"};
+                } else {
+                  response = {"error" : false,"message" : "Line item " + req.params.lineid + " has been updated in order "+ req.params.id};
+                }
+                res.json(response);
+              })
+            }else{
+              res.json(response);
+            }
+          }else{
+            //Line item doesn't exist
+            response = {"error" : true,"message" : "Line item " + req.params.lineid + " does not exist in order "+ req.params.id};
+            res.json(response);
+          }
+        }else{
+          //order doesn't exist
+          response = {"error" : true,"message" : "Order " + req.params.id + " does not exists"};
+          res.json(response);
+        }
+      }
+    });
+  })
+
   //Delete an order line that matches the ID
   .delete(function(req,res){
     var response = {};
@@ -383,7 +521,7 @@ router.route("/orders/:id/lines/:lineid")
                 //console.log("Count: " + data.order.line_items[count]);
                 data.order.line_items[count].line_id = count + 1;
                 //sum up all totals
-                totalPrice = totalPrice + data.order.line_items[count].price;
+                totalPrice = totalPrice + (data.order.line_items[count].price * data.order.line_items[count].quantity);
               }
             }
 
@@ -516,7 +654,7 @@ router.route("/orders/:id/address/:name")
           //console.log("Address lines: " + totalAddressLines);
           response = {"error" : true,"message" : removeAddressName + " address not found in order "+ req.params.id}
           var foundCount = -1;
-          //Loop through all order lines and reset  the ids
+          //Loop through all address lines and reset  the ids
           for (var count = 0; count < totalAddressLines; count++) {
             //check if address exists
             if(data.order.address[count].name === removeAddressName){
@@ -557,6 +695,206 @@ router.route("/orders/:id/address/:name")
 ////////////////////////////////
 
 ////////////////////////////////
+//Process order and update status to success
+router.route("/orders/:id/process")
+
+  .post(function(req,res){
+
+    var response = {};
+    var metadata = {};
+    var query = {};
+    //validation variables. Set to false if issues found
+    var validation = true;
+    //to capture error messages during validation
+    var valError = "";
+    //construct query
+    query['order.order_id'] = req.params.id;
+    query['order.status'] = "SHOPPING_CART";
+
+    // Mongo command to fetch all data from collection.
+    mongoOp.findOne(query,function(err,data){
+      if(err) {
+          response = {"error" : true, "message" : "Error fetching data"};
+          validation = false;
+      } else {
+        //response metadata
+        if(data == null){
+          response = {"error" : true, "message" : "No Shopping Cart Order found with id: " + req.params.id};
+          validation = false;
+        }
+      }
+      ////////////////////////////////
+      //Order detail validations
+      ////////////////////////////////
+      if(validation){
+        //Validate customer details
+        if(data.order.customer!==undefined){
+          if(data.order.customer.customer_id==undefined){
+            valError = valError + " customer.customer_id";
+            validation = false;
+          }
+          if(data.order.customer.first_name==undefined){
+            valError = valError + " customer.first_name";
+            validation = false;
+          }
+          if(data.order.customer.last_name==undefined){
+            valError = valError + " customer.last_name";
+            validation = false;
+          }
+          if(data.order.customer.phone==undefined){
+            valError = valError + " customer.phone";
+            validation = false;
+          }
+          if(data.order.customer.email==undefined){
+            valError = valError + " customer.email";
+            validation = false;
+          }
+        }else{
+          valError = valError + " customer[]";
+          validation = false;
+        }
+
+        //Validate payment details
+        if(data.order.payment!==undefined){
+          if(data.order.payment.card_type==undefined){
+            valError = valError + " payment.card_type";
+            validation = false;
+          }
+          if(data.order.payment.card_number==undefined){
+            valError = valError + " payment.card_number";
+            validation = false;
+          }
+          if(data.order.payment.expiry_year==undefined){
+            valError = valError + " payment.expiry_year";
+            validation = false;
+          }
+          if(data.order.payment.expiry_month==undefined){
+            valError = valError + " payment.expiry_month";
+            validation = false;
+          }
+        }else{
+          valError = valError + " payment[]";
+          validation = false;
+        }
+
+        //Validate address details
+        if(data.order.address.length>0){
+          //Loop through all address lines and validate
+          for (var count = 0; count < data.order.address.length; count++) {
+            if(data.order.address[count].line_1==undefined){
+              valError = valError + " address[" + count + "].line_1";
+              validation = false;
+            }
+            if(data.order.address[count].postcode==undefined){
+              valError = valError + " address[" + count + "].postcode";
+              validation = false;
+            }
+            if(data.order.address[count].country==undefined){
+              valError = valError + " address[" + count + "].country";
+              validation = false;
+            }
+          }
+        }else{
+          valError = valError + " address[]";
+          validation = false;
+        }
+
+        //Validate product line details
+        if(data.order.line_items.length>0){
+          //Loop through all product lines and validate
+          for (var count = 0; count < data.order.line_items.length; count++) {
+            if(data.order.line_items[count].product_id==undefined){
+              valError = valError + " line_items[" + count + "].product_id";
+              validation = false;
+            }
+            if(data.order.line_items[count].product_code==undefined){
+              valError = valError + " line_items[" + count + "].product_code";
+              validation = false;
+            }
+            if(data.order.line_items[count].product_name==undefined){
+              valError = valError + " line_items[" + count + "].product_name";
+              validation = false;
+            }
+            if(data.order.line_items[count].description==undefined){
+              valError = valError + " line_items[" + count + "].description";
+              validation = false;
+            }
+            if(data.order.line_items[count].product_id==undefined){
+              valError = valError + " line_items[" + count + "].product_id";
+              validation = false;
+            }
+            if(data.order.line_items[count].quantity==undefined){
+              valError = valError + " line_items[" + count + "].quantity";
+              validation = false;
+            }
+            if(data.order.line_items[count].price==undefined){
+              valError = valError + " line_items[" + count + "].price";
+              validation = false;
+            }
+            if(data.order.line_items[count].size==undefined){
+              valError = valError + " line_items[" + count + "].size";
+              validation = false;
+            }
+            if(data.order.line_items[count].product_id==undefined){
+              valError = valError + " line_items[" + count + "].product_id";
+              validation = false;
+            }
+            if(data.order.line_items[count].weight==undefined){
+              valError = valError + " line_items[" + count + "].weight";
+              validation = false;
+            }
+            if(data.order.line_items[count].color==undefined){
+              valError = valError + " line_items[" + count + "].color";
+              validation = false;
+            }
+            if(data.order.line_items[count].sku==undefined){
+              valError = valError + " line_items[" + count + "].sku";
+              validation = false;
+            }
+            if(data.order.line_items[count].dimensions.unit==undefined){
+              valError = valError + " line_items[" + count + "].dimensions.unit";
+              validation = false;
+            }
+            if(data.order.line_items[count].dimensions.length==undefined){
+              valError = valError + " line_items[" + count + "].dimensions.length";
+              validation = false;
+            }
+            if(data.order.line_items[count].dimensions.height==undefined){
+              valError = valError + " line_items[" + count + "].dimensions.height";
+              validation = false;
+            }
+            if(data.order.line_items[count].dimensions.width==undefined){
+              valError = valError + " line_items[" + count + "].dimensions.width";
+              validation = false;
+            }
+          }
+        }else{
+          valError = valError + " line_items[]";
+          validation = false;
+        }
+
+        //prepare response
+        response = {"error" : true, "message" : "Could not process Order '" + req.params.id + "' as the following details are missing: " + valError};
+      }
+      ////////////////////////////////
+      ////////////////////////////////
+      //if no errors call API to process event
+      if(validation){
+        console.log("processing order: " + req.params.id);
+        performRequest("/order-event", "POST", data, function(response) {
+          res.json(response);
+        });
+      }else {
+        //Response
+        res.json(response);
+      }
+    });
+
+  })
+
+////////////////////////////////
+
+////////////////////////////////
 //methods to delete by system id
 router.route("/orders/systemid/:id")
 
@@ -583,7 +921,65 @@ router.route("/orders/systemid/:id")
     });
 ////////////////////////////////
 
-app.use('/',router);
+////////////////////////////////////////////////////////////////
+// Function to make REST Calls
+////////////////////////////////////////////////////////////////
+function performRequest(uri, method, data, response) {
 
+  //set header for use in verts <> GET
+  var headers = {};
+  //convert JSON object to string
+  var dataString = JSON.stringify(data);
+  console.log(dataString);
+  //If method is GET then convert data to query string and add to URI
+  if (method == 'GET') {
+    uri += '?' + querystring.stringify(data);
+    headers = {
+      'Content-Type': 'text/plain',
+      'Content-Length': dataString.length
+    };
+  } else {
+    headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Content-Length': dataString.length
+    };
+  }
+
+  //set the call properties
+  var options = {
+    host: apiHost,
+    port: apiPort,
+    path: uri,
+    method: method,
+    headers: headers
+  };
+  //log
+  console.log("performing the folowing call: "+ JSON.stringify(options));
+  //make the HTTP call
+  var req = http.request(options, function(res) {
+
+    res.setEncoding('utf-8');
+    var responseString = '';
+
+    res.on('data', function(data) {
+      responseString += data;
+    });
+
+    res.on('end', function() {
+      //capture response
+      var responseObject = JSON.parse(responseString);
+      response(responseObject);
+    });
+  });
+
+  req.write(dataString);
+  req.end();
+}
+
+
+////////////////////////////////////////////////////////////////
+// Start the server
+////////////////////////////////////////////////////////////////
+app.use('/',router);
 app.listen(PORT);
 console.log("Listening to PORT " + PORT);

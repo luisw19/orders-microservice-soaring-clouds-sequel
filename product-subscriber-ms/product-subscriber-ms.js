@@ -88,7 +88,7 @@ function upsertShoppingCart() {
     if(response.metadata.result_count==0){
       //Step 2, if it doesn't exist create the shopping basket
       performRequest("/orders", "POST", order, function(response) {
-        console.log('screateOrder response: ' + JSON.stringify(response));
+        console.log('createOrder response: ' + JSON.stringify(response));
         //get Hateoas link from result of creating the order
         href = response._links.self.href;
         addProductItem(href);

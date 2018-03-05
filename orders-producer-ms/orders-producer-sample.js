@@ -43,6 +43,7 @@ kafkaAvro.init()
 
                 producer.on('delivery-report', function (err, report) {
                     console.log('in delivery report');
+                    //Increase counter for setInterval()
                     counter++;
                     if (err) {
                         console.error('error occurred: ' + err);
@@ -58,27 +59,7 @@ kafkaAvro.init()
                     'request.required.acks': 1
                 });
 
-      	        //console.log(kafkaAvro.sr);
-
-      	        /*var val =  {
-				    	    "productId": '3e0c63c4-956a-4378-8a6d-2de636d191de',
-				    	    "productCode": {"string":"abc"},
-				    	    "productName": {"string":'productName'},
-				    	    "description": {"string":"this is the description"},
-				    	    "imageUrl": {"string":"imageUrl"},
-				    	    "price": {"double":12.22},
-				    	    "size": {"int":44},
-				    	    "weight": {"double":2.2},
-				    	    "categories": ["sport","men"],
-				    	    "tags": ["tag1","tag2"],
-				    	    "dimension": {
-				    	    		"unit": {"string" :"cm"},
-				    	    		"length": {"double" :12.2},
-				    	    		"height": {"double":2.3},
-				    	    		"width": {"double":3.4}
-				    	    },
-				    	    	"color":{"string":"blue"}
-				    	  };*/
+                //Sample order
                 inOrder = {
                       "_id": "5a9b9ebb53d65b00116606a6",
                       "__v": 2,
@@ -209,12 +190,7 @@ kafkaAvro.init()
 
                 console.log("Producing Order: " + JSON.stringify(outOrder));
 
-      	        //console.log(bufVal);
-      	        //var buf = kafkaAvro.serialize(kafkaAvro.sr.valueSchemas[topicName], kafkaAvro.sr.schemaMeta[topicName].id, bufVal);
-      	        //var type =  avro.parse(kafkaAvro.sr.valueSchemas[topicName], {wrapUnions: true});
-      	        // clone would do the cohercing of the message
-      	        //var output = type.clone(bufVal, {wrapUnions: true});
-
+                //Set key to Oder Id
       	        var key = outOrder.orderId;
                 // if partition is set to -1, librdkafka will use the default partitioner
       	        var partition = -1;
