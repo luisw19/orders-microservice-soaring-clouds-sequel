@@ -67,16 +67,9 @@ Creates an Order.
     + Body
 
             {
-              "shoppingCart_id": "CUST0001",
-              "total_price": 0,
               "currency":"GBP",
-              "status":"SHOPPING_CART",
               "customer":{
-                "customer_id":"CUST0001",
-                "first_name":"Luis",
-                "last_name":"Weir",
-                "phone":"+44 (0) 757 5333 777",
-                "email":"myemail@email.com"
+                "customer_id":"CUST0001"
               }
             }
 
@@ -105,7 +98,7 @@ Returns the details for a specific Order
 
 ### Update Order [PUT]
 Updates only those details which are allowed to be updated.
-At present only Order Status and Payment Detailsadd
+At present only Order Status, Payment Details and Customer Details (excluding ID)
 
 + Request (application/json; charset=utf-8)
 
@@ -119,6 +112,12 @@ At present only Order Status and Payment Detailsadd
 
             {
                 "status":"PROCESSING",
+                "customer": {
+                    "first_name": "Luis",
+                    "last_name": "Weir",
+                    "phone": "+44 (0) 757 5333 777",
+                    "email": "myemail@email.com"
+                },
                 "payment": {
                     "card_type": "VISA_CREDIT",
                     "card_number": "**** **** **** 1111",
@@ -145,6 +144,27 @@ ONLY FOR INTERNAL USE. Deletes an Order.
 + Response 200 (application/json; charset=utf-8)
 
     + Attributes (Response Metadata)
+
+## Process Order [/orders/{order_id}/process]
+
++ Parameters
+
+    + order_id: `unittest` (string, required)
+
+### Process [POST]
+Submits an Order of status = SHOPPING_CART for processing. Several validations will take place
+so if the Order doesn't have all required details, it will error.
+
++ Request (application/json)
+
+    + Headers
+
+            api-key: 73f1c312-64e1-4069-92d8-0179ac056e90
+
++ Response 201 (application/json; charset=utf-8)
+
+    + Attributes (Response Metadata)
+
 
 ## Add and Remove Line Items [/orders/{order_id}/lines]
 
@@ -184,6 +204,27 @@ Add an individual line item.
             }
 
 + Response 201 (application/json; charset=utf-8)
+
+    + Attributes (Response Metadata)
+
+### Update Line Item [PUT /orders/{order_id}/lines/{line_id}]
+Update the quantity of an individual line item.
+
++ Request (application/json; charset=utf-8)
+
+    + Headers
+
+            api-key: 73f1c312-64e1-4069-92d8-0179ac056e90
+
+    + Attributes (Order Lines)
+
+    + Body
+
+            {
+                "quantity": 2
+            }
+
++ Response 200 (application/json; charset=utf-8)
 
     + Attributes (Response Metadata)
 
