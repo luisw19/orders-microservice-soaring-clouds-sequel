@@ -145,13 +145,14 @@ ONLY FOR INTERNAL USE. Deletes an Order.
 
     + Attributes (Response Metadata)
 
-## Process Order [/orders/{order_id}/process]
+## Process or Cancel Order [/orders/{order_id}]
+Resources for processing an order or cancelling an existing order.
 
 + Parameters
 
     + order_id: `unittest` (string, required)
 
-### Process [POST]
+### Process [POST /orders/{order_id}/process]
 Submits an Order of status = SHOPPING_CART for processing. Several validations will take place
 so if the Order doesn't have all required details, it will error.
 
@@ -165,6 +166,24 @@ so if the Order doesn't have all required details, it will error.
 
     + Attributes (Response Metadata)
 
+    ## Process Order [/orders/{order_id}/process]
+
+    + Parameters
+
+        + order_id: `unittest` (string, required)
+
+### Cancel [POST /orders/{order_id}/cancel]
+Cancels an existing Order that has status = SUCCESS
+
+    + Request (application/json)
+
+        + Headers
+
+                api-key: 73f1c312-64e1-4069-92d8-0179ac056e90
+
+    + Response 201 (application/json; charset=utf-8)
+
+        + Attributes (Response Metadata)
 
 ## Add and Remove Line Items [/orders/{order_id}/lines]
 
@@ -312,7 +331,6 @@ Check the health status of the service
 + Response 200 (application/json; charset=utf-8)
 
     + Attributes (Health Metadata)
-
 
 # Data Structures
 

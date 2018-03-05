@@ -18,9 +18,13 @@ services:
   oders-ms:
       #Image
       #image: localhost:3000/orders-ms:0.1.0
-      image: luisw19/orders-ms:0.1.0
+      image: luisw19/orders-ms:0.1.1
       #Uncomment "build" if you wish to build from source code, otherwise it'll pull from registry
       build: .
+      environment:
+        APP_PORT: 3000
+        EVENTAPI_HOST: 'orders-producer'
+        EVENTAPI_PORT: 4000
       depends_on:
         - orders-mongo-db
       ports:
@@ -28,6 +32,21 @@ services:
       command: npm start
       links:
         - orders-mongo-db
+        - orders-producer
+
+  orders-producer:
+      #Image
+      #image: localhost/product-sub-ms:0.1.1
+      image: luisw19/orders-prod-ms:0.1.0
+      #Uncomment "build" if you wish to build from source code, otherwise it'll pull from registry
+      build: ./orders-producer-ms
+      environment:
+        APP_PORT: 4000
+        KAFKA_BROKER: '129.150.77.116:6667'
+        KAFKA_REGISTRY: 'http://129.150.114.134:8081'
+      ports:
+            - "4000:4000"
+      command: node product-subscriber-ms.js
 
   orders-mongo-db:
       image: mongo:3.2.9

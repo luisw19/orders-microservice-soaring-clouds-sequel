@@ -880,18 +880,73 @@ router.route("/orders/:id/process")
       ////////////////////////////////
       //if no errors call API to process event
       if(validation){
+        data.order.status="SUCCESS";
         console.log("processing order: " + req.params.id);
         performRequest("/order-event", "POST", data, function(response) {
-          res.json(response);
+          data.save(function(err){
+            if(err) {
+              response = {"error" : true,"message" : "Error updating order"};
+            }
+            res.json(response);
+          })
         });
       }else {
         //Response
         res.json(response);
       }
     });
-
   })
+////////////////////////////////
 
+////////////////////////////////
+//Cancel an existing order that has satus=SUCCESS
+router.route("/orders/:id/cancel")
+
+  .post(function(req,res){
+
+    var response = {};
+    var metadata = {};
+    var query = {};
+    //validation variables. Set to false if issues found
+    var validation = true;
+    //to capture error messages during validation
+    var valError = "";
+    //construct query
+    query['order.order_id'] = req.params.id;
+    query['order.status'] = "SUCCESS";
+
+    // Mongo command to fetch all data from collection.
+    mongoOp.findOne(query,function(err,data){
+      if(err) {
+          response = {"error" : true, "message" : "Error fetching data"};
+          validation = false;
+      } else {
+        //response metadata
+        if(data == null){
+          response = {"error" : true, "message" : "No Success Order found with id: " + req.params.id};
+          validation = false;
+        }
+      }
+
+      ////////////////////////////////
+      //if no errors call API to process event
+      if(validation){
+        data.order.status="CANCELED";
+        console.log("processing order: " + req.params.id);
+        performRequest("/order-event?type=canceled", "POST", data, function(response) {
+          data.save(function(err){
+            if(err) {
+              response = {"error" : true,"message" : "Error updating order"};
+            }
+            res.json(response);
+          })
+        });
+      }else {
+        //Response
+        res.json(response);
+      }
+    });
+  })
 ////////////////////////////////
 
 ////////////////////////////////
