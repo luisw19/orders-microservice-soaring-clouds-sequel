@@ -135,6 +135,20 @@
             ]
           },
           {
+            "name": "loyaltyLevel",
+            "type": {
+              "type": "enum",
+              "name": "loyaltyLevelEnum",
+              "doc": "Loyalty level of the IF customer has a Loyalty Account",
+              "symbols": [
+                "NONE",
+                "BRONZE",
+                "SILVER",
+                "GOLD"
+              ]
+            }
+          },
+          {
             "name": "firstName",
             "type": [
               "string",
@@ -165,6 +179,84 @@
         ]
       },
       "doc": ""
+    },
+    {
+      "name": "shipping",
+      "type": {
+        "type": "record",
+        "name": "Shipping",
+        "fields": [
+          {
+            "name": "firstName",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          {
+            "name": "lastName",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          {
+            "name": "shippingMethod",
+            "type": {
+              "type": "enum",
+              "name": "shippingMethodEnum",
+              "doc": "Shipping methods supported",
+              "symbols": [
+                "ECONOMY",
+                "PREMIUM"
+              ]
+            }
+          },
+          {
+            "name": "price",
+            "type": [
+              "double",
+              "null"
+            ],
+            "doc": "Target/estimated delivery date"
+          },
+          {
+            "name": "ETA",
+            "type": "string",
+            "doc": "Target/estimated delivery date"
+          }
+        ]
+      }
+    },
+    {
+      "name": "specialDetails",
+      "type": {
+        "type": "record",
+        "name": "specialDetails",
+        "fields": [
+          {
+            "name": "personalMessage",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          {
+            "name": "giftWrapping",
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          {
+            "name": "deliveryNotes",
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "addresses",
