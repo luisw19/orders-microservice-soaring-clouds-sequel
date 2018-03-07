@@ -401,12 +401,18 @@ Check the health status of the service
 
 ## Customer (object)
 - customer_id: `CUST0001` (string, required)
+- loyalty_level (enum, required) - Loyalty level of the IF customer has a Loyalty Account
+  - `NONE` (string) - Customer doesn't have a loyalty account
+  - `BRONZE` (string) - If Bronze customer will get 2% discount
+  - `SILVER` (string) - If Bronze customer will get 3% discount
+  - `GOLD` (string) - If Bronze customer will get 5% discount
 - first_name: `Luis` (string, required)
 - last_name: `Weir` (string, required)
 - phone: `+44 (0) 757 5333 777` (string, optional)
 - email: `myemail@email.com` (string, required)
 
 ## Payment (object)
+- customer_id: `CUST0001` (string, required)
 - card_type (enum, required) - Credit card payment methods supported
   - `VISA_CREDIT` (string)
   - `VISA_DEBIT` (string)
@@ -418,6 +424,20 @@ Check the health status of the service
 - start_month: 1 (number, required) - Credit Card issue month
 - expiry_year: 2020 (number, required) - Credit Card expiry year
 - expiry_month: 6 (number, required) - Credit Card expiry month
+
+## Shipping Details (object)
+- first_name: `Lucas` (string, required)
+- last_name: `Jellema` (string, required)
+- shipping_method (enum, required) - Shipping methods supported
+  - `ECONOMY` (string) -  Reduced cost Shipping Method
+  - `PREMIUM` (string) - Fast delivery method
+- price: 0.0 (number, required) - Price for the shippping depending on the method
+- ETA: `2018-06-05T07:11:00.000Z` (string, optional) - Target/estimated delivery date
+
+## Special Details (object)
+- personal_message: `From Luis with Love!` (string, required) - Special message on delivery
+- gift_wrapping: true (boolean, required) - Whether or not the order items should be gift-wrapped
+- delivery_notes: `Please try to arrive in the morning` (string, required) - Any delivery notes
 
 ## Order (object)
 - order_id: `unittest` (string, optional) - System generated Order ID
@@ -432,6 +452,7 @@ Check the health status of the service
 - created_at: `2018-02-05T07:17:00.442Z` (string, optional)
 - updated_at: `2018-02-05T07:17:00.442Z` (string, optional)
 - total_price: 100 (number, optional)
+- discount: 0 (number, optional) - discount level based on loyalty or something else.
 - currency (enum, optional)
   - `GBP` (string) - British Pounds
   - `USD` (string) - US Dollars
@@ -439,6 +460,8 @@ Check the health status of the service
 - payment (Payment, optional)
 - customer (Customer, optional)
 - address (array[Address], optional)
+- shippping (Shipping Details, optional)
+- special_details (Special Details, optional)
 - line_items (array[Order Lines], optional)
 - _links (optional)
     - self
