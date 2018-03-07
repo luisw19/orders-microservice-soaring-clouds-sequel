@@ -28,6 +28,7 @@
 		"customerId": {
 			"string": "CUST0001"
 		},
+		"loyaltyLevel": "GOLD",
 		"firstName": {
 			"string": "Luis"
 		},
@@ -65,6 +66,30 @@
 				"string": "GB"
 			}
 		}]
+	},
+	"shipping": {
+			"firstName": {
+				"string": "Lucas"
+			},
+			"lastName": {
+				"string": "Jellema"
+			},
+			"shippingMethod": "ECONOMY",
+			"price": {
+				"double": 10.00
+			},
+			"ETA": "2018-06-05T07:11:00.000Z"
+	},
+	"specialDetails": {
+			"personalMessage": {
+				"string": "From Luis with Love!"
+			},
+			"giftWrapping": {
+				"boolean": true
+			},
+			"deliveryNotes": {
+				"string": "Please try to deliver in the morning"
+			}
 	},
 	"items": {
 		"array": [{
