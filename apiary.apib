@@ -113,10 +113,23 @@ Payment Details and Customer Details (excluding ID)
 
             {
                 "customer": {
+                    "loyalty_level": "GOLD",
                     "first_name": "Luis",
                     "last_name": "Weir",
                     "phone": "+44 (0) 757 5333 777",
                     "email": "myemail@email.com"
+                },
+                "shippping": {
+                    "first_name": "Lucas",
+                    "last_name": "Jellema",
+                    "shipping_method": "ECONOMY",
+                    "price": 0,
+                    "ETA": "2018-06-05T07:11:00.000Z"
+                },
+                "special_details": {
+                    "personal_message": "From Luis with Love!",
+                    "gift_wrapping": true,
+                    "delivery_notes": "Please try to deliver in the morning"
                 },
                 "payment": {
                     "card_type": "VISA_CREDIT",
@@ -245,7 +258,7 @@ Add an individual address.
     + Body
 
             {
-                "name": "BILLING",
+                "name": "BILLING_DELIVERY",
                 "line_1": "22",
                 "line_2": "King street",
                 "city": "Leamington Spa",
@@ -437,7 +450,7 @@ Check the health status of the service
 ## Special Details (object)
 - personal_message: `From Luis with Love!` (string, required) - Special message on delivery
 - gift_wrapping: true (boolean, required) - Whether or not the order items should be gift-wrapped
-- delivery_notes: `Please try to arrive in the morning` (string, required) - Any delivery notes
+- delivery_notes: `Please try to deliver in the morning` (string, required) - Any delivery notes
 
 ## Order (object)
 - order_id: `unittest` (string, optional) - System generated Order ID
