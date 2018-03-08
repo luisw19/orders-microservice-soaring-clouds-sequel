@@ -1,5 +1,6 @@
 
 var express     =   require("express");
+var cors = require('cors');
 var app         =   express();
 var bodyParser  =   require("body-parser");
 var mongoOp     =   require("./model/mongo");
@@ -12,6 +13,10 @@ var APP_NAME = "OrdersMS";
 var http = require('http');
 var apiHost = process.env.EVENTAPI_HOST || "localhost";
 var apiPort = process.env.EVENTAPI_PORT || 4000;
+
+//Enable CORS pre-flight in all operations
+app.use(cors());
+app.options('*', cors()); // include before other routes
 //Set Body Parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({"extended" : false}));
@@ -1153,7 +1158,6 @@ function performRequest(uri, method, data, response) {
   req.write(dataString);
   req.end();
 }
-
 
 ////////////////////////////////////////////////////////////////
 // Start the server

@@ -11,6 +11,7 @@ WORKDIR /usr/src/api
 RUN npm install express --save
 RUN npm install --save mongoose
 RUN npm install body-parser --save
+RUN npm install cors
 RUN npm install
 
 # Install Curl so registration script can be run
