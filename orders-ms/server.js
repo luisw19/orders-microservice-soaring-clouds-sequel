@@ -219,70 +219,120 @@ router.route("/orders/:id")
               //Update only fields that are allowed to be updated
               //if validation = false it means there has been an error
               var validation = true;
+              var valError = "";
               //Update Payment Details
               if(updatedOrder.payment!==undefined){
                 //Card validation logic
-                var cardError = "";
-                var cardValidation = true;
                 if(updatedOrder.payment.card_type==undefined){
-                  cardError = cardError+ " card_type";
-                  cardValidation = false;
+                  valError = valError+ " payment.card_type";
+                  validation = false;
                 }
                 if(updatedOrder.payment.card_number==undefined){
-                  cardError = cardError+ " card_number";
-                  cardValidation = false;
+                  valError = valError+ " payment.card_number";
+                  validation = false;
                 }
                 if(updatedOrder.payment.expiry_year==undefined){
-                  cardError = cardError+ " expiry_year";
-                  cardValidation = false;
+                  valError = valError+ " payment.expiry_year";
+                  validation = false;
                 }
                 if(updatedOrder.payment.expiry_month==undefined){
-                  cardError = cardError+ " expiry_month";
-                  cardValidation = false;
-                }
-                //if any errors then set validation to false and prepare error message
-                if(cardValidation){
-                  data.order.payment = updatedOrder.payment;
-                }else {
-                  response = {"error" : true,"message" : "Invalid card details: " + cardError};
+                  valError = valError+ " payment.expiry_month";
                   validation = false;
                 }
               }else{
                 data.order.payment = {};
               }
 
-              //Update Customer Details
-              if(updatedOrder.customer!==undefined){
-                if(updatedOrder.customer.first_name!==undefined){
-                  data.order.customer.first_name = updatedOrder.customer.first_name;
-                }
-                if(updatedOrder.customer.last_name!==undefined){
-                  data.order.customer.last_name = updatedOrder.customer.last_name;
-                }
-                if(updatedOrder.customer.phone!==undefined){
-                  data.order.customer.phone = updatedOrder.customer.phone;
-                }
-                if(updatedOrder.customer.email!==undefined){
-                  data.order.customer.email = updatedOrder.customer.email;
-                }
-              }
-
-              //Update Order status
-              if(updatedOrder.status!==undefined){
-                //If changed status to success then
-                if(updatedOrder.status==="SUCCESS"){
-                  //respond with error as only /orders/{orderId}/process can change status to success
-                  response = {"error" : true,"message" : "Changing Order Status to SUCCESS not allowed"};
+              //Validate shipping details
+              if(updatedOrder.shippping!==undefined){
+                if(updatedOrder.shippping.first_name==undefined){
+                  valError = valError + " shippping.first_name";
                   validation = false;
                 }
-                data.order.status = updatedOrder.status;
+                if(updatedOrder.shippping.last_name==undefined){
+                  valError = valError + " shippping.last_name";
+                  validation = false;
+                }
+                if(updatedOrder.shippping.shipping_method==undefined){
+                  valError = valError + " shippping.shipping_method";
+                  validation = false;
+                }
+                if(updatedOrder.shippping.price<=0){
+                  valError = valError + " shippping.price<=0";
+                  validation = false;
+                }
+                //This validation is not required in this version
+                if(updatedOrder.shippping.ETA==undefined){
+                  //ETA not enforced in this version. Next release
+                  updatedOrder.shippping.ETA = "";
+                  //valError = valError + " shippping.ETA";
+                  //validation = false;
+                }
+              }else{
+                valError = valError + " shippping[]";
+                validation = false;
               }
 
-              //update updated date
-              var now = new Date();
-              data.order.updated_at = now.toJSON();
               //save the data if validation is ok (true)
               if(validation){
+                //update updated date
+                var now = new Date();
+                data.order.updated_at = now.toJSON();
+
+                //Update Order status
+                if(updatedOrder.status!==undefined){
+                  //If changed status to success then
+                  if(updatedOrder.status==="SUCCESS"){
+                    //respond with error as only /orders/{orderId}/process can change status to success
+                    response = {"error" : true,"message" : "Changing Order Status to SUCCESS not allowed"};
+                    validation = false;
+                  }
+                  data.order.status = updatedOrder.status;
+                }
+
+                //Update Customer Details
+                if(updatedOrder.customer!==undefined){
+                  if(updatedOrder.customer.loyalty_level!==undefined){
+                    data.order.customer.loyalty_level = updatedOrder.customer.loyalty_level;
+                  }else{
+                    data.order.customer.loyalty_level = "NONE";
+                  }
+                  if(updatedOrder.customer.first_name!==undefined){
+                    data.order.customer.first_name = updatedOrder.customer.first_name;
+                  }
+                  if(updatedOrder.customer.last_name!==undefined){
+                    data.order.customer.last_name = updatedOrder.customer.last_name;
+                  }
+                  if(updatedOrder.customer.phone!==undefined){
+                    data.order.customer.phone = updatedOrder.customer.phone;
+                  }
+                  if(updatedOrder.customer.email!==undefined){
+                    data.order.customer.email = updatedOrder.customer.email;
+                  }
+                }
+
+                //set Shipping details
+                data.order.shippping = updatedOrder.shippping;
+
+                //Set special details values
+                if(updatedOrder.special_details!==undefined){
+                  if(updatedOrder.special_details.personal_message!==undefined){
+                    data.order.special_details.personal_message = updatedOrder.special_details.personal_message;
+                  }else{
+                    data.order.special_details.personal_message = "";
+                  }
+                  if(updatedOrder.special_details.gift_wrapping!==undefined){
+                    data.order.special_details.gift_wrapping = updatedOrder.special_details.gift_wrapping;
+                  }else{
+                    data.order.special_details.gift_wrapping = false;
+                  }
+                  if(updatedOrder.special_details.delivery_notes!==undefined){
+                    data.order.special_details.delivery_notes = updatedOrder.special_details.delivery_notes;
+                  }else{
+                    data.order.special_details.delivery_notes = "";
+                  }
+                }
+                //Save the changes
                 data.save(function(err){
                   if(err) {
                     response = {"error" : true,"message" : "Error updating order"};
@@ -292,6 +342,7 @@ router.route("/orders/:id")
                   res.json(response);
                 })
               }else {
+                response = {"error" : true, "message" : "Could not update Order '" + req.params.id + "' as the following details are missing: " + valError};
                 res.json(response);
               }
             }else{
@@ -299,7 +350,6 @@ router.route("/orders/:id")
             }
           }else{
             //order doesn't exist
-            response = {"error" : true,"message" : "Order " + req.params.id + " does not exists"};
             res.json(response);
           }
         }
@@ -728,10 +778,13 @@ router.route("/orders/:id/process")
       ////////////////////////////////
       if(validation){
         //Validate customer details
-        if(data.order.customer!==undefined){
+        if(JSON.stringify(data.order.customer)!=="{}"){
           if(data.order.customer.customer_id==undefined){
             valError = valError + " customer.customer_id";
             validation = false;
+          }
+          if(data.order.customer.loyalty_level==undefined){
+            data.order.customer.loyalty_level="NONE";
           }
           if(data.order.customer.first_name==undefined){
             valError = valError + " customer.first_name";
@@ -755,7 +808,9 @@ router.route("/orders/:id/process")
         }
 
         //Validate payment details
-        if(data.order.payment!==undefined){
+
+        if(JSON.stringify(data.order.payment)!=="{}"){
+          console.log(data.order.payment);
           if(data.order.payment.card_type==undefined){
             valError = valError + " payment.card_type";
             validation = false;
@@ -773,8 +828,76 @@ router.route("/orders/:id/process")
             validation = false;
           }
         }else{
-          valError = valError + " payment[]";
+          //in this release is OK not to send payment details
+          //also appart from card_type other AVRO fields are nullable so not need to set to empty
+          data.order.payment = {
+              "card_type": "VISA_CREDIT",
+              "card_number": "",
+              "start_year": 0,
+              "start_month": 0,
+        			"expiry_month": 0,
+        			"expiry_year": 0
+        		};
+          //valError = valError + " payment[]";
+          //validation = false;
+        }
+
+        //Validate shipping details
+        if(JSON.stringify(data.order.shippping)!=="{}"){
+          if(data.order.shippping.first_name==undefined){
+            valError = valError + " shippping.first_name";
+            validation = false;
+          }
+          if(data.order.shippping.last_name==undefined){
+            valError = valError + " shippping.last_name";
+            validation = false;
+          }
+          if(data.order.shippping.shipping_method==undefined){
+            valError = valError + " shippping.shipping_method";
+            validation = false;
+          }
+          if(data.order.shippping.price<=0){
+            valError = valError + " shippping.price<=0";
+            validation = false;
+          }
+          //This validation is not required in this version
+          if(data.order.shippping.ETA==undefined){
+            //ETA not enforced in this version. Next release
+            data.order.shippping.ETA = "";
+            //valError = valError + " shippping.ETA";
+            //validation = false;
+          }
+        }else{
+          valError = valError + " shippping[]";
           validation = false;
+        }
+
+        //Validate special details
+        if(JSON.stringify(data.order.special_details)!=="{}"){
+          if(data.order.special_details.personal_message==undefined){
+            //if undifined, set to empty as AVRO field is not nullable
+            data.order.special_details.personal_message="false";
+          }
+          if(data.order.special_details.gift_wrapping==undefined){
+            //if undifined, set to false as AVRO field is not nullable
+            data.order.special_details.gift_wrapping=false;
+          }
+          if(data.order.special_details.delivery_notes==undefined){
+            //if undifined, set to empty as AVRO field is not nullable
+            data.order.special_details.delivery_notes="false";
+          }
+        }else{
+          //if undifined, set to values
+          data.order.special_details = {
+                "personal_message": "",
+                "gift_wrapping": false,
+                "delivery_notes": ""
+            };
+        }
+
+        //Validate Order Header details
+        if(data.order.discount==undefined){
+            data.order.discount=0;
         }
 
         //Validate address details

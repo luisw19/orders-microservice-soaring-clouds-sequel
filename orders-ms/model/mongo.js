@@ -48,6 +48,7 @@ var linesVar = {
 //Customer object
 var customerVar = {
   customer_id: String,
+  loyalty_level: String,
   first_name: String,
   last_name: String,
   phone: String,
@@ -62,6 +63,22 @@ var paymentVar = {
   start_month: Number,
   expiry_year: Number,
   expiry_month: Number
+};
+
+//Customer object
+var shippingVar = {
+  first_name: String,
+  last_name: String,
+  shipping_method: String,
+  price: Number,
+  ETA: String
+};
+
+//Customer object
+var specialVar = {
+  personal_message: String,
+  gift_wrapping: Boolean,
+  delivery_notes: String,
 };
 
 //HATEOAS links
@@ -83,10 +100,13 @@ var orderVar  = new schema(
       created_at: { type: Date, default: Date.now },
       updated_at: { type: Date, default: Date.now },
       total_price: Number,
+      discount: Number,
       currency: { type: String, default: "GBP" },
       payment: paymentVar,
       customer: customerVar,
       address: [addressVar],
+      shippping: shippingVar,
+      special_details: specialVar,
       line_items: [linesVar],
       _links: linksVar
     }

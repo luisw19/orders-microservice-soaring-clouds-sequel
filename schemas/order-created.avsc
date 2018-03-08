@@ -40,7 +40,11 @@
     },
     {
       "name": "totalPrice",
-      "type": "float"
+      "type": "double"
+    },
+    {
+      "name": "discount",
+      "type": "int"
     },
     {
       "name": "currency",

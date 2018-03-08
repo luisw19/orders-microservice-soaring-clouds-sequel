@@ -1,6 +1,8 @@
- {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+{
+  "$id": "http://example.com/example.json",
   "type": "object",
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "order_id": {
       "$id": "/properties/order_id",
@@ -56,6 +58,15 @@
         100
       ]
     },
+    "discount": {
+      "$id": "/properties/discount",
+      "type": "integer",
+      "title": "The Discount Schema ",
+      "default": 0,
+      "examples": [
+        0
+      ]
+    },
     "currency": {
       "$id": "/properties/currency",
       "type": "string",
@@ -69,6 +80,15 @@
       "$id": "/properties/payment",
       "type": "object",
       "properties": {
+        "customer_id": {
+          "$id": "/properties/payment/properties/customer_id",
+          "type": "string",
+          "title": "The Customer_id Schema ",
+          "default": "",
+          "examples": [
+            "CUST0001"
+          ]
+        },
         "card_type": {
           "$id": "/properties/payment/properties/card_type",
           "type": "string",
@@ -136,6 +156,15 @@
           "default": "",
           "examples": [
             "CUST0001"
+          ]
+        },
+        "loyalty_level": {
+          "$id": "/properties/customer/properties/loyalty_level",
+          "type": "string",
+          "title": "The Loyalty_level Schema ",
+          "default": "",
+          "examples": [
+            "NONE"
           ]
         },
         "first_name": {
@@ -258,6 +287,90 @@
         }
       }
     },
+    "shippping": {
+      "$id": "/properties/shippping",
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "$id": "/properties/shippping/properties/first_name",
+          "type": "string",
+          "title": "The First_name Schema ",
+          "default": "",
+          "examples": [
+            "Lucas"
+          ]
+        },
+        "last_name": {
+          "$id": "/properties/shippping/properties/last_name",
+          "type": "string",
+          "title": "The Last_name Schema ",
+          "default": "",
+          "examples": [
+            "Jellema"
+          ]
+        },
+        "shipping_method": {
+          "$id": "/properties/shippping/properties/shipping_method",
+          "type": "string",
+          "title": "The Shipping_method Schema ",
+          "default": "",
+          "examples": [
+            "ECONOMY"
+          ]
+        },
+        "price": {
+          "$id": "/properties/shippping/properties/price",
+          "type": "integer",
+          "title": "The Price Schema ",
+          "default": 0,
+          "examples": [
+            0
+          ]
+        },
+        "ETA": {
+          "$id": "/properties/shippping/properties/ETA",
+          "type": "string",
+          "title": "The Eta Schema ",
+          "default": "",
+          "examples": [
+            "2018-06-05T07:11:00.000Z"
+          ]
+        }
+      }
+    },
+    "special_details": {
+      "$id": "/properties/special_details",
+      "type": "object",
+      "properties": {
+        "personal_message": {
+          "$id": "/properties/special_details/properties/personal_message",
+          "type": "string",
+          "title": "The Personal_message Schema ",
+          "default": "",
+          "examples": [
+            "From Luis with Love!"
+          ]
+        },
+        "gift_wrapping": {
+          "$id": "/properties/special_details/properties/gift_wrapping",
+          "type": "boolean",
+          "title": "The Gift_wrapping Schema ",
+          "default": false,
+          "examples": [
+            true
+          ]
+        },
+        "delivery_notes": {
+          "$id": "/properties/special_details/properties/delivery_notes",
+          "type": "string",
+          "title": "The Delivery_notes Schema ",
+          "default": "",
+          "examples": [
+            "Please try to deliver in the morning"
+          ]
+        }
+      }
+    },
     "line_items": {
       "$id": "/properties/line_items",
       "type": "array",
@@ -278,6 +391,15 @@
             "$id": "/properties/line_items/items/properties/product_id",
             "type": "string",
             "title": "The Product_id Schema ",
+            "default": "",
+            "examples": [
+              "abbfc4f9-83d5-49ac-9fa5-2909c5dc86e6"
+            ]
+          },
+          "product_code": {
+            "$id": "/properties/line_items/items/properties/product_code",
+            "type": "string",
+            "title": "The Product_code Schema ",
             "default": "",
             "examples": [
               "AX330T"

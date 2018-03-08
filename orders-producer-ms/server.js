@@ -163,6 +163,7 @@ function produceOrderEvent(inOrder,response) {
             "createdAt": inOrder.order.created_at,
             "updatedAt": inOrder.order.updated_at,
             "totalPrice": inOrder.order.total_price,
+            "discount": inOrder.order.discount,
             "currency": inOrder.order.currency,
             "payment": {
               "cardType": inOrder.order.payment.card_type,
@@ -174,6 +175,7 @@ function produceOrderEvent(inOrder,response) {
             },
             "customer": {
               "customerId": {"string": inOrder.order.customer.customer_id},
+              "loyaltyLevel": inOrder.order.customer.loyalty_level,
               "firstName": {"string": inOrder.order.customer.first_name},
               "lastName": {"string": inOrder.order.customer.last_name},
               "phone": {"string": inOrder.order.customer.phone},
@@ -181,6 +183,18 @@ function produceOrderEvent(inOrder,response) {
             },
             "addresses":{
               "array": addressesArray
+            },
+            "shipping": {
+              "firstName": {"string": inOrder.order.shippping.first_name},
+              "lastName": {"string": inOrder.order.shippping.last_name},
+              "shippingMethod": inOrder.order.shippping.shipping_method,
+              "price": {"double": inOrder.order.shippping.price},
+              "ETA": inOrder.order.shippping.ETA,
+            },
+            "specialDetails": {
+              "personalMessage": {"string": inOrder.order.special_details.personal_message},
+              "giftWrapping": {"boolean": inOrder.order.special_details.gift_wrapping},
+              "deliveryNotes": {"string": inOrder.order.special_details.delivery_notes}
             },
             "items":{
               "array": itemsArray
