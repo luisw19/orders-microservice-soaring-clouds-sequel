@@ -21,8 +21,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         self.steps = ko.observableArray(
             [
                 {label: 'Order Summary', disabled: true, id: 'orderSum'},
+                {label: 'Delivery Address', disabled: true, id: 'delivAdd'},
                 {label: 'Delivery Options', disabled: true, id: 'delivOpt'},
-                {label: 'Delivery Costing???', disabled: true, id: 'delivCost'},
                 {label: 'Invoice Details', disabled: true, id: 'invoiceDetail'},
                 {label: 'Payment Information', disabled: true, id: 'paymentInfo'}
             ]
@@ -66,10 +66,10 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
             if (id === "orderSum") {
                 self.stepModule("order_summary");
+            } else if (id === "delivAdd") {
+                self.stepModule("delivery_address");
             } else if (id === "delivOpt") {
                 self.stepModule("delivery_options");
-            } else if (id === "delivCost") {
-                self.stepModule("delivery_costing");
             } else if (id === "invoiceDetail") {
                 self.stepModule("invoice_detail");
             } else if (id === "paymentInfo") {
