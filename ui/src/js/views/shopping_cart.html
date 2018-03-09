@@ -1,0 +1,45 @@
+<h2>Shopping Basket</h2>
+<br>
+<div id="trainContainer">
+    <oj-train id="basketTrain"
+      class="oj-train-stretch"
+      style="max-width:100%"
+      on-oj-before-select="[[beforeSelection]]"
+      on-selected-step-changed="[[stepChanged]]"
+      on-oj-deselect="[[deselectStep]]"
+      selected-step="{{currentStep}}"
+      steps.disabled="true"
+      steps="[[steps]]">
+    </oj-train>
+</div>
+<br>
+<div class="oj-flex oj-flex-items-pad oj-sm-flex-direction-column">
+  <div data-bind="if: onOrderSummary" class="oj-flex oj-flex-item oj-panel oj-sm-margin-2x oj-sm-flex-direction-column">
+    <div class="oj-flex-item oj-panel oj-sm-margin-2x">
+      <oj-collapsible id="productDetailsCollapsible" expanded={{productDetailsExpanded}}>
+        <h3 id="header" slot="header">Product Details</h3>
+        <p id="content">&lt;PLACEHOLDER&gt; - Product Details</p>
+        Order ID: <span data-bind="text: orderId"></span>
+      </oj-collapsible>
+    </div>
+    <div class="oj-flex-item oj-panel oj-sm-margin-2x">
+      <oj-collapsible id="customerDetailsCollapsible" expanded={{customerDetailsExpanded}}>
+        <h3 id="header" slot="header">Customer Details</h3>
+        <p id="content">&lt;PLACEHOLDER&gt; - Customer Details</p>
+        Customer ID: <span data-bind="text: customerId"></span>
+      </oj-collapsible>
+    </div>
+  </div>
+  <div class="oj-flex oj-flex-item oj-sm-margin-2x oj-panel">
+    <div class="oj-flex-item oj-flex-bar-start oj-sm-justify-content-flex-start">
+      <oj-button id="previousStep" data-bind="click: onPreviousStep" disabled=[[disabledPreviousStep]]>
+        Previous
+      </oj-button>
+    </div>
+    <div class="oj-flex-item oj-flex-bar-end oj-sm-justify-content-flex-end">
+      <oj-button id="nextStep" data-bind="click: onNextStep" disabled=[[disabledNextStep]]>
+        Next
+      </oj-button>
+    </div>
+  </div>
+</div>
