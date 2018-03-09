@@ -1,0 +1,83 @@
+<div class="oj-flex-item oj-panel oj-sm-margin-2x">
+  <oj-collapsible id="productDetailsCollapsible" expanded={{productDetailsExpanded}}>
+    <h3 id="header" slot="header">Product Details</h3>
+    <oj-form-layout id="productDetailsLayout"
+      label-edge="start"
+      max-columns="2">
+
+      <oj-input-text id="customerId"
+        readonly
+        value="{{customerId}}"
+        label-hint="Customer ID:">
+      </oj-input-text>
+
+      <oj-input-text id="customerName"
+        readonly
+        value="{{customerName}}"
+        label-hint="Customer Name:">
+      </oj-input-text>
+
+      <oj-input-text id="customerPhone"
+        readonly
+        value="{{customerPhone}}"
+        label-hint="Phone Number:">
+      </oj-input-text>
+
+      <oj-input-text id="customerEmail"
+        readonly
+        value="{{customerEmail}}"
+        label-hint="Email Address:">
+      </oj-input-text>
+
+      <oj-input-text id="customerLoyaltyLevel"
+        readonly
+        value="{{customerLoyaltyLevel}}"
+        label-hint="Loyalty Level:">
+      </oj-input-text>
+
+    </oj-form-layout>
+    <p id="content">&lt;PLACEHOLDER&gt; - Product Details</p>
+    Order ID: <span data-bind="text: orderId"></span>
+  </oj-collapsible>
+</div>
+<div class="oj-flex-item oj-panel oj-sm-margin-2x">
+  <oj-collapsible id="customerDetailsCollapsible" expanded={{customerDetailsExpanded}}>
+    <h3 id="header" slot="header">Customer Details</h3>
+    <oj-form-layout id="customerDetailsLayout"
+      label-edge="start"
+      max-columns="2">
+
+      <oj-input-text id="customerId"
+        readonly
+        value="{{customerId}}"
+        label-hint="Customer ID:">
+      </oj-input-text>
+
+      <oj-input-text id="customerName"
+        readonly
+        value="{{customerName}}"
+        label-hint="Customer Name:">
+      </oj-input-text>
+
+      <oj-input-text id="customerPhone"
+        readonly
+        value="{{customerPhone}}"
+        label-hint="Phone Number:">
+      </oj-input-text>
+
+      <oj-input-text id="customerEmail"
+        readonly
+        value="{{customerEmail}}"
+        label-hint="Email Address:">
+      </oj-input-text>
+
+      <oj-input-text id="customerLoyaltyLevel"
+        readonly
+        value="{{customerLoyaltyLevel}}"
+        label-hint="Loyalty Level:">
+      </oj-input-text>
+
+    </oj-form-layout>
+    
+  </oj-collapsible>
+</div>

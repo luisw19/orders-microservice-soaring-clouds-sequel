@@ -1,4 +1,3 @@
-<h2>Shopping Basket</h2>
 <br>
 <div id="trainContainer">
     <oj-train id="basketTrain"
@@ -15,19 +14,7 @@
 <br>
 <div class="oj-flex oj-flex-items-pad oj-sm-flex-direction-column">
   <div data-bind="if: onOrderSummary" class="oj-flex oj-flex-item oj-panel oj-sm-margin-2x oj-sm-flex-direction-column">
-    <div class="oj-flex-item oj-panel oj-sm-margin-2x">
-      <oj-collapsible id="productDetailsCollapsible" expanded={{productDetailsExpanded}}>
-        <h3 id="header" slot="header">Product Details</h3>
-        <p id="content">&lt;PLACEHOLDER&gt; - Product Details</p>
-        Order ID: <span data-bind="text: orderId"></span>
-      </oj-collapsible>
-    </div>
-    <div class="oj-flex-item oj-panel oj-sm-margin-2x">
-      <oj-collapsible id="customerDetailsCollapsible" expanded={{customerDetailsExpanded}}>
-        <h3 id="header" slot="header">Customer Details</h3>
-        <p id="content">&lt;PLACEHOLDER&gt; - Customer Details</p>
-        Customer ID: <span data-bind="text: customerId"></span>
-      </oj-collapsible>
+    <div data-bind="ojModule: 'order_summary'">
     </div>
   </div>
   <div class="oj-flex oj-flex-item oj-sm-margin-2x oj-panel">

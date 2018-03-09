@@ -1,9 +1,10 @@
 /**
  * Shopping Cart module
  */
-define(['ojs/ojcore', 'knockout', 'jquery', 'factories/OrderFactory', 'ojs/ojknockout',
-        'ojs/ojmodel', 'ojs/ojtrain', 'ojs/ojbutton', 'ojs/ojcollapsible'
-], function (oj, ko, $, OrderFactory) {
+define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
+        'ojs/ojmodel', 'ojs/ojtrain', 'ojs/ojbutton', 'ojs/ojcollapsible',
+        'ojs/ojmodule'
+], function (oj, ko, $) {
     /**
      * The view model for the shopping cart view template
      */
@@ -13,7 +14,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/OrderFactory', 'ojs/ojkno
         var self = this;
         var basketTrain;
 
-        self.order = new oj.Model();
         self.disabledPreviousStep = ko.observable(false);
         self.disabledNextStep = ko.observable(false);
         self.onOrderSummary = ko.observable(false);
@@ -21,10 +21,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/OrderFactory', 'ojs/ojkno
         self.onDeliveryCosting = ko.observable(false);
         self.onInvoiceDetails = ko.observable(false);
         self.onPaymentInfo = ko.observable(false);
-        self.productDetailsExpanded = ko.observable(true);
-        self.customerDetailsExpanded = ko.observable(true);
-        self.orderId = ko.observable();
-        self.customerId = ko.observable();
 
         self.steps = ko.observableArray(
             [
@@ -37,9 +33,12 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/OrderFactory', 'ojs/ojkno
         );
 
         self.handleAttached = function(info) {
+
             basketTrain = document.getElementById("basketTrain");
+
             self.disabledPreviousStep(true);
             self.onOrderSummary(true);
+
         };
 
         self.currentStep = ko.observable(self.steps()[0].id);
@@ -125,47 +124,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/OrderFactory', 'ojs/ojkno
             }
 
         };
-
-        self.init = function () {
-            // Listener to handle content from embedding application
-            // Only applies as running in iFrame
-            window.addEventListener("message", function (event) {
-
-                console.log("Received message from embedding application " + event);
-                console.log("Payload =  " + JSON.stringify(event.data));
-
-                if (event.data.eventType === "globalContext") {
-
-                    self.orderId(event.data.globalContext.orderId);
-                    self.order = OrderFactory.createOrderModel(self.orderId());
-                    self.order.fetch({
-                        success: function(model, response, options) {
-                            self.customerId(model.get('customer').customer_id);
-                        }
-                    });
-
-                }
-
-            }, false);
-
-        };
-
-        $(document).ready(function () {
-            self.init();
-            
-            // Simulate dummy inbound event
-            var event = new MessageEvent("message", {
-                data: {
-                    eventType: "globalContext",
-                    globalContext: {
-                        orderId: "unittest",
-                        userName: "JNEATE"
-                    }
-                }
-            });
-            window.dispatchEvent(event);
-
-        });
 
     }
     
