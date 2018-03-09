@@ -17,8 +17,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         var customer = rootViewModel.order.get("customer");
         self.products = rootViewModel.order.get("line_items");
 
-        oj.Logger.error(self.products[0]);
-
         self.productDetailsExpanded = ko.observable(true);
         self.customerDetailsExpanded = ko.observable(true);
         self.orderId = ko.observable();
@@ -52,8 +50,11 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
           self.orderId(rootViewModel.order.get("order_id"));
           self.orderCurrency(rootViewModel.order.get("currency"));
 
+          self.orderPrice(0.00);
+
           for (var i = 0; i < self.products.length; i++) {
-            self.orderPrice((self.orderPrice() + (self.products[i].price * self.products[i].quantity)).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+            var newOrderPrice = parseFloat(self.orderPrice() + (self.products[i].price * self.products[i].quantity));
+            self.orderPrice(newOrderPrice.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
           }
 
           // Customer Details
@@ -63,15 +64,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
           self.customerEmail(customer.email);
           self.customerLoyaltyLevel(customer.loyalty_level);
 
-          // Product Details
-          // self.productLineId();
-          // self.productCode(customer.first_name + " " + customer.last_name);
-          // self.productName(customer.phone);
-          // self.productDescription(customer.email);
-          // self.productQuantity(customer.loyalty_level);
-
-          var element = document.getElementById('accordionPage');
-          oj.Logger.error(element);
+          // Product Details derived in forEach as multiple line items
 
         };
 
@@ -80,7 +73,9 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
             self.orderPrice(0.00);
 
             for (var i = 0; i < self.products.length; i++) {
-              self.orderPrice((self.orderPrice() + (self.products[i].price * self.products[i].quantity)).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+              rootViewModel.order.get("line_items")[i].quantity = self.products[i].quantity; // Update controller with new changes
+              var newOrderPrice = parseFloat(self.orderPrice() + (self.products[i].price * self.products[i].quantity));
+              self.orderPrice(newOrderPrice.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
             }
 
         };

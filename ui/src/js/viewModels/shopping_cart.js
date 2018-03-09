@@ -16,11 +16,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
         self.disabledPreviousStep = ko.observable(false);
         self.disabledNextStep = ko.observable(false);
-        self.onOrderSummary = ko.observable(false);
-        self.onDeliveryOptions = ko.observable(false);
-        self.onDeliveryCosting = ko.observable(false);
-        self.onInvoiceDetails = ko.observable(false);
-        self.onPaymentInfo = ko.observable(false);
+        self.stepModule = ko.observable();
 
         self.steps = ko.observableArray(
             [
@@ -37,7 +33,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
             basketTrain = document.getElementById("basketTrain");
 
             self.disabledPreviousStep(true);
-            self.onOrderSummary(true);
+            self.stepModule("order_summary");
 
         };
 
@@ -53,7 +49,33 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         };
 
         self.stepChanged = function(event) {
-            self.enableContent(event.detail.value);
+
+            if (event.detail.previousValue === "paymentInfo") {
+                self.disabledNextStep(false);
+            } else if (event.detail.previousValue === "orderSum") {
+                self.disabledPreviousStep(false);
+            }
+
+            if (event.detail.value === "paymentInfo") {
+                self.disabledNextStep(true);
+            } else if (event.detail.value === "orderSum") {
+                self.disabledPreviousStep(true);
+            }
+
+            var id = event.detail.value;
+
+            if (id === "orderSum") {
+                self.stepModule("order_summary");
+            } else if (id === "delivOpt") {
+                self.stepModule("delivery_options");
+            } else if (id === "delivCost") {
+                self.stepModule("delivery_costing");
+            } else if (id === "invoiceDetail") {
+                self.stepModule("invoice_detail");
+            } else if (id === "paymentInfo") {
+                self.stepModule("payment_info");
+            }
+
         };
 
         self.deselectStep = function(event) {
@@ -72,10 +94,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
                     basketTrain.selectedStep = self.steps()[i - 1].id;
 
-                    if ((i - 1) === 0) {
-                        self.disabledPreviousStep(true);
-                    }
-
                     return;
 
                 }
@@ -92,35 +110,9 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
                     
                     basketTrain.selectedStep = self.steps()[i + 1].id;
                     
-                    if ((i + 1) === self.steps().length - 1) {
-                        self.disabledNextStep(true);
-                    }
-
                     return;
 
                 }
-            }
-
-        };
-
-        self.enableContent = function(id) {
-
-            self.onOrderSummary(false);
-            self.onDeliveryOptions(false);
-            self.onDeliveryCosting(false);
-            self.onInvoiceDetails(false);
-            self.onPaymentInfo(false);
-
-            if (id === "orderSum") {
-                self.onOrderSummary(true);
-            } else if (id === "delivOpt") {
-                self.onDeliveryOptions(true);
-            } else if (id === "delivCost") {
-                self.onDeliveryCosting(true);
-            } else if (id === "invoiceDetail") {
-                self.onInvoiceDetails(true);
-            } else if (id === "paymentInfo") {
-                self.onPaymentInfo(true);
             }
 
         };
