@@ -52,19 +52,27 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
           self.orderPrice(0.00);
 
-          for (var i = 0; i < self.products.length; i++) {
-            var newOrderPrice = parseFloat(self.orderPrice() + (self.products[i].price * self.products[i].quantity));
-            self.orderPrice(newOrderPrice.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+          if (self.products != null) {
+            for (var i = 0; i < self.products.length; i++) {
+              var newOrderPrice = parseFloat(self.orderPrice() + (self.products[i].price * self.products[i].quantity));
+              self.orderPrice(newOrderPrice.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+            }
+          } else {
+            // Add line items object to model
+            rootViewModel.order.set("line_items", [{}]);
           }
 
           // Customer Details
-          self.customerId(customer.customer_id);
-          self.customerName(customer.first_name + " " + customer.last_name);
-          self.customerPhone(customer.phone);
-          self.customerEmail(customer.email);
-          self.customerLoyaltyLevel(customer.loyalty_level);
-
-          // Product Details derived in forEach as multiple line items
+          if (customer != null) {
+            self.customerId(customer.customer_id);
+            self.customerName(customer.first_name + " " + customer.last_name);
+            self.customerPhone(customer.phone);
+            self.customerEmail(customer.email);
+            self.customerLoyaltyLevel(customer.loyalty_level);
+          } else {
+            // Add customer object to model
+            rootViewModel.order.set("customer", {});
+          }
 
         };
 

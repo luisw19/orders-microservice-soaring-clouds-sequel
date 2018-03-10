@@ -26,22 +26,32 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
         self.handleAttached = function(info) {
             // Read latest Order from controller
-            if (addressArray.length > 1) {
-                for (var i = 0; i < addressArray.length; i++) {
-                    if (addressArray[i].name.indexOf("DELIVERY") != -1) {
-                        index = i;
-                        address = addressArray[i];
-                        break;
+
+            if (addressArray != null) {
+
+                address = addressArray[0];
+
+                if (addressArray.length > 1) {
+                    for (var i = 0; i < addressArray.length; i++) {
+                        if (addressArray[i].name.indexOf("DELIVERY") != -1) {
+                            index = i;
+                            address = addressArray[i];
+                            break;
+                        }
                     }
                 }
-            }
 
-            self.addressLine1(address.line_1);
-            self.addressLine2(address.line_2);
-            self.city(address.city);
-            self.county(address.county);
-            self.postCode(address.postcode);
-            self.country(address.country);
+                self.addressLine1(address.line_1);
+                self.addressLine2(address.line_2);
+                self.city(address.city);
+                self.county(address.county);
+                self.postCode(address.postcode);
+                self.country(address.country);
+
+            } else {
+                // Add address object to model
+                rootViewModel.order.set("address", [{}]);
+            }
 
         };
 
