@@ -7,13 +7,22 @@
   
         <oj-input-text id="firstName"
           value="{{firstName}}"
+          on-value-changed="[[onFirstNameChanged]]"
           label-hint="First Name:">
         </oj-input-text>
   
         <oj-input-text id="lastName"
           value="{{lastName}}"
+          on-value-changed="[[onLastNameChanged]]"
           label-hint="Last Name:">
         </oj-input-text>
+
+        <oj-input-date id="eta"
+          readonly
+          value="{{eta}}"
+          converter=[[dateConverter]]
+          label-hint="Estimated Arrival:">
+        </oj-input-date>
   
         <oj-radioset id="deliveryMethodOptions"
           value="{{deliveryMethod}}"

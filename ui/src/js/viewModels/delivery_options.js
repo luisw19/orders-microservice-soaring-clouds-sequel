@@ -2,7 +2,8 @@
  * Delivery Options module
  */
 define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
-        'ojs/ojmodule', 'ojs/ojcheckboxset', 'ojs/ojradioset', 
+        'ojs/ojmodule', 'ojs/ojcheckboxset', 'ojs/ojradioset',
+        'ojs/ojdatetimepicker'
 ], function (oj, ko, $) {
     /**
      * The view model for the delivery options view template
@@ -12,7 +13,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
         var self = this;
         var rootViewModel = ko.dataFor(document.getElementById('globalBody'));
-        var shipping = rootViewModel.order.get('shipping');
+        var shipping = rootViewModel.order.get('shippping');
         var specialDetails = rootViewModel.order.get('special_details');
 
         self.deliveryMethodExpanded = ko.observable(true);
@@ -22,6 +23,15 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         self.lastName = ko.observable();
         self.deliveryMethod = ko.observableArray();
         self.price = ko.observable();
+        self.eta = ko.observable();
+
+        self.dateConverter = ko.observable(
+            oj.Validation.converterFactory(oj.ConverterFactory.CONVERTER_TYPE_DATETIME).createConverter(
+                {
+                    pattern : 'dd-MMM-yyyy'
+                }
+            )
+        );
 
         self.personalMessage = ko.observable();
         self.giftWrap = ko.observableArray();
@@ -35,6 +45,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
                 oj.Logger.error(shipping.shipping_method);
                 self.deliveryMethod(shipping.shipping_method);
                 self.price(shipping.price.toFixed(2));
+                self.eta(shipping.ETA);
             } else {
                 // Add shipping object to model
                 rootViewModel.order.set("shipping", {});
@@ -51,6 +62,14 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
                 rootViewModel.order.set("special_details", {});
             }
 
+        };
+
+        self.onFirstNameChanged = function(info) {
+            rootViewModel.order.get('shipping').first_name = self.firstName();
+        };
+
+        self.onLastNameChanged = function(info) {
+            rootViewModel.order.get('shipping').last_name = self.lastName();
         };
 
         self.onDeliveryMethodChanged = function() {

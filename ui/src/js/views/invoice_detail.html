@@ -1,1 +1,78 @@
-&lt;PLACEHOLDER - INVOICE DETAIL&gt;
+<div class="oj-flex-item oj-panel oj-sm-margin-2x">
+  <oj-collapsible id="orderItemsCollapsible" expanded={{orderItemsExpanded}}>
+    <h3 id="header" slot="header">Items</h3>
+    
+    <oj-bind-for-each data="{{items}}" as="item">
+      <template>
+
+        <div class="oj-panel oj-sm-margin-2x">
+
+          <oj-form-layout id="orderItemsLayout"
+            label-edge="start"
+            max-columns="2">
+
+            <oj-input-text id="itemName"
+              readonly
+              value="[[item.data.product_name]]"
+              label-hint="Item Name:">
+            </oj-input-text>
+
+            <oj-input-text id="itemQuantity"
+              readonly
+              value="[[item.data.quantity]]"
+              label-hint="Item Quantity:">
+            </oj-input-text>
+
+            <oj-input-text id="totalItemPrice"
+              readonly
+              value="[[item.data.quantity * item.data.price]]"
+              label-hint="Total Item Price:">
+            </oj-input-text>
+
+          </oj-form-layout>
+        </div>
+
+      </template>
+    </oj-bind-for-each>
+
+  </oj-collapsible>
+</div>
+<div class="oj-flex-item oj-panel oj-sm-margin-2x">
+  <oj-collapsible id="deliveryDetailsCollapsible" expanded={{deliveryDetailsExpanded}}>
+    <h3 id="header" slot="header">Delivery</h3>
+    <oj-form-layout id="deliveryDetailsLayout"
+      label-edge="start"
+      max-columns="2">
+
+      <oj-input-text id="shippingMethod"
+        readonly
+        value="{{shippingMethod}}"
+        label-hint="Delivery Method:">
+      </oj-input-text>
+
+      <oj-input-text id="shippingCost"
+        readonly
+        value="{{shippingCost}}"
+        label-hint="Delivery Cost:">
+      </oj-input-text>
+
+    </oj-form-layout>
+    
+  </oj-collapsible>
+</div>
+<div class="oj-flex-item oj-panel oj-sm-margin-2x">
+  
+  <h3 id="header" slot="header">Total</h3>
+
+  <oj-form-layout id="specialDetailsLayout"
+    label-edge="start"
+    max-columns="2">
+
+    <oj-input-text id="totalPrice"
+      readonly
+      value="{{totalPrice}}"
+      label-hint="Total Price:">
+    </oj-input-text>
+    
+  </oj-collapsible>
+</div>
