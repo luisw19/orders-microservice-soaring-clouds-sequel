@@ -3,7 +3,7 @@
  */
 define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         'ojs/ojcollapsible', 'ojs/ojformlayout', 'ojs/ojinputtext',
-        'ojs/ojaccordion', 'ojs/ojinputnumber'
+        'ojs/ojaccordion', 'ojs/ojinputnumber', 'ojs/ojmodel'
 ], function (oj, ko, $, OrderFactory) {
     /**
      * The view model for the shopping cart view template
@@ -15,7 +15,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         var basketTrain;
         var rootViewModel = ko.dataFor(document.getElementById('globalBody'));
         var customer = rootViewModel.order.get("customer");
-        self.products = rootViewModel.order.get("line_items");
+        self.products = ko.observableArray();
 
         self.productDetailsExpanded = ko.observable(true);
         self.customerDetailsExpanded = ko.observable(true);
@@ -47,14 +47,16 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
         self.handleAttached = function(info) {
 
-          self.orderId(rootViewModel.order.get("order_id"));
+          self.products(rootViewModel.order.get("order").line_items);
+
+          self.orderId(rootViewModel.order.get("order").order_id);
           self.orderCurrency(rootViewModel.order.get("currency"));
 
           self.orderPrice(0.00);
 
-          if (self.products != null) {
-            for (var i = 0; i < self.products.length; i++) {
-              var newOrderPrice = parseFloat(self.orderPrice() + (self.products[i].price * self.products[i].quantity));
+          if (self.products() != null) {
+            for (var i = 0; i < self.products().length; i++) {
+              var newOrderPrice = parseFloat(self.orderPrice() + (self.products()[i].price * self.products()[i].quantity));
               self.orderPrice(newOrderPrice.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
             }
           } else {

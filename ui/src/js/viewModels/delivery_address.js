@@ -12,7 +12,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
         var self = this;
         var rootViewModel = ko.dataFor(document.getElementById('globalBody'));
-        var addressArray = rootViewModel.order.get('address');
+        var order = rootViewModel.order.get("order");
+        var addressArray = rootViewModel.order.get("order").address;
         var address = addressArray[0];
         var index = 0;
 
@@ -41,12 +42,16 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
                     }
                 }
 
-                self.addressLine1(address.line_1);
-                self.addressLine2(address.line_2);
-                self.city(address.city);
-                self.county(address.county);
-                self.postCode(address.postcode);
-                self.country(address.country);
+                if (address != null) {
+                    self.addressLine1(address.line_1);
+                    self.addressLine2(address.line_2);
+                    self.city(address.city);
+                    self.county(address.county);
+                    self.postCode(address.postcode);
+                    self.country(address.country);
+                } else {
+                    rootViewModel.order.set("order", addressArray[{}]);
+                }
 
             } else {
                 // Add address object to model

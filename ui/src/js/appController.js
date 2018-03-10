@@ -30,7 +30,9 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'ojs/ojknockout', 'o
 
                 self.order = OrderFactory.createOrderModel(event.data.globalContext.orderId);
                 self.order.fetch({
+                  headers: {'api-key': '73f1c312-64e1-4069-92d8-0179ac056e90'},
                   success: function(model, response, options) {
+                    oj.Logger.error(model);
                     self.contentLoaded(true);
                   }
                 });

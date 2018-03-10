@@ -4,7 +4,8 @@ function (oj) {
     var OrderFactory = {
 
         setOrderURI: function(orderId) {
-          return "https://private-anon-2453842a28-sttcordersms.apiary-mock.com/api/orders/" + orderId;
+        //   return "https://private-anon-2453842a28-sttcordersms.apiary-mock.com/api/orders/" + orderId;
+          return "https://oc-144-21-82-92.compute.oraclecloud.com:9129/api/orders/" + orderId;
         },
         createOrderModel: function(orderId) {
             var Order = oj.Model.extend({
