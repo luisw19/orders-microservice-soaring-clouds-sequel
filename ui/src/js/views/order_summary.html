@@ -6,7 +6,7 @@
         <oj-bind-for-each data="{{products}}" as="product">
           <template>
             <oj-collapsible id="lineItemCollapsible" expanded=true>
-              <h3 slot="header">Line ID <span data-bind="text: product.data.line_id"></span></h3>
+              <h3 slot="header">Line ID <span data-bind="text: product.data.line_id"></span> - Total: <span data-bind="text: lineItemTotalPrice()[product.index]" converter="[[converter]]"></span> <span data-bind="text: orderCurrency"></span></h3>
               <oj-form-layout id="customerDetailsLayout"
                 label-edge="start"
                 max-columns="2">

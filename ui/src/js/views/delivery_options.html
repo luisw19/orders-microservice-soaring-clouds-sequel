@@ -18,8 +18,8 @@
         </oj-input-text>
 
         <oj-input-date id="eta"
-          readonly
           value="{{eta}}"
+          on-value-changed="[[onEtaChanged]]"
           converter=[[dateConverter]]
           label-hint="Estimated Arrival:">
         </oj-input-date>
@@ -31,12 +31,6 @@
           <oj-option id="economyOpt" value="ECONOMY">Economy</oj-option>
           <oj-option id="premiumOpt" value="PREMIUM">Premium</oj-option>
         </oj-radioset>
-  
-        <oj-input-text id="price"
-          readonly
-          value="{{price}}"
-          label-hint="Delivery Cost:">
-        </oj-input-text>
   
       </oj-form-layout>
 

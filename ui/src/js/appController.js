@@ -5,8 +5,8 @@
 /*
  * Your application specific code will go here
  */
-define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'ojs/ojknockout', 'ojs/ojmodel'],
-  function(oj, ko, OrderFactory) {
+define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerFactory', 'ojs/ojknockout', 'ojs/ojmodel'],
+  function(oj, ko, OrderFactory, CustomerFactory) {
      function ControllerViewModel() {
        var self = this;
 
@@ -16,6 +16,7 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'ojs/ojknockout', 'o
 
       self.shoppingCart = ko.observable("shopping_cart");
       self.order = new oj.Model();
+      self.customer = new oj.Model();
       self.contentLoaded = ko.observable(false);
 
       self.init = function () {
@@ -29,11 +30,17 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'ojs/ojknockout', 'o
             if (event.data.eventType === "globalContext") {
 
                 self.order = OrderFactory.createOrderModel(event.data.globalContext.orderId);
+                
                 self.order.fetch({
                   headers: {'api-key': '73f1c312-64e1-4069-92d8-0179ac056e90'},
                   success: function(model, response, options) {
-                    oj.Logger.error(model);
-                    self.contentLoaded(true);
+                    self.customer = CustomerFactory.createCustomerModel(model.get("_id"));
+                    self.customer.fetch({
+                      success: function(model, response, options) {
+                        self.order.get("order").customer = model.get("0");
+                        self.contentLoaded(true);
+                      }
+                    });
                   }
                 });
 

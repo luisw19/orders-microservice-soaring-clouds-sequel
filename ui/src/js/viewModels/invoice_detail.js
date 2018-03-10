@@ -26,17 +26,10 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
             oj.Logger.error(shipping);
 
-            self.totalPrice(0.00);
-            var total = 0;
-
             self.shippingMethod(shipping.shipping_method);
             self.shippingCost(shipping.price.toFixed(2));
 
-            for (var i = 0; i < self.items.length; i++) {
-                total = total + (self.items[i].quantity * parseFloat(self.items[i].price));
-            }
-
-            self.totalPrice(total);
+            self.totalPrice(rootViewModel.order.get('order').total_price);
 
         };
 

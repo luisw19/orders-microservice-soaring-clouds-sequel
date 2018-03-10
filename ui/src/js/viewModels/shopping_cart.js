@@ -1,10 +1,10 @@
 /**
  * Shopping Cart module
  */
-define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
-        'ojs/ojmodel', 'ojs/ojtrain', 'ojs/ojbutton', 'ojs/ojcollapsible',
-        'ojs/ojmodule'
-], function (oj, ko, $) {
+define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
+        'ojs/ojknockout', 'ojs/ojmodel', 'ojs/ojtrain', 'ojs/ojbutton',
+        'ojs/ojcollapsible', 'ojs/ojmodule'
+], function (oj, ko, $, AddressFactory) {
     /**
      * The view model for the shopping cart view template
      */
@@ -13,6 +13,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
         var self = this;
         var basketTrain;
+        var rootViewModel = ko.dataFor(document.getElementById('globalBody'));
 
         self.disabledPreviousStep = ko.observable(false);
         self.disabledNextStep = ko.observable(false);
@@ -42,9 +43,37 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         self.beforeSelection = function(event) {
 
             var nextStep = event.detail.toStep;
+            var index = null;
+            
+            if (!nextStep.disabled) {
 
-            nextStep.disabled = false;
-            basketTrain.updateStep(nextStep.id, nextStep);
+                var array = self.steps();
+
+                for (var i = 0; i < self.steps().length; i++) {
+
+                    if (self.steps()[i].id === nextStep.id) {
+                        index = i;
+                    } else if (index != null) {
+
+                        var newStep = {};
+                        newStep.label = self.steps()[i].label;
+                        newStep.id = self.steps()[i].id;
+                        newStep.disabled = true;
+                        
+                        array[i] = newStep;
+                        
+                    }
+
+                }
+
+                self.steps(array);
+
+            } else {
+
+                nextStep.disabled = false;
+                basketTrain.updateStep(nextStep.id, nextStep);
+
+            }
 
         };
 
@@ -85,9 +114,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
             document.getElementById("basketTrain").updateStep(step.id, step);
         };
 
-        self.onPreviousStep = function(event) {
-
-            self.disabledNextStep(false);
+        self.onPreviousStep = function() {
 
             for (var i = 0; i < self.steps().length; i++) {
                 if (basketTrain.selectedStep === self.steps()[i].id) {
@@ -101,12 +128,43 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
         };
 
-        self.onNextStep = function(event) {
-
-            self.disabledPreviousStep(false);
+        self.onNextStep = function() {
+            
+            var index = -1;
+            var orderAddress = {};
 
             for (var i = 0; i < self.steps().length; i++) {
                 if (basketTrain.selectedStep === self.steps()[i].id) {
+
+                    if (self.steps()[i + 1].id === "delivOpt") {
+
+                        var address = AddressFactory.createAddressModel(rootViewModel.order.get("order").order_id);
+
+                        // Call Add/Update Address on Order
+                        oj.ajax = function(ajaxOptions) {
+                            ajaxOptions.headers['api-key'] = '73f1c312-64e1-4069-92d8-0179ac056e90';
+                            return $.ajax(ajaxOptions);
+                        };
+
+                        for (var j = 0; j < rootViewModel.order.get("order").address.length; j++) {
+                            if (rootViewModel.order.get("order").address[j].name.indexOf("DELIVERY") != -1) {
+                                index = j;
+                                orderAddress = rootViewModel.order.get("order").address[j];
+                                break;
+                            }
+                        }
+
+                        address.set({
+                            "name": "DELIVERY",
+                            "line_1": orderAddress.line_1,
+                            "line_2": orderAddress.line_2,
+                            "city": orderAddress.city,
+                            "county": orderAddress.county,
+                            "postcode": orderAddress.postcode,
+                            "country": orderAddress.country
+                        });
+                        address.save();
+                    }
                     
                     basketTrain.selectedStep = self.steps()[i + 1].id;
                     

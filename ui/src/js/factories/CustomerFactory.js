@@ -1,15 +1,15 @@
 define(['ojs/ojcore'],
 function (oj) {
     
-    var OrderFactory = {
+    var CustomerFactory = {
 
-        setOrderURI: function(orderId) {
-        //   return "https://private-anon-2453842a28-sttcordersms.apiary-mock.com/api/orders/" + orderId;
-          return "https://oc-144-21-82-92.compute.oraclecloud.com:9129/api/orders/" + orderId;
+        setCustomerURI: function(customerId) {
+        //   return "https://oc-144-21-82-92.compute.oraclecloud.com:9129/api/customer/profile/" + customerId;
+          return "data/customerData.json";
         },
-        createOrderModel: function(orderId) {
-            var Order = oj.Model.extend({
-                urlRoot: this.setOrderURI(orderId),
+        createCustomerModel: function(customerId) {
+            var Customer = oj.Model.extend({
+                urlRoot: this.setCustomerURI(customerId),
                 parse: function(response) {
 
                     // return {
@@ -54,10 +54,10 @@ function (oj) {
                 },
                 idAttribute: '_id'
             });
-            return new Order();
+            return new Customer();
         }
     };
 
-    return OrderFactory;
+    return CustomerFactory;
 
 });

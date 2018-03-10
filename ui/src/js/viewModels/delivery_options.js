@@ -22,7 +22,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         self.firstName = ko.observable();
         self.lastName = ko.observable();
         self.deliveryMethod = ko.observableArray();
-        self.price = ko.observable();
         self.eta = ko.observable();
 
         self.dateConverter = ko.observable(
@@ -44,7 +43,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
                 self.lastName(shipping.last_name);
                 oj.Logger.error(shipping.shipping_method);
                 self.deliveryMethod(shipping.shipping_method);
-                self.price(shipping.price.toFixed(2));
                 self.eta(shipping.ETA);
             } else {
                 // Add shipping object to model
@@ -70,6 +68,10 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
         self.onLastNameChanged = function(info) {
             rootViewModel.order.get('shipping').last_name = self.lastName();
+        };
+
+        self.onEtaChanged = function(info) {
+            rootViewModel.order.get('shipping').eta = self.eta();
         };
 
         self.onDeliveryMethodChanged = function() {

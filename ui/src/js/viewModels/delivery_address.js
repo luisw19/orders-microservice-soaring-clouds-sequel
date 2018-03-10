@@ -13,8 +13,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         var self = this;
         var rootViewModel = ko.dataFor(document.getElementById('globalBody'));
         var order = rootViewModel.order.get("order");
-        var addressArray = rootViewModel.order.get("order").address;
-        var address = addressArray[0];
+        
+        var address;
         var index = 0;
 
         self.deliveryAddressExpanded = ko.observable(true);
@@ -28,9 +28,9 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         self.handleAttached = function(info) {
             // Read latest Order from controller
 
-            if (addressArray != null) {
+            var addressArray = rootViewModel.order.get("order").address;
 
-                address = addressArray[0];
+            if (addressArray != null) {
 
                 if (addressArray.length > 1) {
                     for (var i = 0; i < addressArray.length; i++) {
@@ -40,6 +40,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
                             break;
                         }
                     }
+                } else if (addressArray.length === 1) {
+                    address = addressArray[0];
                 }
 
                 if (address != null) {
@@ -50,38 +52,40 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
                     self.postCode(address.postcode);
                     self.country(address.country);
                 } else {
-                    rootViewModel.order.set("order", addressArray[{}]);
+                    order.address = [{"name" : "DELIVERY"}];
+                    rootViewModel.order.set("order", order);
                 }
 
             } else {
                 // Add address object to model
-                rootViewModel.order.set("address", [{}]);
+                order.address = [{}];
+                rootViewModel.order.set("order", order);
             }
 
         };
 
         self.onAddressLine1Change = function() {
-            rootViewModel.order.get('address')[index].line_1 = self.addressLine1();
+            rootViewModel.order.get("order").address[index].line_1 = self.addressLine1();
         };
 
         self.onAddressLine2Change = function() {
-            rootViewModel.order.get('address')[index].line_2 = self.addressLine2();
+            rootViewModel.order.get("order").address[index].line_2 = self.addressLine2();
         };
 
         self.onCityChange = function() {
-            rootViewModel.order.get('address')[index].city = self.city();
+            rootViewModel.order.get("order").address[index].city = self.city();
         };
 
         self.onCountyChange = function() {
-            rootViewModel.order.get('address')[index].county = self.county();
+            rootViewModel.order.get("order").address[index].county = self.county();
         };
 
         self.onPostCodeChange = function() {
-            rootViewModel.order.get('address')[index].postcode = self.postCode();
+            rootViewModel.order.get("order").address[index].postcode = self.postCode();
         };
 
         self.onCountryChange = function() {
-            rootViewModel.order.get('address')[index].country = self.country();
+            rootViewModel.order.get("order").address[index].country = self.country();
         };
 
     }
