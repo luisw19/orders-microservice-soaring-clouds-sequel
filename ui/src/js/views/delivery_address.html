@@ -2,25 +2,23 @@
   <oj-collapsible id="deliveryAddressCollapsible" expanded={{deliveryAddressExpanded}}>
     <h3 id="header" slot="header">Delivery Address</h3>
     
-    <div data-bind="if: blankDeliveryAddress">
-      <oj-form-layout id="deliveryAddressLayout"
-        label-edge="start"
-        max-columns="2">
+    <oj-form-layout id="deliveryAddressLayout"
+      label-edge="start"
+      max-columns="2">
 
-        <oj-combobox-one id="deliveryAddressCombo"
-          value="{{selectedDeliveryAddress}}"
-          on-value-changed="[[onDeliveryAddressChanged]]"
-          label-hint="Delivery Address: ">
-          <oj-bind-for-each data="[[customerAddresses]]" as="address">
-            <template>
-              <oj-option value="[[address.data['_id']]]"><span data-bind="text: address.data.type"></span> - <span data-bind="text: address.data.streetNumber"></span><span> </span><span data-bind="text: address.data.streetName"></span></oj-option>
-            </template>
-          </oj-bind-for-each>
-          <oj-option value="newDeliveryAddress">New delivery address</oj-option>
-        </oj-combobox-one>
+      <oj-combobox-one id="deliveryAddressCombo"
+        value="{{selectedDeliveryAddress}}"
+        on-value-changed="[[onDeliveryAddressChanged]]"
+        label-hint="Delivery Address: ">
+        <oj-bind-for-each data="[[customerAddresses]]" as="address">
+          <template>
+            <oj-option value="[[address.data['_id']]]"><span data-bind="text: address.data.type"></span> - <span data-bind="text: address.data.streetNumber"></span><span> </span><span data-bind="text: address.data.streetName"></span></oj-option>
+          </template>
+        </oj-bind-for-each>
+        <oj-option value="newDeliveryAddress">New delivery address</oj-option>
+      </oj-combobox-one>
 
-      </oj-form-layout>
-    </div>
+    </oj-form-layout>
     <div data-bind="if: selectedDeliveryAddress">
       <oj-form-layout id="deliveryAddressLayout"
         label-edge="start"

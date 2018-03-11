@@ -303,7 +303,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
 
         self.apiInteraction = function(stepId) {
 
-            if (stepId === "delivAdd") {
+            if (stepId === "delivOpt") {
 
                 var orderAddress = null;
 
@@ -320,21 +320,9 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                 if (orderAddress != null) {
                     
                     // Overwride POST call to DELETE Address on Order
-                    oj.ajax = function(ajaxOptions) {
-                        ajaxOptions.url += "/" + orderAddress.name;
-                        ajaxOptions.type = "DELETE";
-                        return $.ajax(ajaxOptions);
-                    };
-
-                    address.save(null, {
-                        error: function() {
-                            alert("Error deleting " + orderAddress.name + " address");
-                        }
-                    });
+                    
 
                 }
-
-            } else if (stepId === "delivOpt") {
 
                 var address = AddressFactory.createAddressModel(rootViewModel.order.get("order").order_id);
 
@@ -348,23 +336,38 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                 }
 
                 oj.ajax = function(ajaxOptions) {
-                    ajaxOptions.type = "POST";
+                    ajaxOptions.url += "/" + orderAddress.name;
+                    ajaxOptions.type = "DELETE";
                     return $.ajax(ajaxOptions);
                 };
 
-                address.set({
-                    "name": "DELIVERY",
-                    "line_1": orderAddress.line_1,
-                    "line_2": orderAddress.line_2,
-                    "city": orderAddress.city,
-                    "county": orderAddress.county,
-                    "postcode": orderAddress.postcode,
-                    "country": orderAddress.country
-                });
-
                 address.save(null, {
+                    success: function(model, response, error) {
+
+                        oj.ajax = function(ajaxOptions) {
+                            ajaxOptions.type = "POST";
+                            return $.ajax(ajaxOptions);
+                        };
+        
+                        address.set({
+                            "name": "DELIVERY",
+                            "line_1": orderAddress.line_1,
+                            "line_2": orderAddress.line_2,
+                            "city": orderAddress.city,
+                            "county": orderAddress.county,
+                            "postcode": orderAddress.postcode,
+                            "country": orderAddress.country
+                        });
+        
+                        address.save(null, {
+                            error: function() {
+                                alert("Error adding DELIVERY address");
+                            }
+                        });
+
+                    },
                     error: function() {
-                        alert("Error adding DELIVERY address");
+                        alert("Error deleting " + orderAddress.name + " address");
                     }
                 });
 

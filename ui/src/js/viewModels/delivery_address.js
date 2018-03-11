@@ -28,7 +28,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
         self.customerAddresses = ko.observableArray();
         self.selectedDeliveryAddress = ko.observable();
-        self.addressReadOnly = ko.observable();
+        self.isCustomerAddress = ko.observable();
 
         self.handleAttached = function(info) {
 
@@ -42,13 +42,11 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
             if (addressArray != null) {
 
-                if (addressArray.length > 1) {
-                    for (var i = 0; i < addressArray.length; i++) {
-                        if (addressArray[i].name.indexOf("DELIVERY") != -1) {
-                            index = i;
-                            address = addressArray[i];
-                            break;
-                        }
+                for (var i = 0; i < addressArray.length; i++) {
+                    if (addressArray[i].name.indexOf("DELIVERY") != -1) {
+                        index = i;
+                        address = addressArray[i];
+                        break;
                     }
                 }
 
