@@ -47,13 +47,17 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
                       alert("Error fetching Order ID: " + event.data.globalContext.orderId);
                     }
 
-                    self.customer = CustomerFactory.createCustomerModel(model.get("order").customer.customer_id);
+                    var customerId = model.get("order").customer.customer_id;
+                    self.customer = CustomerFactory.createCustomerModel(customerId);
                     self.customer.fetch({
                       success: function(model, response, options) {
 
                         self.order.get("order").customer = model.get("0");
                         self.contentLoaded(true);
 
+                      },
+                      error: function(model, xhr, options) {
+                        alert("Error fetching Customer ID: " + customerId);
                       }
                     });
 
