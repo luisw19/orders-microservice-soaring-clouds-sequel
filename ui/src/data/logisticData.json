@@ -1,0 +1,27 @@
+{
+  "status": "NOK",
+  "validationFindings": [
+      {
+          "findingType": "outOfStockItem",
+          "offendingItem": {
+              "productIdentifier": "42371XX",
+              "itemCount": 1
+          }
+      },
+      {
+          "findingType": "outOfStockItem",
+          "offendingItem": {
+              "productIdentifier": "XCZ",
+              "itemCount": 1
+          }
+      },
+      {
+          "findingType": "outOfStockItem",
+          "offendingItem": {
+              "productIdentifier": "AAA",
+              "itemCount": 13
+          }
+      }
+  ],
+  "shippingCosts": 8.040000000000001
+}

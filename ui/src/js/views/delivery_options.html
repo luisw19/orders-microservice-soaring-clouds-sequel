@@ -1,0 +1,62 @@
+<div class="oj-flex-item oj-panel oj-sm-margin-2x">
+    <oj-collapsible id="deliveryMethodCollapsible" expanded={{deliveryMethodExpanded}}>
+      <h3 id="header" slot="header">Delivery Method</h3>
+      <oj-form-layout id="deliveryMethodLayout"
+        label-edge="start"
+        max-columns="2">
+  
+        <oj-input-text id="firstName"
+          value="{{firstName}}"
+          on-value-changed="[[onFirstNameChanged]]"
+          label-hint="First Name:">
+        </oj-input-text>
+  
+        <oj-input-text id="lastName"
+          value="{{lastName}}"
+          on-value-changed="[[onLastNameChanged]]"
+          label-hint="Last Name:">
+        </oj-input-text>
+
+        <oj-input-date id="eta"
+          value="{{eta}}"
+          on-value-changed="[[onEtaChanged]]"
+          converter=[[dateConverter]]
+          label-hint="Estimated Arrival:">
+        </oj-input-date>
+  
+        <oj-radioset id="deliveryMethodOptions"
+          value="{{deliveryMethod}}"
+          on-value-changed="[[onDeliveryMethodChanged]]"
+          label-hint="Delivery Method:">
+          <oj-option id="economyOpt" value="ECONOMY">Economy</oj-option>
+          <oj-option id="premiumOpt" value="PREMIUM">Premium</oj-option>
+        </oj-radioset>
+  
+      </oj-form-layout>
+
+    </oj-collapsible>
+  </div>
+  <div class="oj-flex-item oj-panel oj-sm-margin-2x">
+    <oj-collapsible id="specialDetailsCollapsible" expanded={{specialDetailsExpanded}}>
+      <h3 id="header" slot="header">Special Details</h3>
+      <oj-form-layout id="specialDetailsLayout"
+        label-edge="start"
+        max-columns="2">
+  
+        <oj-input-text id="personalMessage"
+          value="{{personalMessage}}"
+          on-value-changed="[[onPersonalMessageChanged]]"
+          label-hint="Personal Message:">
+        </oj-input-text>
+  
+        <oj-checkboxset id="giftWrappingCheckbox"
+          value="{{giftWrap}}"
+          on-value-changed="[[onGiftWrapChanged]]"
+          label-hint="Gift Wrap:">
+          <oj-option id="giftWrapOpt" value="giftWrap"></oj-option>
+        </oj-checkboxset>
+  
+      </oj-form-layout>
+      
+    </oj-collapsible>
+  </div>

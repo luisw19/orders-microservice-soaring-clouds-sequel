@@ -1,0 +1,136 @@
+<div class="oj-flex-item oj-panel oj-sm-margin-2x">
+  <oj-collapsible id="paymentDetailsCollapsible" expanded={{paymentDetailsExpanded}}>
+    <h3 id="header" slot="header">Payment Details</h3>
+    <oj-form-layout id="paymentDetailsLayout"
+      label-edge="start"
+      max-columns="2">
+
+      <oj-combobox-one id="paymentMethod"
+        value="{{selectedPaymentMethod}}"
+        on-value-changed="[[onPaymentMethodChanged]]"
+        label-hint="Payment Method: ">
+        <oj-bind-for-each data="[[paymentMethods]]" as="method">
+          <template>
+            <oj-option value="[[method.data['_id']]]"><span data-bind="text: method.data.type"></span> - <span data-bind="text: maskCard(method.data.cardNumber)"></span></oj-option>
+          </template>
+        </oj-bind-for-each>
+        <oj-option value="newPayMethod">New payment method</oj-option>
+      </oj-combobox-one>
+
+    </oj-form-layout>
+
+    <div data-bind="if: displayNewMethod">
+
+      <oj-form-layout id="newPaymentMethodLayout"
+        label-edge="start"
+        max-columns="2">
+
+        <oj-input-text id="nameOnCard"
+          value="{{nameOnCard}}"
+          on-value-changed="[[onNameOnCardChange]]"
+          label-hint="Name on card:">
+        </oj-input-text>
+
+        <oj-combobox-one id="cardType"
+          value="{{selectedCardType}}"
+          on-value-changed="[[onCardTypeChange]]"
+          label-hint="Card Type: ">
+          <oj-option value="VISA_DEBIT">Visa Debit</oj-option>
+          <oj-option value="VISA_CREDIT">Visa Credit</oj-option>
+          <oj-option value="MASTERCARD">Mastercard</oj-option>
+          <oj-option value="AMEX">American Express</oj-option>
+        </oj-combobox-one>
+
+        <oj-input-text id="cardNumber"
+          value="{{cardNumber}}"
+          on-value-changed="[[onCardNumberChanged]]"
+          label-hint="Card Number:">
+        </oj-input-text>
+
+        <oj-input-text id="startDate"
+          value="{{startDate}}"
+          on-value-changed="[[onStartDateChanged]]"
+          placeholder="mm/yy"
+          label-hint="Start Date:">
+        </oj-input-text>
+
+        <oj-input-text id="expiryDate"
+          value="{{expiryDate}}"
+          on-value-changed="[[onEndDateChanged]]"
+          placeholder="mm/yy"
+          label-hint="Expiry Date:">
+        </oj-input-text>
+
+      </oj-form-layout>
+
+    </div>
+
+  </oj-collapsible>
+</div>
+<div class="oj-flex-item oj-panel oj-sm-margin-2x">
+  <oj-collapsible id="billingAddressCollapsible" expanded={{billingAddressExpanded}}>
+    <h3 id="header" slot="header">Billing Address</h3>
+
+    <oj-form-layout id="sameAddressAsDeliveryLayout"
+      label-edge="start"
+      max-columns="2">
+
+      <oj-checkboxset id="sameAddressAsDeliveryCheckbox"
+        value="{{sameAddressAsDelivery}}"
+        on-value-changed="[[onSameAddressAsDeliveryChanged]]"
+        label-hint="Use Delivery Address:">
+        <oj-option id="deliveryAddress" value="deliveryAddress"></oj-option>
+      </oj-checkboxset>
+
+    </oj-form-layout>
+
+    <oj-form-layout id="billingAddressLayout"
+      label-edge="start"
+      max-columns="2">
+
+      <oj-input-text id="addressLine1"
+        value="{{addressLine1}}"
+        readonly="[[addressReadOnly]]"
+        on-value-changed="[[onAddressLine1Changed]]"
+        label-hint="Address Line 1:">
+      </oj-input-text>
+
+      <oj-input-text id="addressLine2"
+        value="{{addressLine2}}"
+        readonly="[[addressReadOnly]]"
+        on-value-changed="[[onAddressLine2Changed]]"
+        label-hint="Address Line 2:">
+      </oj-input-text>
+
+      <oj-input-text id="city"
+        value="{{city}}"
+        readonly="[[addressReadOnly]]"
+        on-value-changed="[[onCityChanged]]"
+        label-hint="City:">
+      </oj-input-text>
+
+      <oj-input-text id="county"
+        value="{{county}}"
+        readonly="[[addressReadOnly]]"
+        on-value-changed="[[onCountyChanged]]"
+        label-hint="County:">
+      </oj-input-text>
+
+      <oj-input-text id="postCode"
+        value="{{postCode}}"
+        readonly="[[addressReadOnly]]"
+        on-value-changed="[[onPostCodeChanged]]"
+        label-hint="Post Code:">
+      </oj-input-text>
+
+      <oj-input-text id="country"
+        value="{{country}}"
+        readonly="[[addressReadOnly]]"
+        on-value-changed="[[onCountryChanged]]"
+        label-hint="Country:">
+      </oj-input-text>
+
+    </oj-form-layout>
+
+  </oj-collapsible>
+</div>
