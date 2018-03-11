@@ -46,7 +46,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
             if (shipping != null) {
                 self.firstName(shipping.first_name);
                 self.lastName(shipping.last_name);
-                oj.Logger.error(shipping.shipping_method);
                 self.deliveryMethod(shipping.shipping_method);
                 self.eta(shipping.ETA);
             } else {

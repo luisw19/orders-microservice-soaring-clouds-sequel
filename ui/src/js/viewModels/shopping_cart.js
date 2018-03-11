@@ -98,11 +98,13 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
 
             var id = event.detail.value;
             self.hasValidatedLogistics(true);
+            self.displayValidate(false);
 
             if (id === "orderSum") {
                 self.stepModule("order_summary");
             } else if (id === "delivAdd") {
                 self.stepModule("delivery_address");
+                self.apiInteraction(id); // Remove address when opening page
             } else if (id === "delivOpt") {
                 self.stepModule("delivery_options");
                 self.hasValidatedLogistics(false);
@@ -223,11 +225,36 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
 
         self.apiInteraction = function(stepId) {
 
-            if (stepId === "delivOpt") {
+            if (stepId === "delivAdd") {
+
+                if (rootViewModel.order.get("order").address.length > 0) {
+                    // Remove address on accessing delivery page
+                    var address = AddressFactory.createAddressModel(rootViewModel.order.get("order").order_id);
+
+                    for (var i = 0; i < rootViewModel.order.get("order").address.length; i++) {
+                        if (rootViewModel.order.get("order").address[i].name.indexOf("DELIVERY") != -1) {
+                            index = i;
+                            orderAddress = rootViewModel.order.get("order").address[i];
+                            break;
+                        }
+                    }
+
+                    // Overwride POST call to DELETE Address on Order
+                    oj.ajax = function(ajaxOptions) {
+                        ajaxOptions.url += "/" + orderAddress.name;
+                        ajaxOptions.headers['api-key'] = '73f1c312-64e1-4069-92d8-0179ac056e90';
+                        ajaxOptions.type = "DELETE";
+                        return $.ajax(ajaxOptions);
+                    };
+
+                    address.save();
+                }
+
+            } else if (stepId === "delivOpt") {
 
                 var address = AddressFactory.createAddressModel(rootViewModel.order.get("order").order_id);
 
-                // Call Add/Update Address on Order
+                // Call Add Address on Order
                 oj.ajax = function(ajaxOptions) {
                     ajaxOptions.headers['api-key'] = '73f1c312-64e1-4069-92d8-0179ac056e90';
                     return $.ajax(ajaxOptions);
