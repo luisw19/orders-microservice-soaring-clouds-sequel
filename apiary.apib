@@ -98,7 +98,7 @@ Returns the details for a specific Order
 
 ### Update Order [PUT]
 Updates only those details which are allowed to be updated.
-At present only Order Status (excluding SUCCESS and CANCELLED), 
+At present only Order Status (excluding SUCCESS and CANCELED), 
 Payment Details and Customer Details (excluding ID)
 
 + Request (application/json; charset=utf-8)
@@ -123,22 +123,13 @@ Payment Details and Customer Details (excluding ID)
                     "first_name": "Lucas",
                     "last_name": "Jellema",
                     "shipping_method": "ECONOMY",
-                    "price": 0,
-                    "ETA": "2018-06-05T07:11:00.000Z"
+                    "price": 15
                 },
                 "special_details": {
                     "personal_message": "From Luis with Love!",
                     "gift_wrapping": true,
                     "delivery_notes": "Please try to deliver in the morning"
-                },
-                "payment": {
-                    "card_type": "VISA_CREDIT",
-                    "card_number": "**** **** **** 1111",
-                    "start_year": 2018,
-                    "start_month": 1,
-                    "expiry_year": 2020,
-                    "expiry_month": 6
-              }
+                }
             }
 
 + Response 200 (application/json; charset=utf-8)
@@ -443,7 +434,7 @@ Check the health status of the service
 - shipping_method (enum, required) - Shipping methods supported
   - `ECONOMY` (string) -  Reduced cost Shipping Method
   - `PREMIUM` (string) - Fast delivery method
-- price: 0.0 (number, required) - Price for the shippping depending on the method
+- price: 0.0 (number, required) - Price for the shipping depending on the method
 - ETA: `2018-06-05T07:11:00.000Z` (string, optional) - Target/estimated delivery date
 
 ## Special Details (object)
@@ -463,8 +454,8 @@ Check the health status of the service
   - `CANCELED` (string) - Order has been canceled
 - created_at: `2018-02-05T07:17:00.442Z` (string, optional)
 - updated_at: `2018-02-05T07:17:00.442Z` (string, optional)
-- total_price: 100 (number, optional)
-- discount: 0 (number, optional) - discount level based on loyalty or something else.
+- total_price: 100 (number, optional) - total price excluding discount
+- discount: 0 (number, optional) - discount level in % based on loyalty or something else.
 - currency (enum, optional)
   - `GBP` (string) - British Pounds
   - `USD` (string) - US Dollars
