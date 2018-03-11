@@ -23,7 +23,7 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
 
         $.ajaxSetup({
           headers: {
-            "api-key": "73f1c312-64e1-4069-92d8-0179ac056e90"
+            "api-key": "API-KEY-PLACEHOLDER"
           }
         });
 
