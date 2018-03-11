@@ -12,24 +12,37 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
         var self = this;
         var rootViewModel = ko.dataFor(document.getElementById('globalBody'));
-        var shipping = rootViewModel.order.get("shippping");
-        self.items = rootViewModel.order.get("line_items");
+        var order = rootViewModel.order.get("order");
+        var shipping = order.shipping;
+        self.items = order.line_items;
 
         self.orderItemsExpanded = ko.observable(true);
         self.deliveryDetailsExpanded = ko.observable(true);
 
         self.shippingMethod = ko.observable();
         self.shippingCost = ko.observable();
+        self.shippingETA = ko.observable();
         self.totalPrice = ko.observable();
+
+        self.dateConverter = ko.observable(
+            oj.Validation.converterFactory(oj.ConverterFactory.CONVERTER_TYPE_DATETIME).createConverter(
+                {
+                    pattern : 'dd-MMM-yyyy'
+                }
+            )
+        );
 
         self.handleAttached = function(info) {
 
-            oj.Logger.error(shipping);
+            order = rootViewModel.order.get("order");
+            shipping = order.shipping;
+            self.items = order.line_items;
 
             self.shippingMethod(shipping.shipping_method);
             self.shippingCost(shipping.price.toFixed(2));
+            self.shippingETA(shipping.ETA);
 
-            self.totalPrice(rootViewModel.order.get('order').total_price);
+            self.totalPrice(parseFloat(order.total_price).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + " " + order.currency);
 
         };
 

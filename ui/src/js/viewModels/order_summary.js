@@ -13,7 +13,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/LineItemFactory',
     function ShoppingCartViewModel() {
 
         var self = this;
-        var basketTrain;
         var rootViewModel = ko.dataFor(document.getElementById('globalBody'));
         var customer = rootViewModel.customer.get('0');
         var array = [];
@@ -56,6 +55,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/LineItemFactory',
 
           self.orderId(rootViewModel.order.get("order").order_id);
           self.orderCurrency(rootViewModel.order.get("order").currency);
+
+          customer = rootViewModel.customer.get('0');
 
           newOrderPrice = 0;
           

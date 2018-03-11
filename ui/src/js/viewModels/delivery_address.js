@@ -29,6 +29,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
             // Read latest Order from controller
 
             var addressArray = rootViewModel.order.get("order").address;
+            order = rootViewModel.order.get("order");
 
             if (addressArray != null) {
 

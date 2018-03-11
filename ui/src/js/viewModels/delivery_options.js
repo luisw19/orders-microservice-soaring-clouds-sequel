@@ -13,8 +13,9 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
         var self = this;
         var rootViewModel = ko.dataFor(document.getElementById('globalBody'));
-        var shipping = rootViewModel.order.get('shippping');
-        var specialDetails = rootViewModel.order.get('special_details');
+        var order = rootViewModel.order.get("order");
+        var shipping = order.shipping;
+        var specialDetails = order.special_details;
 
         self.deliveryMethodExpanded = ko.observable(true);
         self.specialDetailsExpanded = ko.observable(true);
@@ -37,6 +38,10 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
         self.handleAttached = function(info) {
 
+            order = rootViewModel.order.get("order");
+            shipping = order.shipping;
+            specialDetails = order.special_details;
+
             // Delivery Method
             if (shipping != null) {
                 self.firstName(shipping.first_name);
@@ -46,7 +51,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
                 self.eta(shipping.ETA);
             } else {
                 // Add shipping object to model
-                rootViewModel.order.set("shipping", {});
+                order.shipping = {};
+                rootViewModel.order.set("order", order);
             }
 
             if (specialDetails != null) {
@@ -57,40 +63,42 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
                 }
             } else {
                 // Add special details object to model
-                rootViewModel.order.set("special_details", {});
+                order.special_details = {};
+                rootViewModel.order.set("order", order);
             }
 
         };
 
         self.onFirstNameChanged = function(info) {
-            rootViewModel.order.get('shipping').first_name = self.firstName();
+            rootViewModel.order.get('order').shipping.first_name = self.firstName();
         };
 
         self.onLastNameChanged = function(info) {
-            rootViewModel.order.get('shipping').last_name = self.lastName();
+            rootViewModel.order.get('order').shipping.last_name = self.lastName();
         };
 
         self.onEtaChanged = function(info) {
-            rootViewModel.order.get('shipping').eta = self.eta();
+            var date = new Date(self.eta());
+            rootViewModel.order.get('order').shipping.ETA = oj.IntlConverterUtils.dateToLocalIso(date);
         };
 
         self.onDeliveryMethodChanged = function() {
-            rootViewModel.order.get('shipping').shipping_method = self.deliveryMethod()[0];
+            rootViewModel.order.get('order').shipping.shipping_method = self.deliveryMethod();
         };
 
         self.onGiftWrapChanged = function() {
 
             if (self.giftWrap().length === 0) {
-                rootViewModel.order.get('special_details').gift_wrapping = false;
+                rootViewModel.order.get('order').special_details.gift_wrapping = false;
             } else {
-                rootViewModel.order.get('special_details').gift_wrapping = true;
+                rootViewModel.order.get('order').special_details.gift_wrapping = true;
             }
 
         };
 
         self.onPersonalMessageChanged = function() {
 
-            rootViewModel.order.get('special_details').personal_message = self.personalMessage();
+            rootViewModel.order.get('order').special_details.personal_message = self.personalMessage();
 
         };
 

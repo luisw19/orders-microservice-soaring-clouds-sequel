@@ -24,9 +24,31 @@
       </oj-button>
     </div>
     <div class="oj-flex-item oj-flex-bar-end oj-sm-justify-content-flex-end">
-      <oj-button id="nextStep" data-bind="click: onNextStep" disabled=[[disabledNextStep]]>
-        Next
-      </oj-button>
+      <div data-bind="ifnot: displayValidate">
+        <oj-button id="nextStep" data-bind="click: onNextStep" disabled=[[disabledNextStep]]>
+          Next
+        </oj-button>
+      </div>
+      <div data-bind="if: displayValidate">
+        <div id="dialogWrapper">
+          <oj-dialog style="display:none" id="confirmationDialog" title="Confirmation" on-oj-close="[[onDialogClose]]">
+            <div slot="body">
+                Do you accept the delivery cost of <span data-bind="text: deliveryCost"></span> <span data-bind="text: currency"></span>
+            </div>
+            <div slot="footer">
+              <oj-button id="okButton" data-bind="click: confirmCost">  
+                Yes
+              </oj-button>
+              <oj-button id="cancelButton" data-bind="click: cancelCost">
+                No
+            </oj-button>
+            </div>
+          </oj-dialog>
+        </div>
+        <oj-button id="validateLogistics" data-bind="click: onValidate">
+          Validate
+        </oj-button>
+      </div>
     </div>
   </div>
 </div>

@@ -9,7 +9,7 @@
 
           <oj-form-layout id="orderItemsLayout"
             label-edge="start"
-            max-columns="2">
+            max-columns="3">
 
             <oj-input-text id="itemName"
               readonly
@@ -40,23 +40,32 @@
 <div class="oj-flex-item oj-panel oj-sm-margin-2x">
   <oj-collapsible id="deliveryDetailsCollapsible" expanded={{deliveryDetailsExpanded}}>
     <h3 id="header" slot="header">Delivery</h3>
-    <oj-form-layout id="deliveryDetailsLayout"
-      label-edge="start"
-      max-columns="2">
+    <div class="oj-panel oj-sm-margin-2x">
+      <oj-form-layout id="deliveryDetailsLayout"
+        label-edge="start"
+        max-columns="3">
 
-      <oj-input-text id="shippingMethod"
-        readonly
-        value="{{shippingMethod}}"
-        label-hint="Delivery Method:">
-      </oj-input-text>
+        <oj-input-text id="shippingMethod"
+          readonly
+          value="{{shippingMethod}}"
+          label-hint="Delivery Method:">
+        </oj-input-text>
 
-      <oj-input-text id="shippingCost"
-        readonly
-        value="{{shippingCost}}"
-        label-hint="Delivery Cost:">
-      </oj-input-text>
+        <oj-input-text id="shippingCost"
+          readonly
+          value="{{shippingCost}}"
+          label-hint="Delivery Cost:">
+        </oj-input-text>
 
-    </oj-form-layout>
+        <oj-input-date id="eta"
+          readonly
+          value="{{shippingETA}}"
+          converter=[[dateConverter]]
+          label-hint="Estimated Arrival:">
+        </oj-input-date>
+
+      </oj-form-layout>
+    </div>
     
   </oj-collapsible>
 </div>
@@ -66,7 +75,7 @@
 
   <oj-form-layout id="specialDetailsLayout"
     label-edge="start"
-    max-columns="2">
+    max-columns="1">
 
     <oj-input-text id="totalPrice"
       readonly

@@ -10,45 +10,19 @@ function (oj) {
         createOrderModel: function(orderId) {
             var Order = oj.Model.extend({
                 urlRoot: this.setOrderURI(orderId),
-                parse: function(response) {
-
-                    // return {
-                    //     "headerId": response.headerId,
-                    //     "headerNumber": response.headerNumber,
-                    //     "headerType": response.headerType,
-                    //     "name": response.name,
-                    //     "cardType": response.cardType,
-                    //     "isTask": response.isTask,
-                    //     "createdBy": createdBy,
-                    //     "creationDate": creationDate,
-                    //     "updatedBy": response.updatedBy,
-                    //     "updatedDate": response.updatedDate,
-                    //     "ageGroup": response.ageGroup,
-                    //     "room": response.room,
-                    //     "status": status,
-                    //     "group": group,
-                    //     "contentDetail": response.contentDetail
-                    // };
-
-                    return response;
-
-                },
                 parseSave: function(request) {
                     
                     return {
-                        "headerId": request.headerId,
-                        "headerNumber": request.headerNumber,
-                        "headerType": request.headerType,
-                        "name": request.name,
-                        "cardType": request.cardType,
-                        "isTask": request.isTask,
-                        "createdBy": request.createdBy,
-                        "creationDate": request.creationDate,
-                        "updatedBy": request.updatedBy,
-                        "updatedDate": request.updatedDate,
-                        "ageGroup": request.ageGroup,
-                        "room": request.room,
-                        "contentDetail": request.contentDetail
+                        "customer": {
+                            "loyalty_level": request.order.customer.loyalty_level,
+                            "first_name": request.order.customer.first_name,
+                            "last_name": request.order.customer.last_name,
+                            "phone": request.order.customer.phone,
+                            "email": request.order.customer.email
+                        },
+                        // TODO - TYPO IN API (Shipping with 3 Ps)
+                        "shippping": request.order.shipping,
+                        "special_details": request.order.special_details
                     };
 
                 },
