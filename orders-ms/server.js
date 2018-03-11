@@ -7,7 +7,7 @@ var mongoOp     =   require("./model/mongo");
 var router      =   express.Router();
 var querystring = require('querystring');
 var PORT = process.env.APP_PORT || 3000;
-var APP_VERSION = "1.0.0";
+var APP_VERSION = "1.1.2";
 var APP_NAME = "OrdersMS";
 //Set variables for calling the Event Producer API
 var http = require('http');
