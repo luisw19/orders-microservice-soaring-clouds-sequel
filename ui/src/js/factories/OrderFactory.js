@@ -23,8 +23,7 @@ function (oj) {
                                 "phone": request.order.customer.phone,
                                 "email": request.order.customer.email
                             },
-                            // TODO - TYPO IN API (Shipping with 3 Ps)
-                            "shippping": request.order.shipping,
+                            "shipping": request.order.shipping,
                             "special_details": request.order.special_details
                         };
 
@@ -38,8 +37,7 @@ function (oj) {
                                 "phone": request.order.customer.phone,
                                 "email": request.order.customer.email
                             },
-                            // TODO - TYPO IN API (Shipping with 3 Ps)
-                            "shippping": request.order.shipping,
+                            "shipping": request.order.shipping,
                             "special_details": request.order.special_details
                         };
 

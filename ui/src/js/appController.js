@@ -36,8 +36,10 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
 
             if (event.data.eventType === "globalContext") {
 
+              if (event.data.globalContext != null && event.data.globalContext.orderId != null) {
+
                 self.order = OrderFactory.createOrderModel(event.data.globalContext.orderId);
-                
+              
                 self.order.fetch({
                   success: function(model, response, options) {
 
@@ -56,7 +58,12 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
                     });
 
                   }
+                  
                 });
+
+              } else {
+                alert("Error - No Order ID passed into the application");
+              }
 
             }
 
@@ -66,19 +73,25 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
 
       $(document).ready(function () {
 
-        self.init();
-        
-        // Simulate dummy inbound event
-        var event = new MessageEvent("message", {
-            data: {
-                eventType: "globalContext",
-                globalContext: {
-                    orderId: "unittest"
-                }
-            }
-        });
+        oj.Logger.error(location);
 
-        window.dispatchEvent(event);
+        self.init();
+
+        if (location.search.indexOf("orderId=unittest") != -1) {
+
+            // Simulate dummy inbound event
+            var event = new MessageEvent("message", {
+              data: {
+                "eventType": "globalContext",
+                "globalContext": {
+                  orderId: "unittest"
+                }
+              }
+          });
+
+          window.dispatchEvent(event);
+
+        }
 
       });
 

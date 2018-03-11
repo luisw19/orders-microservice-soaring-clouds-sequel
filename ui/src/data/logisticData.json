@@ -1,5 +1,5 @@
 {
-  "status": "NOK",
+  "status": "OK",
   "validationFindings": [
       {
           "findingType": "outOfStockItem",
