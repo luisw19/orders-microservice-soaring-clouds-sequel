@@ -1,0 +1,100 @@
+<div class="oj-flex-item oj-panel oj-sm-margin-2x">
+  <oj-collapsible id="productDetailsCollapsible" expanded={{productDetailsExpanded}}>
+    <h3 id="header" slot="header">Order Details - Total: <span data-bind="text: orderPrice" converter="[[converter]]"></span> <span data-bind="text: orderCurrency"></span></h3>
+    <oj-accordion id="accordionPage"
+      multiple>
+        <oj-bind-for-each data="{{products}}" as="product">
+          <template>
+            <oj-collapsible id="lineItemCollapsible" expanded=true>
+              <h3 slot="header">Line ID <span data-bind="text: product.data.line_id"></span> - Total: <span data-bind="text: lineItemTotalPrice()[product.index]" converter="[[converter]]"></span> <span data-bind="text: orderCurrency"></span></h3>
+              <oj-form-layout id="customerDetailsLayout"
+                label-edge="start"
+                max-columns="2">
+
+                <oj-input-text id="productName"
+                  readonly
+                  value="[[product.data.product_name]]"
+                  label-hint="Product Name:">
+                </oj-input-text>
+          
+                <oj-input-text id="productDescription"
+                  readonly
+                  value="[[product.data.description]]"
+                  label-hint="Product Description:">
+                </oj-input-text>
+
+                <oj-input-text id="productColour"
+                  readonly
+                  value="[[product.data.color]]"
+                  label-hint="Product Colour:">
+                </oj-input-text>
+
+                <oj-input-text id="productCode"
+                  readonly
+                  value="[[product.data.product_code]]"
+                  label-hint="Product Code:">
+                </oj-input-text>
+          
+                <oj-input-text id="productPrice"
+                  readonly
+                  value="[[product.data.price]]"
+                  label-hint="Product Price:">
+                </oj-input-text>
+
+                <oj-input-number id="productQuantity"
+                  min= "0"
+                  step= "1" 
+                  value="{{product.data.quantity}}"
+                  label-hint="Product Quantity:"
+                  on-value-changed="[[onQuantityChanged]]">
+                </oj-input-number>
+          
+              </oj-form-layout>
+              
+            </oj-collapsible>
+          </template>
+        </oj-bind-for-each>
+      </oj-accordion>
+  </oj-collapsible>
+</div>
+<div class="oj-flex-item oj-panel oj-sm-margin-2x">
+  <oj-collapsible id="customerDetailsCollapsible" expanded={{customerDetailsExpanded}}>
+    <h3 id="header" slot="header">Customer Details</h3>
+    <oj-form-layout id="customerDetailsLayout"
+      label-edge="start"
+      max-columns="2">
+
+      <oj-input-text id="customerId"
+        readonly
+        value="{{customerId}}"
+        label-hint="Customer ID:">
+      </oj-input-text>
+
+      <oj-input-text id="customerName"
+        readonly
+        value="{{customerName}}"
+        label-hint="Customer Name:">
+      </oj-input-text>
+
+      <oj-input-text id="customerPhone"
+        readonly
+        value="{{customerPhone}}"
+        label-hint="Phone Number:">
+      </oj-input-text>
+
+      <oj-input-text id="customerEmail"
+        readonly
+        value="{{customerEmail}}"
+        label-hint="Email Address:">
+      </oj-input-text>
+
+      <oj-input-text id="customerLoyaltyLevel"
+        readonly
+        value="{{customerLoyaltyLevel}}"
+        label-hint="Loyalty Level:">
+      </oj-input-text>
+
+    </oj-form-layout>
+    
+  </oj-collapsible>
+</div>
