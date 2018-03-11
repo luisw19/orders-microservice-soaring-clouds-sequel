@@ -123,25 +123,13 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
                 self.displayNewMethod(true);
 
-                order.payment.name_on_card = self.nameOnCard();
-                order.payment.card_type = self.selectedCardType();
-                order.payment.card_number = self.cardNumber();
-
-                if (self.startDate() != null) {
-                    order.payment.start_month = self.startDate().substring(1, self.startDate().indexOf("/"));
-                    order.payment.start_year = "20" + self.startDate().substring(self.startDate().indexOf("/") + 1);
-                } else {
-                    order.payment.start_month = "";
-                    order.payment.start_year = "";
-                }
-
-                if (self.expiryDate() != null) {
-                    order.payment.expiry_month = self.expiryDate().substring(1, self.expiryDate().indexOf("/"));
-                    order.payment.expiry_year = "20" + self.expiryDate().substring(self.expiryDate().indexOf("/") + 1);
-                } else {
-                    order.payment.expiry_month = "";
-                    order.payment.expiry_year = "";
-                }
+                order.payment.name_on_card = "";
+                order.payment.card_type = "";
+                order.payment.card_number = "";
+                order.payment.start_month = "";
+                order.payment.start_year = "";
+                order.payment.expiry_month = "";
+                order.payment.expiry_year = "";
 
             } else {
 

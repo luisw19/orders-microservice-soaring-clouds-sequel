@@ -4,7 +4,7 @@
 define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
         'factories/LogisticsFactory', 'factories/OrderFactory',
         'ojs/ojknockout', 'ojs/ojmodel', 'ojs/ojtrain', 'ojs/ojbutton',
-        'ojs/ojcollapsible', 'ojs/ojmodule', 'ojs/ojdialog'
+        'ojs/ojcollapsible', 'ojs/ojmodule', 'ojs/ojdialog', 'ojs/ojradioset'
 ], function (oj, ko, $, AddressFactory, LogisticsFactory, OrderFactory) {
     /**
      * The view model for the shopping cart view template
@@ -40,6 +40,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
 
             basketTrain = document.getElementById("basketTrain");
 
+            self.orderComplete(false);
             self.disabledPreviousStep(true);
             self.stepModule("order_summary");
 
@@ -304,18 +305,20 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
 
             if (stepId === "delivAdd") {
 
-                if (rootViewModel.order.get("order").address.length > 0) {
-                    // Remove address on accessing delivery page
-                    var address = AddressFactory.createAddressModel(rootViewModel.order.get("order").order_id);
+                var orderAddress = null;
 
-                    for (var i = 0; i < rootViewModel.order.get("order").address.length; i++) {
-                        if (rootViewModel.order.get("order").address[i].name.indexOf("DELIVERY") != -1) {
-                            index = i;
-                            orderAddress = rootViewModel.order.get("order").address[i];
-                            break;
-                        }
+                var address = AddressFactory.createAddressModel(rootViewModel.order.get("order").order_id);
+
+                for (var i = 0; i < rootViewModel.order.get("order").address.length; i++) {
+                    if (rootViewModel.order.get("order").address[i].name.indexOf("DELIVERY") != -1) {
+                        index = i;
+                        orderAddress = rootViewModel.order.get("order").address[i];
+                        break;
                     }
+                }
 
+                if (orderAddress != null) {
+                    
                     // Overwride POST call to DELETE Address on Order
                     oj.ajax = function(ajaxOptions) {
                         ajaxOptions.url += "/" + orderAddress.name;
@@ -328,6 +331,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                             alert("Error deleting " + orderAddress.name + " address");
                         }
                     });
+
                 }
 
             } else if (stepId === "delivOpt") {
@@ -335,12 +339,18 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                 var address = AddressFactory.createAddressModel(rootViewModel.order.get("order").order_id);
 
                 // Call Add Address on Order
+                oj.Logger.error(rootViewModel.order.get("order").address);
                 for (var i = 0; i < rootViewModel.order.get("order").address.length; i++) {
                     if (rootViewModel.order.get("order").address[i].name.indexOf("DELIVERY") != -1) {
                         orderAddress = rootViewModel.order.get("order").address[i];
                         break;
                     }
                 }
+
+                oj.ajax = function(ajaxOptions) {
+                    ajaxOptions.type = "POST";
+                    return $.ajax(ajaxOptions);
+                };
 
                 address.set({
                     "name": "DELIVERY",
@@ -375,6 +385,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
 
                 oj.ajax = function(ajaxOptions) {
                     ajaxOptions.url = OrderFactory.setOrderURI(order.order_id);
+                    ajaxOptions.type = "PUT";
                     return $.ajax(ajaxOptions);
                 };
 

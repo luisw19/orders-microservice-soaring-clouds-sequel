@@ -2,7 +2,8 @@
  * Delivery Address module
  */
 define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
-        'ojs/ojmodule'
+        'ojs/ojmodule', 'ojs/ojradioset', 'ojs/ojbutton', 'ojs/ojdialog',
+        'ojs/ojselectcombobox'
 ], function (oj, ko, $) {
     /**
      * The view model for the delivery address view template
@@ -25,11 +26,19 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         self.postCode = ko.observable();
         self.country = ko.observable();
 
-        self.handleAttached = function(info) {
-            // Read latest Order from controller
+        self.customerAddresses = ko.observableArray();
+        self.selectedDeliveryAddress = ko.observable();
+        self.addressReadOnly = ko.observable();
 
+        self.handleAttached = function(info) {
+
+            // Read latest Order from controller
             var addressArray = rootViewModel.order.get("order").address;
             order = rootViewModel.order.get("order");
+
+            self.customerAddresses(rootViewModel.customer.get("0").addresses);
+
+            oj.Logger.error(rootViewModel.order.get("order").address);
 
             if (addressArray != null) {
 
@@ -41,11 +50,10 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
                             break;
                         }
                     }
-                } else if (addressArray.length === 1) {
-                    address = addressArray[0];
                 }
 
                 if (address != null) {
+                    self.selectedDeliveryAddress(" ");
                     self.addressLine1(address.line_1);
                     self.addressLine2(address.line_2);
                     self.city(address.city);
@@ -54,14 +62,57 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
                     self.country(address.country);
                 } else {
                     order.address = [{"name" : "DELIVERY"}];
+                    index = 0;
                     rootViewModel.order.set("order", order);
                 }
 
             } else {
                 // Add address object to model
-                order.address = [{}];
+                order.address = [{"name" : "DELIVERY"}];
+                index = 0;
                 rootViewModel.order.set("order", order);
             }
+
+        };
+
+        self.onDeliveryAddressChanged = function(event) {
+
+            var id = event.detail.value;
+
+            if (id === "newDeliveryAddress") {
+
+                self.addressLine1("");
+                self.addressLine2("");
+                self.city("");
+                self.county("");
+                self.postCode("");
+                self.country("");
+
+            } else {
+
+                var address;
+
+                for (var i = 0; i < self.customerAddresses().length; i++) {
+                    if (id === self.customerAddresses()[i]._id) {
+                        address = self.customerAddresses()[i];
+                    }
+                }
+
+                self.addressLine1(address.streetNumber + " " + address.streetName);
+                self.addressLine2(address.line_2);
+                self.city(address.city);
+                self.county(address.county);
+                self.postCode(address.postcode);
+                self.country(address.country);
+
+            }
+
+            rootViewModel.order.get("order").address[index].line_1 = self.addressLine1();
+            rootViewModel.order.get("order").address[index].line_2 = self.addressLine2();
+            rootViewModel.order.get("order").address[index].city = self.city();
+            rootViewModel.order.get("order").address[index].county = self.county();
+            rootViewModel.order.get("order").address[index].postcode = self.postCode();
+            rootViewModel.order.get("order").address[index].country = self.country();
 
         };
 
