@@ -185,11 +185,11 @@ function produceOrderEvent(inOrder,response) {
               "array": addressesArray
             },
             "shipping": {
-              "firstName": {"string": inOrder.order.shippping.first_name},
-              "lastName": {"string": inOrder.order.shippping.last_name},
-              "shippingMethod": inOrder.order.shippping.shipping_method,
-              "price": {"double": inOrder.order.shippping.price},
-              "ETA": inOrder.order.shippping.ETA,
+              "firstName": {"string": inOrder.order.shipping.first_name},
+              "lastName": {"string": inOrder.order.shipping.last_name},
+              "shippingMethod": inOrder.order.shipping.shipping_method,
+              "price": {"double": inOrder.order.shipping.price},
+              "ETA": inOrder.order.shipping.ETA,
             },
             "specialDetails": {
               "personalMessage": {"string": inOrder.order.special_details.personal_message},

@@ -249,32 +249,32 @@ router.route("/orders/:id")
               }
 
               //Validate shipping details
-              if(updatedOrder.shippping!==undefined){
-                if(updatedOrder.shippping.first_name==undefined){
-                  valError = valError + " shippping.first_name";
+              if(updatedOrder.shipping!==undefined){
+                if(updatedOrder.shipping.first_name==undefined){
+                  valError = valError + " shipping.first_name";
                   validation = false;
                 }
-                if(updatedOrder.shippping.last_name==undefined){
-                  valError = valError + " shippping.last_name";
+                if(updatedOrder.shipping.last_name==undefined){
+                  valError = valError + " shipping.last_name";
                   validation = false;
                 }
-                if(updatedOrder.shippping.shipping_method==undefined){
-                  valError = valError + " shippping.shipping_method";
+                if(updatedOrder.shipping.shipping_method==undefined){
+                  valError = valError + " shipping.shipping_method";
                   validation = false;
                 }
-                if(updatedOrder.shippping.price<=0){
-                  valError = valError + " shippping.price<=0";
+                if(updatedOrder.shipping.price<=0){
+                  valError = valError + " shipping.price<=0";
                   validation = false;
                 }
                 //This validation is not required in this version
-                if(updatedOrder.shippping.ETA==undefined){
+                if(updatedOrder.shipping.ETA==undefined){
                   //ETA not enforced in this version. Next release
-                  updatedOrder.shippping.ETA = "";
-                  //valError = valError + " shippping.ETA";
+                  updatedOrder.shipping.ETA = "";
+                  //valError = valError + " shipping.ETA";
                   //validation = false;
                 }
               }else{
-                valError = valError + " shippping[]";
+                valError = valError + " shipping[]";
                 validation = false;
               }
 
@@ -317,7 +317,7 @@ router.route("/orders/:id")
                 }
 
                 //set Shipping details
-                data.order.shippping = updatedOrder.shippping;
+                data.order.shipping = updatedOrder.shipping;
 
                 //Set special details values
                 if(updatedOrder.special_details!==undefined){
@@ -848,32 +848,32 @@ router.route("/orders/:id/process")
         }
 
         //Validate shipping details
-        if(JSON.stringify(data.order.shippping)!=="{}"){
-          if(data.order.shippping.first_name==undefined){
-            valError = valError + " shippping.first_name";
+        if(JSON.stringify(data.order.shipping)!=="{}"){
+          if(data.order.shipping.first_name==undefined){
+            valError = valError + " shipping.first_name";
             validation = false;
           }
-          if(data.order.shippping.last_name==undefined){
-            valError = valError + " shippping.last_name";
+          if(data.order.shipping.last_name==undefined){
+            valError = valError + " shipping.last_name";
             validation = false;
           }
-          if(data.order.shippping.shipping_method==undefined){
-            valError = valError + " shippping.shipping_method";
+          if(data.order.shipping.shipping_method==undefined){
+            valError = valError + " shipping.shipping_method";
             validation = false;
           }
-          if(data.order.shippping.price<=0){
-            valError = valError + " shippping.price<=0";
+          if(data.order.shipping.price<=0){
+            valError = valError + " shipping.price<=0";
             validation = false;
           }
           //This validation is not required in this version
-          if(data.order.shippping.ETA==undefined){
+          if(data.order.shipping.ETA==undefined){
             //ETA not enforced in this version. Next release
-            data.order.shippping.ETA = "";
-            //valError = valError + " shippping.ETA";
+            data.order.shipping.ETA = "";
+            //valError = valError + " shipping.ETA";
             //validation = false;
           }
         }else{
-          valError = valError + " shippping[]";
+          valError = valError + " shipping[]";
           validation = false;
         }
 

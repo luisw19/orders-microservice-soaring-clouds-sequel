@@ -15,9 +15,13 @@ libdb-dev \
 libssl1.0.0 libssl-dev libiodbc2 libiodbc2-dev libsasl2-2 libsasl2-dev \
 sasl2-bin
 
-############ Install kafka-avro and dependenies
-# Install kafka-avro
+############ dependenies
+RUN npm install express --save
+RUN npm install mongoose --save
+RUN npm install body-parser --save
+RUN npm install bcrypt --save
 RUN npm install kafka-avro --save
+RUN npm install
 
 # start command
 CMD [ "node", "product-subscriber-ms.js" ]

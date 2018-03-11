@@ -105,7 +105,7 @@ var orderVar  = new schema(
       payment: paymentVar,
       customer: customerVar,
       address: [addressVar],
-      shippping: shippingVar,
+      shipping: shippingVar,
       special_details: specialVar,
       line_items: [linesVar],
       _links: linksVar
