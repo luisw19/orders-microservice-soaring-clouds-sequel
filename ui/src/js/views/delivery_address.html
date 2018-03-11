@@ -1,0 +1,67 @@
+<div class="oj-flex-item oj-panel oj-sm-margin-2x">
+  <oj-collapsible id="deliveryAddressCollapsible" expanded={{deliveryAddressExpanded}}>
+    <h3 id="header" slot="header">Delivery Address</h3>
+    
+    <oj-form-layout id="deliveryAddressLayout"
+      label-edge="start"
+      max-columns="2">
+
+      <oj-combobox-one id="deliveryAddressCombo"
+        value="{{selectedDeliveryAddress}}"
+        on-value-changed="[[onDeliveryAddressChanged]]"
+        label-hint="Delivery Address: ">
+        <oj-bind-for-each data="[[customerAddresses]]" as="address">
+          <template>
+            <oj-option value="[[address.data['_id']]]"><span data-bind="text: address.data.type"></span> - <span data-bind="text: address.data.streetNumber"></span><span> </span><span data-bind="text: address.data.streetName"></span></oj-option>
+          </template>
+        </oj-bind-for-each>
+        <oj-option value="newDeliveryAddress">New delivery address</oj-option>
+      </oj-combobox-one>
+
+    </oj-form-layout>
+    <div data-bind="if: selectedDeliveryAddress">
+      <oj-form-layout id="deliveryAddressLayout"
+        label-edge="start"
+        max-columns="2">
+
+        <oj-input-text id="addressLine1"
+          value="{{addressLine1}}"
+          label-hint="Address Line 1:"
+          on-value-changed="[[onAddressLine1Change]]">
+        </oj-input-text>
+
+        <oj-input-text id="addressLine2"
+          value="{{addressLine2}}"
+          label-hint="Address Line 2:"
+          on-value-changed="[[onAddressLine2Change]]">
+        </oj-input-text>
+
+        <oj-input-text id="city"
+          value="{{city}}"
+          label-hint="City:"
+          on-value-changed="[[onCityChange]]">
+        </oj-input-text>
+
+        <oj-input-text id="county"
+          value="{{county}}"
+          label-hint="County:"
+          on-value-changed="[[onCountyChange]]">
+        </oj-input-text>
+
+        <oj-input-text id="postCode"
+          value="{{postCode}}"
+          label-hint="Post Code:"
+          on-value-changed="[[onPostCodeChange]]">
+        </oj-input-text>
+
+        <oj-input-text id="country"
+          value="{{country}}"
+          label-hint="Country:"
+          on-value-changed="[[onCountryChange]]">
+        </oj-input-text>
+
+      </oj-form-layout>
+    </div>
+
+  </oj-collapsible>
+</div>
