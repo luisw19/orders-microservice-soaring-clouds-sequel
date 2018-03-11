@@ -93,7 +93,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/LineItemFactory',
 
               oj.ajax = function(ajaxOptions) {
                 ajaxOptions.type = 'PUT';
-                ajaxOptions.headers['api-key'] = '73f1c312-64e1-4069-92d8-0179ac056e90';
                 return $.ajax(ajaxOptions);
               };
 

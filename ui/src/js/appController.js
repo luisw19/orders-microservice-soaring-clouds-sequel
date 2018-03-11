@@ -20,6 +20,13 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
       self.contentLoaded = ko.observable(false);
 
       self.init = function () {
+
+        $.ajaxSetup({
+          headers: {
+            "api-key": "73f1c312-64e1-4069-92d8-0179ac056e90"
+          }
+        });
+
         // Listener to handle content from embedding application
         // Only applies as running in iFrame
         window.addEventListener("message", function (event) {
@@ -32,15 +39,22 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
                 self.order = OrderFactory.createOrderModel(event.data.globalContext.orderId);
                 
                 self.order.fetch({
-                  headers: {'api-key': '73f1c312-64e1-4069-92d8-0179ac056e90'},
                   success: function(model, response, options) {
-                    self.customer = CustomerFactory.createCustomerModel(model.get("_id"));
+
+                    if (response.error) {
+                      alert("Error fetching Order ID: " + event.data.globalContext.orderId);
+                    }
+
+                    self.customer = CustomerFactory.createCustomerModel(model.get("order").customer.customer_id);
                     self.customer.fetch({
                       success: function(model, response, options) {
+
                         self.order.get("order").customer = model.get("0");
                         self.contentLoaded(true);
+
                       }
                     });
+
                   }
                 });
 
@@ -51,6 +65,7 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
       };
 
       $(document).ready(function () {
+
         self.init();
         
         // Simulate dummy inbound event
@@ -58,11 +73,11 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
             data: {
                 eventType: "globalContext",
                 globalContext: {
-                    orderId: "unittest",
-                    userName: "JNEATE"
+                    orderId: "unittest"
                 }
             }
         });
+
         window.dispatchEvent(event);
 
       });

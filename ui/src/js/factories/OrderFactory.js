@@ -11,19 +11,39 @@ function (oj) {
             var Order = oj.Model.extend({
                 urlRoot: this.setOrderURI(orderId),
                 parseSave: function(request) {
-                    
-                    return {
-                        "customer": {
-                            "loyalty_level": request.order.customer.loyalty_level,
-                            "first_name": request.order.customer.first_name,
-                            "last_name": request.order.customer.last_name,
-                            "phone": request.order.customer.phone,
-                            "email": request.order.customer.email
-                        },
-                        // TODO - TYPO IN API (Shipping with 3 Ps)
-                        "shippping": request.order.shipping,
-                        "special_details": request.order.special_details
-                    };
+
+                    if (request.order.payment != null) {
+                        
+                        return {
+                            "payment": request.order.payment,
+                            "customer": {
+                                "loyalty_level": request.order.customer.loyalty_level,
+                                "first_name": request.order.customer.first_name,
+                                "last_name": request.order.customer.last_name,
+                                "phone": request.order.customer.phone,
+                                "email": request.order.customer.email
+                            },
+                            // TODO - TYPO IN API (Shipping with 3 Ps)
+                            "shippping": request.order.shipping,
+                            "special_details": request.order.special_details
+                        };
+
+                    } else {
+
+                        return {
+                            "customer": {
+                                "loyalty_level": request.order.customer.loyalty_level,
+                                "first_name": request.order.customer.first_name,
+                                "last_name": request.order.customer.last_name,
+                                "phone": request.order.customer.phone,
+                                "email": request.order.customer.email
+                            },
+                            // TODO - TYPO IN API (Shipping with 3 Ps)
+                            "shippping": request.order.shipping,
+                            "special_details": request.order.special_details
+                        };
+
+                    }
 
                 },
                 idAttribute: '_id'

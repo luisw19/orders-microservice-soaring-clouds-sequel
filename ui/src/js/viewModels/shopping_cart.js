@@ -16,10 +16,12 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
         var basketTrain;
         var rootViewModel = ko.dataFor(document.getElementById('globalBody'));
 
+        self.orderComplete = ko.observable(false);
         self.disabledPreviousStep = ko.observable(false);
         self.disabledNextStep = ko.observable(false);
         self.hasValidatedLogistics = ko.observable(true);
         self.displayValidate = ko.observable(false);
+        self.displayPay = ko.observable(false);
         self.stepModule = ko.observable();
         self.deliveryCost = ko.observable();
         self.currency = ko.observable();
@@ -99,6 +101,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
             var id = event.detail.value;
             self.hasValidatedLogistics(true);
             self.displayValidate(false);
+            self.displayPay(false);
 
             if (id === "orderSum") {
                 self.stepModule("order_summary");
@@ -113,6 +116,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                 self.stepModule("invoice_detail");
             } else if (id === "paymentInfo") {
                 self.stepModule("payment_info");
+                self.displayPay(true);
             }
 
         };
@@ -223,6 +227,79 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
             }
         };
 
+        self.onPayNow = function() {
+
+            var address = AddressFactory.createAddressModel(rootViewModel.order.get("order").order_id);
+
+            for (var i = 0; i < rootViewModel.order.get("order").address.length; i++) {
+                if (rootViewModel.order.get("order").address[i].name.indexOf("BILLING") != -1) {
+                    index = i;
+                    orderAddress = rootViewModel.order.get("order").address[i];
+                    break;
+                }
+            }
+
+            // Overwride POST call to DELETE Address on Order
+            oj.ajax = function(ajaxOptions) {
+                ajaxOptions.type = "POST";
+                return $.ajax(ajaxOptions);
+            };
+
+            address.set({
+                "name": "BILLING",
+                "line_1": orderAddress.line_1,
+                "line_2": orderAddress.line_2,
+                "city": orderAddress.city,
+                "county": orderAddress.county,
+                "postcode": orderAddress.postcode,
+                "country": orderAddress.country
+            });
+
+            address.save(null, {
+                success: function(model, response, options) {
+
+                    oj.ajax = function(ajaxOptions) {
+                        ajaxOptions.url = OrderFactory.setOrderURI(rootViewModel.order.get("order").order_id);
+                        return $.ajax(ajaxOptions);
+                    };
+        
+                    rootViewModel.order.save(null, {
+                        success: function(model, response, options) {
+
+                            // Process order
+                            oj.ajax = function(ajaxOptions) {
+                                ajaxOptions.url = OrderFactory.setOrderURI(rootViewModel.order.get("order").order_id) + "/process";
+                                ajaxOptions.type = "POST";
+                                return $.ajax(ajaxOptions);
+                            };
+
+                            // TODO - Uncomment when ready to process orders
+                            // rootViewModel.order.save(null, {
+                            //     success: function(model, response, options) {
+                            //         if (response.error) {
+                            //             alert("Error processing order - Please try again");
+                            //         } else {
+                            //             self.orderComplete(true);
+                            //         }
+                            //     }
+                            // });
+
+                            self.orderComplete(true);
+
+                        },
+                        error: function() {
+                            alert("Error adding payment method");
+                        }
+                    });
+
+                },
+                error: function() {
+                    alert("Error adding billing address");
+                }
+            });
+
+        };
+
         self.apiInteraction = function(stepId) {
 
             if (stepId === "delivAdd") {
@@ -242,12 +319,15 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                     // Overwride POST call to DELETE Address on Order
                     oj.ajax = function(ajaxOptions) {
                         ajaxOptions.url += "/" + orderAddress.name;
-                        ajaxOptions.headers['api-key'] = '73f1c312-64e1-4069-92d8-0179ac056e90';
                         ajaxOptions.type = "DELETE";
                         return $.ajax(ajaxOptions);
                     };
 
-                    address.save();
+                    address.save(null, {
+                        error: function() {
+                            alert("Error deleting " + orderAddress.name + " address");
+                        }
+                    });
                 }
 
             } else if (stepId === "delivOpt") {
@@ -255,14 +335,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                 var address = AddressFactory.createAddressModel(rootViewModel.order.get("order").order_id);
 
                 // Call Add Address on Order
-                oj.ajax = function(ajaxOptions) {
-                    ajaxOptions.headers['api-key'] = '73f1c312-64e1-4069-92d8-0179ac056e90';
-                    return $.ajax(ajaxOptions);
-                };
-
                 for (var i = 0; i < rootViewModel.order.get("order").address.length; i++) {
                     if (rootViewModel.order.get("order").address[i].name.indexOf("DELIVERY") != -1) {
-                        index = i;
                         orderAddress = rootViewModel.order.get("order").address[i];
                         break;
                     }
@@ -278,7 +352,11 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                     "country": orderAddress.country
                 });
 
-                address.save();
+                address.save(null, {
+                    error: function() {
+                        alert("Error adding DELIVERY address");
+                    }
+                });
 
             } else if (stepId === "invoiceDetail") {
                 // Call PUT ORDER for Shipping & Customer & Special Details
@@ -297,11 +375,32 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
 
                 oj.ajax = function(ajaxOptions) {
                     ajaxOptions.url = OrderFactory.setOrderURI(order.order_id);
-                    ajaxOptions.headers['api-key'] = '73f1c312-64e1-4069-92d8-0179ac056e90';
                     return $.ajax(ajaxOptions);
                 };
 
-                rootViewModel.order.save();
+                rootViewModel.order.save(null, {
+                    error: function() {
+                        alert("Error updating order details");
+                    }
+                });
+
+            } else if (stepId === "paymentInfo") {
+
+                // Remove address on accessing delivery page
+                var address = AddressFactory.createAddressModel(rootViewModel.order.get("order").order_id);
+
+                // Overwride POST call to DELETE Address on Order
+                oj.ajax = function(ajaxOptions) {
+                    ajaxOptions.url += "/BILLING";
+                    ajaxOptions.type = "DELETE";
+                    return $.ajax(ajaxOptions);
+                };
+
+                address.save(null, {
+                    error: function() {
+                        alert("Error deleting BILLING address");
+                    }
+                });
 
             }
 

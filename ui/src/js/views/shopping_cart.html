@@ -1,54 +1,66 @@
 <br>
-<div id="trainContainer">
-    <oj-train id="basketTrain"
-      class="oj-train-stretch"
-      style="max-width:100%"
-      on-oj-before-select="[[beforeSelection]]"
-      on-selected-step-changed="[[stepChanged]]"
-      on-oj-deselect="[[deselectStep]]"
-      selected-step="{{currentStep}}"
-      steps.disabled="true"
-      steps="[[steps]]">
-    </oj-train>
-</div>
-<br>
-<div class="oj-flex oj-flex-items-pad oj-sm-flex-direction-column">
-  <div class="oj-flex oj-flex-item oj-panel oj-sm-margin-2x oj-sm-flex-direction-column">
-    <div data-bind="ojModule: stepModule">
-    </div>
+<div data-bind="ifnot: orderComplete">
+  <div id="trainContainer">
+      <oj-train id="basketTrain"
+        class="oj-train-stretch"
+        style="max-width:100%"
+        on-oj-before-select="[[beforeSelection]]"
+        on-selected-step-changed="[[stepChanged]]"
+        on-oj-deselect="[[deselectStep]]"
+        selected-step="{{currentStep}}"
+        steps.disabled="true"
+        steps="[[steps]]">
+      </oj-train>
   </div>
-  <div class="oj-flex oj-flex-item oj-sm-margin-2x oj-panel">
-    <div class="oj-flex-item oj-flex-bar-start oj-sm-justify-content-flex-start">
-      <oj-button id="previousStep" data-bind="click: onPreviousStep" disabled=[[disabledPreviousStep]]>
-        Previous
-      </oj-button>
+  <br>
+  <div class="oj-flex oj-flex-items-pad oj-sm-flex-direction-column">
+    <div class="oj-flex oj-flex-item oj-panel oj-sm-margin-2x oj-sm-flex-direction-column">
+      <div data-bind="ojModule: stepModule">
+      </div>
     </div>
-    <div class="oj-flex-item oj-flex-bar-end oj-sm-justify-content-flex-end">
-      <div data-bind="ifnot: displayValidate">
-        <oj-button id="nextStep" data-bind="click: onNextStep" disabled=[[disabledNextStep]]>
-          Next
+    <div class="oj-flex oj-flex-item oj-sm-margin-2x oj-panel">
+      <div class="oj-flex-item oj-flex-bar-start oj-sm-justify-content-flex-start">
+        <oj-button id="previousStep" data-bind="click: onPreviousStep" disabled=[[disabledPreviousStep]]>
+          Previous
         </oj-button>
       </div>
-      <div data-bind="if: displayValidate">
-        <div id="dialogWrapper">
-          <oj-dialog style="display:none" id="confirmationDialog" cancel-behavior="none" title="Confirmation" on-oj-close="[[onDialogClose]]">
-            <div slot="body">
-                Do you accept the delivery cost of <span data-bind="text: deliveryCost"></span> <span data-bind="text: currency"></span>
-            </div>
-            <div slot="footer">
-              <oj-button id="okButton" data-bind="click: confirmCost">  
-                Yes
-              </oj-button>
-              <oj-button id="cancelButton" data-bind="click: cancelCost">
-                No
+      <div class="oj-flex-item oj-flex-bar-end oj-sm-justify-content-flex-end">
+        <div data-bind="ifnot: displayValidate">
+          <div data-bind="ifnot: displayPay">
+            <oj-button id="nextStep" data-bind="click: onNextStep" disabled=[[disabledNextStep]]>
+              Next
             </oj-button>
-            </div>
-          </oj-dialog>
+          </div>
         </div>
-        <oj-button id="validateLogistics" data-bind="click: onValidate">
-          Validate
-        </oj-button>
+        <div data-bind="if: displayValidate">
+          <div id="dialogWrapper">
+            <oj-dialog style="display:none" id="confirmationDialog" cancel-behavior="none" title="Confirmation" on-oj-close="[[onDialogClose]]">
+              <div slot="body">
+                  Do you accept the delivery cost of <span data-bind="text: deliveryCost"></span> <span data-bind="text: currency"></span>
+              </div>
+              <div slot="footer">
+                <oj-button id="okButton" data-bind="click: confirmCost">  
+                  Yes
+                </oj-button>
+                <oj-button id="cancelButton" data-bind="click: cancelCost">
+                  No
+              </oj-button>
+              </div>
+            </oj-dialog>
+          </div>
+          <oj-button id="validateLogistics" data-bind="click: onValidate">
+            Validate
+          </oj-button>
+        </div>
+        <div data-bind="if: displayPay">
+          <oj-button id="payNow" data-bind="click: onPayNow">
+            Pay Now
+          </oj-button>
+        </div>
       </div>
     </div>
   </div>
+</div>
+<div data-bind="if: orderComplete">
+  <h3>Order Completed!</h3>
 </div>
