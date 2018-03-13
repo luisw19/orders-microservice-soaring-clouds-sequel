@@ -10,11 +10,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      run: orders-ms-exposed
+      run: orders-ms
   template:
     metadata:
       labels:
-        run: orders-ms-exposed
+        run: orders-ms
     spec:
       containers:
       - args:
@@ -49,5 +49,5 @@ spec:
     protocol: TCP
     targetPort: 3000
   selector:
-    run: orders-ms-exposed
+    run: orders-ms
   type: NodePort
