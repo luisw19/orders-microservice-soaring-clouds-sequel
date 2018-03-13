@@ -1,10 +1,10 @@
 define(['ojs/ojcore'],
 function (oj) {
-    
+
     var CustomerFactory = {
 
         setCustomerURI: function(customerId) {
-          return "https://oc-144-21-82-92.compute.oraclecloud.com:9129/api/customer/profile/" + customerId;
+          return "API-GW-PLACEHOLDER/api/customer/profile/" + customerId;
         },
         createCustomerModel: function(customerId) {
             var Customer = oj.Model.extend({

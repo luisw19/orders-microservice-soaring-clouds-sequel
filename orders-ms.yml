@@ -28,7 +28,7 @@ spec:
         - name: EVENTAPI_PORT
           value: "4000"
         image: luisw19/orders-ms:1.1.2
-        name: oders-ms
+        name: orders-ms
         ports:
         - containerPort: 3000
       restartPolicy: Always
