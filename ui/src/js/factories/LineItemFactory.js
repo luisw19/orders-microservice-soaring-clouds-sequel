@@ -1,10 +1,10 @@
 define(['ojs/ojcore'],
 function (oj) {
-    
+
     var LineItemFactory = {
 
         setLineItemURI: function(orderId, lineItemId) {
-          return "https://oc-144-21-82-92.compute.oraclecloud.com:9129/api/orders/" + orderId + "/lines/" + lineItemId;
+          return "API-GW-PLACEHOLDER/api/orders/" + orderId + "/lines/" + lineItemId;
         },
         createLineItemModel: function(orderId, lineItemId) {
             var LineItem = oj.Model.extend({

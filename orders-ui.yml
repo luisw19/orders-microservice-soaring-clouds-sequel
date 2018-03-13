@@ -1,0 +1,51 @@
+# APP DEPLOYMENT
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: orders-ui
+  name: orders-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: orders-ui
+  template:
+    metadata:
+      labels:
+        run: orders-ui
+    spec:
+      containers:
+      - args:
+        - bash
+        - container-entrypoint.sh
+        env:
+        - name: API_HOST
+          value: https://oc-144-21-82-92.compute.oraclecloud.com:9129
+        - name: API_KEY
+          value: 73f1c312-64e1-4069-92d8-0179ac056e90
+        image: luisw19/orders-ui:1.0.0
+        name: orders-ui
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always
+
+---
+
+# APP SERVICE
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: orders-ui
+  name: orders-ui
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    run: orders-ui
+  type: NodePort

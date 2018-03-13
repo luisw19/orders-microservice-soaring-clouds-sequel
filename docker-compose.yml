@@ -1,5 +1,17 @@
 version: '2'
 services:
+  orders-ui:
+      #Image
+      image: luisw19/orders-ui:1.0.0
+      #Uncomment "build" if you wish to build from source code, otherwise it'll pull from registry
+      build: ./ui
+      environment:
+        API_HOST: 'https://oc-144-21-82-92.compute.oraclecloud.com:9129'
+        API_KEY: '73f1c312-64e1-4069-92d8-0179ac056e90'
+      ports:
+        - "8080:8080"
+      command: bash container-entrypoint.sh
+
   product-sub-ms:
       #Image
       #image: localhost/product-sub-ms:0.1.1
