@@ -38,8 +38,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
             self.customerAddresses(rootViewModel.customer.get("0").addresses);
 
-            oj.Logger.error(rootViewModel.order.get("order").address);
-
             if (addressArray != null) {
 
                 for (var i = 0; i < addressArray.length; i++) {

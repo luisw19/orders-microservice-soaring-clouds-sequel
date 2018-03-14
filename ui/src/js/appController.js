@@ -36,21 +36,21 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
 
             if (event.data.eventType === "globalContext") {
 
-              if (event.data.globalContext != null && event.data.globalContext.orderId != null) {
+              if (event.data.globalContext != null && event.data.globalContext.customer != null && event.data.globalContext.customer.customerIdentifier != null) {
 
-                self.order = OrderFactory.createOrderModel(event.data.globalContext.orderId, "SHOPPING");
+                self.order = OrderFactory.createOrderModel(event.data.globalContext.customer.customerIdentifier, "SHOPPING");
               
                 self.order.fetch({
                   success: function(model, response, options) {
 
                     if (response.orders != null && response.orders.length == 0) {
-                      alert("Error fetching Order ID: " + event.data.globalContext.orderId + " - " + response.message);
+                      alert("Error fetching Order for Customer ID: " + event.data.globalContext.customer.customerIdentifier);
                     } else {
                       self.order = OrderFactory.createOrderModel(self.order.get("orders")[0].order.order_id);
                       self.order.fetch({
 
                         success: function(model, response, options) {
-                          oj.Logger.error(model);
+                          
                           var customerId = model.get("order").customer.customer_id;
                           self.customer = CustomerFactory.createCustomerModel(customerId);
                           self.customer.fetch({
@@ -89,27 +89,7 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
 
       $(document).ready(function () {
 
-        oj.Logger.error(location);
-
         self.init();
-
-        if (location.search != null) {
-
-          var orderId = location.search.substr(location.search.indexOf("=") + 1);
-
-          // Simulate inbound event
-          var event = new MessageEvent("message", {
-            data: {
-              "eventType": "globalContext",
-              "globalContext": {
-                orderId: orderId
-              }
-            }
-          });
-
-          window.dispatchEvent(event);
-
-        }
 
       });
 

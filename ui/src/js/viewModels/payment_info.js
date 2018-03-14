@@ -82,10 +82,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
                 rootViewModel.order.set("order", order);
             }
 
-            oj.Logger.error(deliveryAddress);
-            oj.Logger.error(billingAddress);
-            oj.Logger.error(self.sameAddressAsDelivery());
-
             if (self.sameAddressAsDelivery().length === 0) {
 
                 self.addressReadOnly(false);
