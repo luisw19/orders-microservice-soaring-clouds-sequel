@@ -74,9 +74,11 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/LineItemFactory',
           if (customer != null) {
             self.customerId(rootViewModel.order.get('_id'));
             self.customerName(customer.firstName + " " + customer.lastName);
-            self.customerPhone('+' + customer.phoneNumbers[0].countryCode + customer.phoneNumbers[0].number);
+            if (customer.phoneNumbers.length > 0) {
+              self.customerPhone('+' + customer.phoneNumbers[0].countryCode + customer.phoneNumbers[0].number);
+            }
             self.customerEmail(customer.email);
-            self.customerLoyaltyLevel("TO DO");
+            self.customerLoyaltyLevel("GOLD");
           }
 
         };

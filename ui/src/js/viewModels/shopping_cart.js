@@ -168,22 +168,31 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
             var shipping = order.shipping;
             var address = order.address;
             var items = [];
+            var addressItem = null;
 
             for (var i = 0; i < order.line_items.length; i++) {
                 items[i] = {};
-                items[i].productIdentifier = order.line_items.product_id;
-                items[i].itemCount = order.line_items.quantity;
+                items[i].productIdentifier = order.line_items[i].product_id;
+                items[i].itemCount = order.line_items[i].quantity;
+            }
+            
+            // Has to be a delivery address at this point in time
+            for (var j = 0; j < address.length; j++) {
+                if (address[j].name === "DELIVERY") {
+                    addressItem = address[j];
+                    break;
+                }
             }
 
             logisticsValidation.set({
                 "nameAddressee": shipping.first_name + " " + shipping.last_name,
                 "destination": {
                     "houseNumber": "",
-                    "street": address.line_1,
-                    "city": address.city,
-                    "postCode": address.postcode,
-                    "county": address.county,
-                    "country": address.country
+                    "street": addressItem.line_1,
+                    "city": addressItem.city,
+                    "postCode": addressItem.postcode,
+                    "county": addressItem.county,
+                    "country": addressItem.country
                 },
                 "shippingMethod": shipping.shipping_method,
                 "desiredDeliveryDate": shipping.eta,
@@ -192,7 +201,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                 "items": items
             });
 
-            // TODO - This AJAX override needs to be deleted when logistic API supports CORS
+            // TODO - This oj.AJAX override needs to be deleted when logistic API supports CORS
             oj.ajax = function(ajaxOptions) {
                 ajaxOptions.type = "GET";
                 return $.ajax(ajaxOptions);
@@ -377,7 +386,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
             } else if (stepId === "invoiceDetail") {
                 // Call PUT ORDER for Shipping & Customer & Special Details
                 var order = rootViewModel.order.get("order");
-                order.customer.loyalty_level = "NONE";
+                order.customer.loyalty_level = "GOLD";
                 order.customer.first_name = order.customer.firstName;
                 order.customer.last_name = order.customer.lastName;
 

@@ -3,13 +3,18 @@ function (oj) {
 
     var OrderFactory = {
 
-        setOrderURI: function(orderId) {
-        //   return "https://private-anon-2453842a28-sttcordersms.apiary-mock.com/api/orders/" + orderId;
-          return "API-GW-PLACEHOLDER/api/orders/" + orderId;
+        setOrderURI: function(orderId, type) {
+            if (type === "SHOPPING") {
+                return "API-GW-PLACEHOLDER/api/orders?shoppingCard_id=" + orderId + "&status=SHOPPING_CART";
+                // return "https://oc-144-21-82-92.compute.oraclecloud.com:9129/api/orders?shoppingCard_id=" + orderId + "&status=SHOPPING_CART";
+            } else {
+                return "API-GW-PLACEHOLDER/api/orders/" + orderId;
+                // return "https://oc-144-21-82-92.compute.oraclecloud.com:9129/api/orders/" + orderId;
+            }
         },
-        createOrderModel: function(orderId) {
+        createOrderModel: function(orderId, type) {
             var Order = oj.Model.extend({
-                urlRoot: this.setOrderURI(orderId),
+                urlRoot: this.setOrderURI(orderId, type),
                 parseSave: function(request) {
 
                     if (request.order.payment != null) {
