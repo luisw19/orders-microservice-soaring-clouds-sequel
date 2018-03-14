@@ -36,44 +36,48 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
 
             if (event.data.eventType === "globalContext") {
 
-              if (event.data.globalContext != null && event.data.globalContext.customer != null && event.data.globalContext.customer.customerIdentifier != null) {
+              if (event.data.globalContext != null) {
 
-                self.order = OrderFactory.createOrderModel(event.data.globalContext.customer.customerIdentifier, "SHOPPING");
+                if (event.data.globalContext.customer != null && event.data.globalContext.customer.customerIdentifier != null) {
+
+                  self.order = OrderFactory.createOrderModel(event.data.globalContext.customer.customerIdentifier, "SHOPPING");
               
-                self.order.fetch({
-                  success: function(model, response, options) {
+                  self.order.fetch({
+                    success: function(model, response, options) {
 
-                    if (response.orders != null && response.orders.length == 0) {
-                      alert("Error fetching Order for Customer ID: " + event.data.globalContext.customer.customerIdentifier);
-                    } else {
-                      self.order = OrderFactory.createOrderModel(self.order.get("orders")[0].order.order_id);
-                      self.order.fetch({
+                      if (response.orders != null && response.orders.length == 0) {
+                        alert("Error fetching Order for Customer ID: " + event.data.globalContext.customer.customerIdentifier);
+                      } else {
+                        self.order = OrderFactory.createOrderModel(self.order.get("orders")[0].order.order_id);
+                        self.order.fetch({
 
-                        success: function(model, response, options) {
-                          
-                          var customerId = model.get("order").customer.customer_id;
-                          self.customer = CustomerFactory.createCustomerModel(customerId);
-                          self.customer.fetch({
-                            success: function(model, response, options) {
+                          success: function(model, response, options) {
+                            
+                            var customerId = model.get("order").customer.customer_id;
+                            self.customer = CustomerFactory.createCustomerModel(customerId);
+                            self.customer.fetch({
+                              success: function(model, response, options) {
 
-                              self.order.get("order").customer = model.get("0");
-                              self.contentLoaded(true);
+                                self.order.get("order").customer = model.get("0");
+                                self.contentLoaded(true);
 
-                            },
-                            error: function(model, xhr, options) {
-                              alert("Error fetching Customer ID: " + customerId);
-                            }
-                          });
+                              },
+                              error: function(model, xhr, options) {
+                                alert("Error fetching Customer ID: " + customerId);
+                              }
+                            });
 
-                        }
+                          }
 
-                      });
+                        });
+
+                      }
 
                     }
-
-                  }
+                    
+                  });
                   
-                });
+                }
 
               } else {
                 alert("Error - No Order ID passed into the application");
@@ -96,5 +100,6 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
      }
 
      return new ControllerViewModel();
+
   }
 );
