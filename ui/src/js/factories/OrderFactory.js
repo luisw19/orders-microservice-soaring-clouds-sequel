@@ -5,7 +5,7 @@ function (oj) {
 
         setOrderURI: function(orderId, type) {
             if (type === "SHOPPING") {
-                return "API-GW-PLACEHOLDER/api/orders?shoppingCard_id=" + orderId + "&status=SHOPPING_CART";
+                return "API-GW-PLACEHOLDER/api/orders?shoppingCart_id=" + orderId + "&status=SHOPPING_CART";
                 // return "https://oc-144-21-82-92.compute.oraclecloud.com:9129/api/orders?shoppingCard_id=" + orderId + "&status=SHOPPING_CART";
             } else {
                 return "API-GW-PLACEHOLDER/api/orders/" + orderId;
