@@ -295,7 +295,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                             rootViewModel.order.save(null, {
                                 success: function(model, response, options) {
                                     if (response.error) {
-                                        alert("Error processing order - Please try again");
+                                        alert("Error processing order: " + response.message + " - Please try again");
                                         return;
                                     } else {
                                         self.orderComplete(true);

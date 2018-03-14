@@ -18,6 +18,7 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
       self.order = new oj.Model();
       self.customer = new oj.Model();
       self.contentLoaded = ko.observable(false);
+      self.noShoppingBasket = ko.observable(false);
 
       self.init = function () {
 
@@ -46,7 +47,8 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
                     success: function(model, response, options) {
 
                       if (response.orders != null && response.orders.length == 0) {
-                        alert("Error fetching Order for Customer ID: " + event.data.payload.globalContext.customer.customerIdentifier);
+                        self.noShoppingBasket(true);
+                        self.contentLoaded(false);
                       } else {
                         self.order = OrderFactory.createOrderModel(self.order.get("orders")[0].order.order_id);
                         self.order.fetch({
@@ -59,6 +61,7 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
                               success: function(model, response, options) {
 
                                 self.order.get("order").customer = model.get("0");
+                                self.noShoppingBasket(false);
                                 self.contentLoaded(true);
 
                               },

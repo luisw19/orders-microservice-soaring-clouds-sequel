@@ -52,12 +52,17 @@
       -->
       <div role="main" class="oj-web-applayout-max-width oj-web-applayout-content">
         <h2>Shopping Basket</h2>
-        <div data-bind="ifnot: contentLoaded">
-          <!-- Add loading spinner (spinner_full.gif) -->
-          <h4>Loading...</h4>
+        <div data-bind="if: noShoppingBasket">
+          <h4>No orders found</h4>
         </div>
-        <div data-bind="if: contentLoaded">
-          <div data-bind="ojModule: 'shopping_cart'"></div>
+        <div data-bind="ifnot: noShoppingBasket">
+          <div data-bind="ifnot: contentLoaded">
+            <!-- Add loading spinner (spinner_full.gif) -->
+            <h4>Loading...</h4>
+          </div>
+          <div data-bind="if: contentLoaded">
+            <div data-bind="ojModule: 'shopping_cart'"></div>
+          </div>
         </div>
       </div>
     </div>
