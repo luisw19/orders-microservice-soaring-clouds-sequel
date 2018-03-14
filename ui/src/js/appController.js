@@ -38,28 +38,38 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
 
               if (event.data.globalContext != null && event.data.globalContext.orderId != null) {
 
-                self.order = OrderFactory.createOrderModel(event.data.globalContext.orderId);
+                self.order = OrderFactory.createOrderModel(event.data.globalContext.orderId, "SHOPPING");
               
                 self.order.fetch({
                   success: function(model, response, options) {
 
-                    if (response.error) {
-                      alert("Error fetching Order ID: " + event.data.globalContext.orderId);
+                    if (response.orders != null && response.orders.length == 0) {
+                      alert("Error fetching Order ID: " + event.data.globalContext.orderId + " - " + response.message);
+                    } else {
+                      self.order = OrderFactory.createOrderModel(self.order.get("orders")[0].order.order_id);
+                      self.order.fetch({
+
+                        success: function(model, response, options) {
+                          oj.Logger.error(model);
+                          var customerId = model.get("order").customer.customer_id;
+                          self.customer = CustomerFactory.createCustomerModel(customerId);
+                          self.customer.fetch({
+                            success: function(model, response, options) {
+
+                              self.order.get("order").customer = model.get("0");
+                              self.contentLoaded(true);
+
+                            },
+                            error: function(model, xhr, options) {
+                              alert("Error fetching Customer ID: " + customerId);
+                            }
+                          });
+
+                        }
+
+                      });
+
                     }
-
-                    var customerId = model.get("order").customer.customer_id;
-                    self.customer = CustomerFactory.createCustomerModel(customerId);
-                    self.customer.fetch({
-                      success: function(model, response, options) {
-
-                        self.order.get("order").customer = model.get("0");
-                        self.contentLoaded(true);
-
-                      },
-                      error: function(model, xhr, options) {
-                        alert("Error fetching Customer ID: " + customerId);
-                      }
-                    });
 
                   }
                   
@@ -73,6 +83,8 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
 
         }, false);
 
+        parent.postMessage({"childHasLoaded": true}, "*");
+
       };
 
       $(document).ready(function () {
@@ -81,16 +93,18 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
 
         self.init();
 
-        if (location.search.indexOf("orderId=unittest") != -1) {
+        if (location.search != null) {
 
-            // Simulate dummy inbound event
-            var event = new MessageEvent("message", {
-              data: {
-                "eventType": "globalContext",
-                "globalContext": {
-                  orderId: "unittest"
-                }
+          var orderId = location.search.substr(location.search.indexOf("=") + 1);
+
+          // Simulate inbound event
+          var event = new MessageEvent("message", {
+            data: {
+              "eventType": "globalContext",
+              "globalContext": {
+                orderId: orderId
               }
+            }
           });
 
           window.dispatchEvent(event);
