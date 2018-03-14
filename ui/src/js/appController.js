@@ -36,17 +36,17 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
 
             if (event.data.eventType === "globalContext") {
 
-              if (event.data.globalContext != null) {
+              if (event.data.payload.globalContext != null) {
 
-                if (event.data.globalContext.customer != null && event.data.globalContext.customer.customerIdentifier != null) {
+                if (event.data.payload.globalContext.customer != null && event.data.payload.globalContext.customer.customerIdentifier != null) {
 
-                  self.order = OrderFactory.createOrderModel(event.data.globalContext.customer.customerIdentifier, "SHOPPING");
+                  self.order = OrderFactory.createOrderModel(event.data.payload.globalContext.customer.customerIdentifier, "SHOPPING");
               
                   self.order.fetch({
                     success: function(model, response, options) {
 
                       if (response.orders != null && response.orders.length == 0) {
-                        alert("Error fetching Order for Customer ID: " + event.data.globalContext.customer.customerIdentifier);
+                        alert("Error fetching Order for Customer ID: " + event.data.payload.globalContext.customer.customerIdentifier);
                       } else {
                         self.order = OrderFactory.createOrderModel(self.order.get("orders")[0].order.order_id);
                         self.order.fetch({
@@ -76,7 +76,7 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
                     }
                     
                   });
-                  
+
                 }
 
               } else {
