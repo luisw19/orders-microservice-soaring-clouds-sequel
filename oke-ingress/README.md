@@ -10,7 +10,7 @@ The steps described in this page are based on: https://docs.cloud.oracle.com/iaa
 1) Grant the Kubernetes RBAC cluster-admin clusterrole to the OCID user
 
 	```bash
-	kubectl create clusterrolebinding sttc_admin --clusterrole=cluster-admin --user=ocid1.user.oc1..aaaaaaaazhciwyt5kooopvnovupyao7v7a73imsvxoqrb2omojbcvcxpgvrq
+	kubectl create clusterrolebinding sttc_admin --clusterrole=cluster-admin --user=ocid1.user.oc1..aaaaaaaazhci..............cxpgvrq
 	```
 2) Grant access by executing
 
