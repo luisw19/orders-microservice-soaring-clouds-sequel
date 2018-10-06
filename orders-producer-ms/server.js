@@ -3,8 +3,8 @@ var express     =   require("express");
 var app         =   express();
 var bodyParser  =   require("body-parser");
 var router      =   express.Router();
-var PORT = process.env.APP_PORT || 4000;
-var APP_VERSION = "1.0.0";
+var PORT = process.env.APP_PORT;
+var APP_VERSION = "2.0.0";
 var APP_NAME = "OrderProducerMS";
 var response = {};
 //Variables for Kafka
@@ -12,7 +12,7 @@ var KafkaAvro = require('kafka-avro');
 var avro = require('avsc');
 var fmt = require('bunyan-format');
 var kafkaLog  = KafkaAvro.getLogger();
-var topicName = 'a516817-soaring-order-created';
+var topicName = process.env.KAFKA_ORDER_TOPIC;
 //Variable containing the Order from Orders-MS
 var inOrder = {};
 //Variable containing the Order that will be produced
@@ -59,9 +59,7 @@ console.log("Listening to PORT " + PORT);
 //start Kafka connection
 //Get Kafka infrastructure  details from environment variables
 var kafkaAvro = new KafkaAvro({
-    //kafkaBroker: '129.150.77.116:6667',
     kafkaBroker: process.env.KAFKA_BROKER,
-    //schemaRegistry: 'http://129.150.114.134:8081',
     schemaRegistry: process.env.KAFKA_REGISTRY,
     parseOptions: { wrapUnions: true }
 });

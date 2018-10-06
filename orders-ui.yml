@@ -25,7 +25,7 @@ spec:
           value: https://oc-144-21-82-92.compute.oraclecloud.com:9129
         - name: API_KEY
           value: 73f1c312-64e1-4069-92d8-0179ac056e90
-        image: luisw19/orders-ui:1.0.4
+        image: luisw19/orders-ui:1.0.5
         name: orders-ui
         ports:
         - containerPort: 8080

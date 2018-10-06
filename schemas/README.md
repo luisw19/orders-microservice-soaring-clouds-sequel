@@ -16,7 +16,7 @@ https://community.hortonworks.com/articles/91250/validating-avro-schema-and-json
 
 - xx.avsc = AVROvro schema to be used
 - yy.json = JSON payload to validate against AVRO
-- zz.avro = Serialised AVRO paylod. Will be generated only if validation is successfull  
+- zz.avro = Serialised AVRO paylod. Will be generated only if validation is successfull
 
 ```bash
   java -jar ./avro-tools-1.8.2.jar fromjson --schema-file xx.avsc yy.json > zz.avro

@@ -6,13 +6,14 @@ var bodyParser  =   require("body-parser");
 var mongoOp     =   require("./model/mongo");
 var router      =   express.Router();
 var querystring = require('querystring');
-var PORT = process.env.APP_PORT || 3000;
-var APP_VERSION = "1.1.2";
+var stripchar = require('stripchar').StripChar; //used to remove special chars before saving in mongo
+var PORT = process.env.APP_PORT;
+var APP_VERSION = "2.0.0";
 var APP_NAME = "OrdersMS";
 //Set variables for calling the Event Producer API
 var http = require('http');
-var apiHost = process.env.EVENTAPI_HOST || "localhost";
-var apiPort = process.env.EVENTAPI_PORT || 4000;
+var apiHost = process.env.EVENTAPI_HOST;
+var apiPort = process.env.EVENTAPI_PORT;
 
 //Enable CORS pre-flight in all operations
 app.use(cors());
@@ -423,6 +424,8 @@ router.route("/orders/:id/lines")
 
               //get the line item payload
               var addLineItem = req.body;
+              //Remove special chars from description
+              addLineItem.description = stripchar.RSExceptUnsAlpNum(addLineItem.description);
 
               //Get number of line items in existing order
               //console.log("Current number of line items: " + odertest.line_items.length);
@@ -912,6 +915,16 @@ router.route("/orders/:id/process")
             if(data.order.address[count].line_1==undefined){
               valError = valError + " address[" + count + "].line_1";
               validation = false;
+            }
+            //fields that are not mandatory can be empty
+            if(data.order.address[count].line_2==undefined){
+              data.order.address[count].line_2 = "";
+            }
+            if(data.order.address[count].city==undefined){
+              data.order.address[count].city = "";
+            }
+            if(data.order.address[count].county==undefined){
+              data.order.address[count].county = "";
             }
             if(data.order.address[count].postcode==undefined){
               valError = valError + " address[" + count + "].postcode";

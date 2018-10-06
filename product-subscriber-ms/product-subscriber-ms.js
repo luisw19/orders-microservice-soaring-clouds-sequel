@@ -4,25 +4,27 @@ var fmt = require('bunyan-format');
 var kafkaLog  = KafkaAvro.getLogger();
 //Read environment variable KAFKA_HOST
 var kafkaBroker = process.env.KAFKA_BROKER;
-//var kafkaBroker = "129.150.77.116:6667";
-//var kafkaRegistry = "http://129.150.114.134:8081";
 var kafkaRegistry = process.env.KAFKA_REGISTRY;
-var kafkaConsumerGroup = "librd-test2";
-var topicName = 'a516817-soaring-add-to-shopping-cart';
+var topicName = process.env.KAFKA_SHOPPINGCART_TOPIC;
+var kafkaConsumerGroup = "shoppingcart-consumer1";
 
 //HTTP vars
 var querystring = require('querystring');
 //var https = require('https');
 var http = require('http');
-//var apiHost = "127.0.0.1";
 var apiHost = process.env.ORDERSAPI_HOST;
-//var apiPort = 3000;
 var apiPort = process.env.ORDERSAPI_PORT;
 var response = {};
 var order = {};
 var orderCheck = {};
 var productItem = {};
 var href = "";
+
+//App version
+var APP_VERSION = "2.0.0";
+var APP_NAME = "Product Subscriber MS";
+//Log status
+console.log("Running " + APP_NAME + " version: " + APP_VERSION);
 
 ////////////////////////////////////////////////////////////////
 // Function to make REST Calls

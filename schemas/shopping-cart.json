@@ -1,0 +1,50 @@
+{
+  "sessionId": "123456789",
+  "customerId": "CUST0001",
+  "quantity": 5,
+  "priceInCurrency": 10.20,
+  "currency": "EUR",
+  "product": {
+    "productId": "abcde",
+    "productCode": {
+      "string": "abcde"
+    },
+    "productName": {
+      "string": "abcde"
+    },
+    "description": {
+      "string": "abcde"
+    },
+    "imageUrl": {
+      "string": "abcde"
+    },
+    "price": {
+      "double": 10.20
+    },
+    "size": {
+      "int": 22
+    },
+    "weight": {
+      "double": 10.20
+    },
+    "categories": ["a", "b", "c"],
+    "tags": ["a", "b", "c"],
+    "dimension": {
+      "unit": {
+        "string": "INCHES"
+      },
+      "length": {
+        "double": 10.20
+      },
+      "height": {
+        "double": 10.20
+      },
+      "width": {
+        "double": 10.20
+      }
+    },
+    "color": {
+      "string": "blue"
+    }
+  }
+}
