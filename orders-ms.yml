@@ -7,7 +7,7 @@ metadata:
     run: orders-ms
   name: orders-ms
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       run: orders-ms
@@ -27,7 +27,7 @@ spec:
           value: orders-prod-ms
         - name: EVENTAPI_PORT
           value: "4000"
-        image: luisw19/orders-ms:1.1.3
+        image: luisw19/orders-ms:2.0.0
         name: orders-ms
         ports:
         - containerPort: 3000

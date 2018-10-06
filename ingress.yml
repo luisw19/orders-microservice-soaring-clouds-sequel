@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: orders-ms-ing
   annotations:
-    kubernetes.io/ingress.class: 'nginx'
+    kubernetes.io/ingress.class: "nginx"
     ingress.kubernetes.io/add-base-url: 'true'
     ingress.kubernetes.io/rewrite-target: /
 spec:
@@ -20,3 +20,26 @@ spec:
         backend:
           serviceName: orders-ui
           servicePort: 8080
+
+# apiVersion: extensions/v1beta1
+# kind: Ingress
+# metadata:
+#   name: orders-ms-ing
+#   annotations:
+#     kubernetes.io/ingress.class: 'nginx'
+#     ingress.kubernetes.io/add-base-url: 'true'
+#     ingress.kubernetes.io/rewrite-target: /
+# spec:
+#   tls:
+#   - secretName: tls-secret
+#   rules:
+#   - http:
+#       paths:
+#       - path: /orders-ms/api/
+#         backend:
+#           serviceName: orders-ms
+#           servicePort: 3000
+#       - path: /orders-ms/ui/
+#         backend:
+#           serviceName: orders-ui
+#           servicePort: 8080

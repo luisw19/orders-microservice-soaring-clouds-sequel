@@ -7,7 +7,7 @@ metadata:
     run: orders-prod-ms
   name: orders-prod-ms
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       run: orders-prod-ms-exposed
@@ -24,10 +24,12 @@ spec:
         - name: APP_PORT
           value: "4000"
         - name: KAFKA_BROKER
-          value: 129.150.77.116:6667
+          value: 129.156.113.171:6667
         - name: KAFKA_REGISTRY
-          value: http://129.150.114.134:8081
-        image: luisw19/orders-prod-ms:1.1.1
+          value: http://129.156.113.125:8081
+        - name: KAFKA_ORDER_TOPIC
+          value: idcs-1d61df536acb4e9d929e79a92f3414b5-soaringordercreated
+        image: luisw19/orders-prod-ms:2.0.0
         name: orders-prod-ms
         ports:
         - containerPort: 4000

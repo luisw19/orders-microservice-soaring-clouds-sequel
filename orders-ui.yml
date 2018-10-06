@@ -22,9 +22,9 @@ spec:
         - container-entrypoint.sh
         env:
         - name: API_HOST
-          value: https://oc-144-21-82-92.compute.oraclecloud.com:9129
+          value: https://oc-129-156-113-240.compute.oraclecloud.com:9022
         - name: API_KEY
-          value: 73f1c312-64e1-4069-92d8-0179ac056e90
+          value: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
         image: luisw19/orders-ui:1.0.5
         name: orders-ui
         ports:
