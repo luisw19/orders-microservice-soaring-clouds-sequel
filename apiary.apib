@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://oc-144-21-82-92.compute.oraclecloud.com:9129/api
+HOST: https://oc-129-156-113-240.compute.oraclecloud.com:9022/api
 
 # STTC Orders MS
 The Soaring Through The Clouds Orders Microservice allows to search, read, create and delete orders.
@@ -43,7 +43,7 @@ Returns Orders that match the specified criteria.
 
     + Headers
 
-            api-key: 73f1c312-64e1-4069-92d8-0179ac056e90
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
 
 + Response 200 (application/json; charset=utf-8)
 
@@ -60,7 +60,7 @@ Creates an Order.
 
     + Headers
 
-            api-key: 73f1c312-64e1-4069-92d8-0179ac056e90
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
 
     + Attributes (Order)
 
@@ -90,7 +90,7 @@ Returns the details for a specific Order
 
     + Headers
 
-            api-key: 73f1c312-64e1-4069-92d8-0179ac056e90
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
 
 + Response 200 (application/json; charset=utf-8)
 
@@ -98,14 +98,14 @@ Returns the details for a specific Order
 
 ### Update Order [PUT]
 Updates only those details which are allowed to be updated.
-At present only Order Status (excluding SUCCESS and CANCELED), 
+At present only Order Status (excluding SUCCESS and CANCELED),
 Payment Details and Customer Details (excluding ID)
 
 + Request (application/json; charset=utf-8)
 
     + Headers
 
-            api-key: 73f1c312-64e1-4069-92d8-0179ac056e90
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
 
     + Attributes (Order)
 
@@ -143,7 +143,7 @@ ONLY FOR INTERNAL USE. Deletes an Order.
 
     + Headers
 
-            api-key: 73f1c312-64e1-4069-92d8-0179ac056e90
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
 
 + Response 200 (application/json; charset=utf-8)
 
@@ -162,7 +162,7 @@ Add an individual line item.
 
     + Headers
 
-            api-key: 73f1c312-64e1-4069-92d8-0179ac056e90
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
 
     + Attributes (Order Lines)
 
@@ -198,7 +198,7 @@ Update the quantity of an individual line item.
 
     + Headers
 
-            api-key: 73f1c312-64e1-4069-92d8-0179ac056e90
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
 
     + Attributes (Order Lines)
 
@@ -223,7 +223,7 @@ Remove a line item from an order
 
     + Headers
 
-            api-key: 73f1c312-64e1-4069-92d8-0179ac056e90
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
 
 + Response 200 (application/json; charset=utf-8)
 
@@ -242,7 +242,7 @@ Add an individual address.
 
     + Headers
 
-            api-key: 73f1c312-64e1-4069-92d8-0179ac056e90
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
 
     + Attributes (Address)
 
@@ -273,7 +273,7 @@ Remove address from an order
 
     + Headers
 
-            api-key: 73f1c312-64e1-4069-92d8-0179ac056e90
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
 
 + Response 200 (application/json; charset=utf-8)
 
@@ -295,7 +295,7 @@ so if the Order doesn't have all required details, it will error.
 
     + Headers
 
-            api-key: 73f1c312-64e1-4069-92d8-0179ac056e90
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
 
 + Response 201 (application/json; charset=utf-8)
 
@@ -315,7 +315,7 @@ Cancels an existing Order of status = SUCCESS
 
     + Headers
 
-            api-key: 73f1c312-64e1-4069-92d8-0179ac056e90
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
 
 + Response 201 (application/json; charset=utf-8)
 
@@ -333,7 +333,7 @@ Check the health status of the service
 
     + Headers
 
-            api-key: 73f1c312-64e1-4069-92d8-0179ac056e90
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
 
 + Response 200 (application/json; charset=utf-8)
 
