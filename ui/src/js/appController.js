@@ -7,8 +7,8 @@
  */
 define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerFactory', 'ojs/ojknockout', 'ojs/ojmodel'],
   function(oj, ko, OrderFactory, CustomerFactory) {
-     function ControllerViewModel() {
-       var self = this;
+    function ControllerViewModel() {
+      var self = this;
 
       // Media queries for repsonsive layouts
       var smQuery = oj.ResponsiveUtils.getFrameworkQuery(oj.ResponsiveUtils.FRAMEWORK_QUERY_KEY.SM_ONLY);
@@ -20,89 +20,91 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
       self.contentLoaded = ko.observable(false);
       self.noShoppingBasket = ko.observable(false);
 
-      self.init = function () {
+      self.init = function() {
 
         $.ajaxSetup({
           headers: {
             "api-key": "API-KEY-PLACEHOLDER"
+            //"api-key": "351801a3-0c02-41c1-b261-d0e5aaa4a0e6"
           }
         });
 
         // Listener to handle content from embedding application
         // Only applies as running in iFrame
-        window.addEventListener("message", function (event) {
+        window.addEventListener("message", function(event) {
+          console.log("Received message from embedding application " + event);
+          console.log("Payload =  " + JSON.stringify(event.data));
 
-            console.log("Received message from embedding application " + event);
-            console.log("Payload =  " + JSON.stringify(event.data));
+          if (event.data.eventType === "globalContext") {
 
-            if (event.data.eventType === "globalContext") {
+            if (event.data.payload.globalContext != null) {
 
-              if (event.data.payload.globalContext != null) {
+              if (event.data.payload.globalContext.customer != null && event.data.payload.globalContext.customer.customerIdentifier != null) {
 
-                if (event.data.payload.globalContext.customer != null && event.data.payload.globalContext.customer.customerIdentifier != null) {
+                self.order = OrderFactory.createOrderModel(event.data.payload.globalContext.customer.customerIdentifier, "SHOPPING");
 
-                  self.order = OrderFactory.createOrderModel(event.data.payload.globalContext.customer.customerIdentifier, "SHOPPING");
-              
-                  self.order.fetch({
-                    success: function(model, response, options) {
+                self.order.fetch({
+                  success: function(model, response, options) {
 
-                      if (response.orders != null && response.orders.length == 0) {
-                        self.noShoppingBasket(true);
-                        self.contentLoaded(false);
-                      } else {
-                        self.order = OrderFactory.createOrderModel(self.order.get("orders")[0].order.order_id);
-                        self.order.fetch({
+                    if (response.orders != null && response.orders.length == 0) {
+                      self.noShoppingBasket(true);
+                      self.contentLoaded(false);
+                    } else {
+                      self.order = OrderFactory.createOrderModel(self.order.get("orders")[0].order.order_id);
+                      self.order.fetch({
 
-                          success: function(model, response, options) {
-                            
-                            var customerId = model.get("order").customer.customer_id;
-                            self.customer = CustomerFactory.createCustomerModel(customerId);
-                            self.customer.fetch({
-                              success: function(model, response, options) {
+                        success: function(model, response, options) {
 
-                                self.order.get("order").customer = model.get("0");
-                                self.noShoppingBasket(false);
-                                self.contentLoaded(true);
+                          var customerId = model.get("order").customer.customer_id;
+                          self.customer = CustomerFactory.createCustomerModel(customerId);
+                          self.customer.fetch({
+                            success: function(model, response, options) {
 
-                              },
-                              error: function(model, xhr, options) {
-                                alert("Error fetching Customer ID: " + customerId);
-                              }
-                            });
+                              self.order.get("order").customer = model.get("0");
+                              self.noShoppingBasket(false);
+                              self.contentLoaded(true);
 
-                          }
+                            },
+                            error: function(model, xhr, options) {
+                              alert("Error fetching Customer ID: " + customerId);
+                            }
+                          });
 
-                        });
+                        }
 
-                      }
+                      });
 
                     }
-                    
-                  });
 
-                }
+                  }
 
-              } else {
-                alert("Error - No Order ID passed into the application");
+                });
+
               }
 
+            } else {
+              alert("Error - No Order ID passed into the application");
             }
+
+          }
 
         }, false);
 
-        parent.postMessage({"childHasLoaded": true}, "*");
+        parent.postMessage({
+          "childHasLoaded": true
+        }, "*");
 
       };
 
-      $(document).ready(function () {
+      $(document).ready(function() {
 
         self.init();
 
       });
 
-     }
+    }
 
-     return new ControllerViewModel();
+    return new ControllerViewModel();
 
   }
 );

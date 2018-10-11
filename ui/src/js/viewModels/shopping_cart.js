@@ -52,7 +52,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
 
             var nextStep = event.detail.toStep;
             var index = null;
-            
+
             if (!nextStep.disabled) {
 
                 var array = self.steps();
@@ -67,9 +67,9 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                         newStep.label = self.steps()[i].label;
                         newStep.id = self.steps()[i].id;
                         newStep.disabled = true;
-                        
+
                         array[i] = newStep;
-                        
+
                     }
 
                 }
@@ -143,7 +143,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
         };
 
         self.onNextStep = function() {
-            
+
             var index = -1;
             var orderAddress = {};
 
@@ -151,9 +151,9 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                 if (basketTrain.selectedStep === self.steps()[i].id) {
 
                     self.apiInteraction(self.steps()[i + 1].id);
-                    
+
                     basketTrain.selectedStep = self.steps()[i + 1].id;
-                    
+
                     return;
 
                 }
@@ -175,7 +175,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                 items[i].productIdentifier = order.line_items[i].product_id;
                 items[i].itemCount = order.line_items[i].quantity;
             }
-            
+
             // Has to be a delivery address at this point in time
             for (var j = 0; j < address.length; j++) {
                 if (address[j].name === "DELIVERY") {
@@ -203,7 +203,9 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
 
             // TODO - This oj.AJAX override needs to be deleted when logistic API supports CORS
             oj.ajax = function(ajaxOptions) {
-                ajaxOptions.type = "GET";
+                //ajaxOptions.type = "GET";
+                //Changed to POST as logistics expects it
+                ajaxOptions.type = "POST";
                 return $.ajax(ajaxOptions);
             };
 
@@ -214,7 +216,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                     document.getElementById("confirmationDialog").open();
                 }
             });
-            
+
         };
 
         self.confirmCost = function() {
@@ -276,7 +278,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                         ajaxOptions.url = OrderFactory.setOrderURI(rootViewModel.order.get("order").order_id);
                         return $.ajax(ajaxOptions);
                     };
-        
+
                     rootViewModel.order.save(null, {
                         success: function(model, response, options) {
 
@@ -351,7 +353,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                             ajaxOptions.type = "POST";
                             return $.ajax(ajaxOptions);
                         };
-        
+
                         address.set({
                             "name": "DELIVERY",
                             "line_1": orderAddress.line_1,
@@ -361,7 +363,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                             "postcode": orderAddress.postcode,
                             "country": orderAddress.country
                         });
-        
+
                         address.save(null, {
                             success: function (model, response, options) {
 
@@ -449,7 +451,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
         };
 
     }
-    
+
     return new ShoppingCartViewModel();
 
 });

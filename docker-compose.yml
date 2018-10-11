@@ -2,7 +2,7 @@ version: '2'
 services:
   orders-ui:
       #Image
-      image: luisw19/orders-ui:2.0.1
+      image: luisw19/orders-ui:2.0.3
       #Uncomment "build" if you wish to build from source code, otherwise it'll pull from registry
       build: ./ui
       environment:
@@ -11,7 +11,7 @@ services:
       ports:
         - "8080:8080"
       command: bash container-entrypoint.sh
-
+  
   product-sub-ms:
       #Image
       #image: localhost/product-sub-ms:0.1.1

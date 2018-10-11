@@ -6,10 +6,10 @@ function (oj) {
         setOrderURI: function(orderId, type) {
             if (type === "SHOPPING") {
                 return "API-GW-PLACEHOLDER/api/orders?shoppingCart_id=" + orderId + "&status=SHOPPING_CART";
-                // return "https://oc-144-21-82-92.compute.oraclecloud.com:9129/api/orders?shoppingCard_id=" + orderId + "&status=SHOPPING_CART";
+                //return "https://oc-129-156-113-240.compute.oraclecloud.com:9022/api/orders?shoppingCart_id=" + orderId + "&status=SHOPPING_CART";
             } else {
                 return "API-GW-PLACEHOLDER/api/orders/" + orderId;
-                // return "https://oc-144-21-82-92.compute.oraclecloud.com:9129/api/orders/" + orderId;
+                //return "https://oc-129-156-113-240.compute.oraclecloud.com:9022" + orderId;
             }
         },
         createOrderModel: function(orderId, type) {
