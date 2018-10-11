@@ -14,7 +14,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         var self = this;
         var rootViewModel = ko.dataFor(document.getElementById('globalBody'));
         var order = rootViewModel.order.get("order");
-        
+
         var address;
         var index = 0;
 
@@ -35,8 +35,9 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
             // Read latest Order from controller
             var addressArray = rootViewModel.order.get("order").address;
             order = rootViewModel.order.get("order");
-
-            self.customerAddresses(rootViewModel.customer.get("0").addresses);
+            
+            //self.customerAddresses(rootViewModel.customer.get("0").addresses);
+            self.customerAddresses(rootViewModel.customer.get("addresses"));
 
             if (addressArray != null) {
 
@@ -137,7 +138,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         };
 
     }
-    
+
     return new DeliveryAddressViewModel();
 
 });

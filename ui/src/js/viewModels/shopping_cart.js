@@ -388,9 +388,10 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
             } else if (stepId === "invoiceDetail") {
                 // Call PUT ORDER for Shipping & Customer & Special Details
                 var order = rootViewModel.order.get("order");
+                oj.Logger.error(order);
                 order.customer.loyalty_level = "GOLD";
-                order.customer.first_name = order.customer.firstName;
-                order.customer.last_name = order.customer.lastName;
+                order.customer.first_name = order.customer.get("firstName");
+                order.customer.last_name = order.customer.get("lastName");
 
                 if (order.customer.phoneNumbers.length > 0) {
                     order.customer.phone = "+" + order.customer.phoneNumbers[0].countryCode + order.customer.phoneNumbers[0].number;
