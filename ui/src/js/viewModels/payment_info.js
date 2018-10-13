@@ -199,7 +199,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
             deliveryAddress = {};
             billingAddress = {};
-            index = -1;
+            index = -1; 
 
             for (var i = 0; i < order.address.length; i++) {
                 if (order.address[i].name.indexOf("DELIVERY") != -1) {

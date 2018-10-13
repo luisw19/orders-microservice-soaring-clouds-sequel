@@ -401,7 +401,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                 order.customer.loyalty_level = "GOLD";
 
                 if (order.customer.get("phoneNumbers").length > 0) {
-                    order.customer.phone = "+" + order.customer.phoneNumbers[0].countryCode + order.customer.phoneNumbers[0].number;
+                    order.customer.phone = "+" + order.customer.get("phoneNumbers")[0].countryCode + order.customer.get("phoneNumbers")[0].number;
                 } else {
                     order.customer.phone = "n/a";
                 }

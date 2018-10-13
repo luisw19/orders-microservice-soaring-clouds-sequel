@@ -22,10 +22,19 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
 
       self.init = function() {
 
+        ///Added to test locally
+        var servingHost = window.location.host;
+        var apiKey = "API-KEY-PLACEHOLDER";
+        if (servingHost.indexOf("localhost") !== -1) {
+          //modify apiKey to test locally
+          apiKey = "351801a3-0c02-41c1-b261-d0e5aaa4a0e6";
+        }
+        console.log("apiKey: "+ apiKey);
+        ////
+
         $.ajaxSetup({
           headers: {
-            "api-key": "API-KEY-PLACEHOLDER"
-            //"api-key": "351801a3-0c02-41c1-b261-d0e5aaa4a0e6"
+            "api-key": apiKey
           }
         });
 
@@ -106,64 +115,31 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
       $(document).ready(function() {
 
         oj.Logger.error(location);
-
         self.init();
 
         //added to test locally
-        if (location.search != null) {
-
-          var orderId = location.search.substr(location.search.indexOf("=") + 1);
-
-          // Simulate inbound event
-          var event = new MessageEvent("message", {
-            data: {
-              "eventType": "globalContext",
-              "payload": {
-                "globalContext": {
-                  "orderId": "5bbc5cd590c4920011f96510",
-                  "userName": "lweir@gmail.com",
-                  "customer": {
-                    "_id": "5bbc5cd590c4920011f96510",
-                    "firstName": "Luis",
-                    "lastName": "Weir",
-                    "title": "Mr",
-                    "email": "lweir@gmail.com",
-                    "dateOfBirth": "1980-01-01T00:00:00.000Z",
-                    "addresses": [{
-                      "_id": "5bbc5cd590c4920011f96511",
-                      "type": "BILLING",
-                      "streetName": "King street",
-                      "streetNumber": "22",
-                      "city": "Warwick ",
-                      "postcode": "CV22 3AB",
-                      "country": "UK"
-                    }],
-                    "paymentDetails": [{
-                      "_id": "5bbc5cd590c4920011f96512",
-                      "type": "CREDIT",
-                      "cardNumber": "1111-2222-3333-4444",
-                      "expirationDate": "20-20",
-                      "nameOnCard": "L WEIR"
-                    }],
-                    "preferences": {
-                      "_id": "5bbc5cd590c4920011f96513",
-                      "newsLetter": true,
-                      "offers": true
-                    },
-                    "phoneNumbers": [],
-                    "__v": 0,
-                    "id": "5bbc5cd590c4920011f96510",
-                    "customerIdentifier": "5bbc5cd590c4920011f96510"
+        var servingHost = window.location.host;
+        console.log("servingHost: " + servingHost);
+        if (servingHost.indexOf("localhost") !== -1) {
+          if (location.search != null) {
+            var cartId = location.search.substr(location.search.indexOf("cartId=") + 7);
+            // Simulate inbound event
+            var event = new MessageEvent("message", {
+              data: {
+                "eventType": "globalContext",
+                "payload": {
+                  "globalContext": {
+                    "customer": {
+                      "customerIdentifier": cartId
+                    }
                   }
                 }
               }
-            }
-          });
-          oj.Logger.error(event);
-
-          window.dispatchEvent(event);
-
-        }
+            });
+            oj.Logger.error(event);
+            window.dispatchEvent(event);
+          }
+        };
 
       });
 
