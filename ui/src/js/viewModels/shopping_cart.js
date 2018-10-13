@@ -184,7 +184,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                 }
             }
 
-            logisticsValidation.set({
+            var logisticsPaylaod = {
                 "nameAddressee": shipping.first_name + " " + shipping.last_name,
                 "destination": {
                     "houseNumber": "",
@@ -199,7 +199,11 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                 "giftWrapping": order.special_details.gift_wrapping,
                 "personalMessage": order.special_details.personal_message,
                 "items": items
-            });
+            };
+
+            console.log("logistics paylaod:" + JSON.stringify(logisticsPaylaod));
+
+            logisticsValidation.set(logisticsPaylaod);
 
             // TODO - This oj.AJAX override needs to be deleted when logistic API supports CORS
             oj.ajax = function(ajaxOptions) {
@@ -389,14 +393,17 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                 // Call PUT ORDER for Shipping & Customer & Special Details
                 var order = rootViewModel.order.get("order");
                 oj.Logger.error(order);
-                order.customer.loyalty_level = "GOLD";
+
                 order.customer.first_name = order.customer.get("firstName");
                 order.customer.last_name = order.customer.get("lastName");
+                order.customer.email = order.customer.get("email");
+                //TODO this should not be hardcoded
+                order.customer.loyalty_level = "GOLD";
 
-                if (order.customer.phoneNumbers.length > 0) {
+                if (order.customer.get("phoneNumbers").length > 0) {
                     order.customer.phone = "+" + order.customer.phoneNumbers[0].countryCode + order.customer.phoneNumbers[0].number;
                 } else {
-                    order.customer.phone = null;
+                    order.customer.phone = "n/a";
                 }
 
                 rootViewModel.order.set("order", order);

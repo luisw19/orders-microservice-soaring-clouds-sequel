@@ -14,7 +14,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         var self = this;
         var rootViewModel = ko.dataFor(document.getElementById('globalBody'));
         var order = rootViewModel.order.get("order");
-        var customer = rootViewModel.customer.get("0");
+        var customer = rootViewModel.customer;
+        //var customer = rootViewModel.customer.get("0");
 
         var deliveryAddress = null;
         var billingAddress = null;
@@ -44,7 +45,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         self.handleAttached = function(info) {
 
             order = rootViewModel.order.get("order");
-            customer = rootViewModel.customer.get("0");
+            //customer = rootViewModel.customer.get("0");
+            customer = rootViewModel.customer;
 
             if (self.displayNewMethod()) {
                 self.nameOnCard(order.payment.name_on_card);
@@ -87,7 +89,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
                 self.addressReadOnly(false);
 
             } else {
-                
+
                 self.addressLine1(deliveryAddress.line_1);
                 self.addressLine2(deliveryAddress.line_2);
                 self.city(deliveryAddress.city);
@@ -99,7 +101,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
             }
 
-            self.paymentMethods(customer.paymentDetails);
+            //self.paymentMethods(customer.paymentDetails);
+            self.paymentMethods(customer.get("paymentDetails"));
 
         };
 
@@ -108,9 +111,9 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         };
 
         self.onPaymentMethodChanged = function(event) {
-            
+
             var id = event.detail.value;
-            
+
             if (order.payment == null) {
                 order.payment = {};
             }
@@ -133,9 +136,17 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
                 var paymentMethod = {};
 
-                for (var i = 0; i < customer.paymentDetails.length; i++) {
+                /*for (var i = 0; i < customer.paymentDetails.length; i++) {
                     if (customer.paymentDetails[i]._id === id) {
                         paymentMethod = customer.paymentDetails[i];
+                        break;
+                    }
+
+                }*/
+
+                for (var i = 0; i < customer.get("paymentDetails").length; i++) {
+                    if (customer.get("paymentDetails")[i]._id === id) {
+                        paymentMethod = customer.get("paymentDetails")[i];
                         break;
                     }
 
@@ -199,7 +210,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
                     index = i;
                 }
             }
-            
+
             if (self.sameAddressAsDelivery().length === 0) {
 
                 self.addressLine1("");
@@ -235,7 +246,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
                 billingAddress.country = deliveryAddress.country;
 
                 self.addressReadOnly(true);
-                
+
             }
 
             order.address[index] = billingAddress;
@@ -268,7 +279,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         };
 
     }
-    
+
     return new PaymentInfoViewModel();
 
 });

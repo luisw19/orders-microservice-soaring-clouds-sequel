@@ -56,8 +56,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/LineItemFactory',
       self.orderCurrency(rootViewModel.order.get("order").currency);
 
       customer = rootViewModel.customer;
-      //customer = rootViewModel.customer;
-      //
+      //customer = rootViewModel.customer.get("0");
 
       oj.Logger.error(rootViewModel.customer);
 
@@ -76,12 +75,19 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/LineItemFactory',
       // Customer Details
       if (customer != null) {
         self.customerId(rootViewModel.order.get('_id'));
-
         self.customerName(customer.get("firstName") + " " + customer.get("lastName"));
+
+        var tlf="n/a";
         if (customer.get("phoneNumbers").length > 0) {
-          self.customerPhone('+' + customer.get("phoneNumbers")[0].countryCode + customer.get("phoneNumbers")[0].number);
+          tlf='+' + customer.get("phoneNumbers")[0].countryCode + customer.get("phoneNumbers")[0].number;
         }
+        console.log("tlf: "+tlf);
+        self.customerPhone(tlf);
+
+        console.log("email:" + customer.get("email"));
         self.customerEmail(customer.get("email"));
+
+        //TODO this should not be hardcoded
         self.customerLoyaltyLevel("GOLD");
       }
 

@@ -24,8 +24,8 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
 
         $.ajaxSetup({
           headers: {
-            //"api-key": "API-KEY-PLACEHOLDER"
-            "api-key": "351801a3-0c02-41c1-b261-d0e5aaa4a0e6"
+            "api-key": "API-KEY-PLACEHOLDER"
+            //"api-key": "351801a3-0c02-41c1-b261-d0e5aaa4a0e6"
           }
         });
 
@@ -55,7 +55,7 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
                     } else {
 
                       self.order = OrderFactory.createOrderModel(self.order.get("orders")[0].order.order_id);
-                      
+
                       self.order.fetch({
 
                         success: function(model, response, options) {
