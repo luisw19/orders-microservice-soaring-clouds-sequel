@@ -193,17 +193,23 @@ kafkaAvro.getConsumer({
               shoppingCart_id: message.parsed.customerId,
               status: orderStatus
             };
-            //if SKU not present set to N/A
+            //if SKU not present leave to empty string
             var skuVal = "";
             if(message.parsed.product.sku!==undefined){
               skuVal = message.parsed.product.sku.string;
             }
+            //if Product Description is null leave to empty string
+            var productDes = "";
+            if(message.parsed.product.description!==null){
+              productDes = message.parsed.product.description.string;
+            }
+
             //Set Product line item
             productItem = {
             	product_id: message.parsed.product.productId,
               product_code: message.parsed.product.productCode.string,
             	product_name: message.parsed.product.productName.string,
-            	description: message.parsed.product.description.string,
+            	description: productDes,
             	quantity: message.parsed.quantity,
             	price: message.parsed.priceInCurrency,
             	size: message.parsed.product.size.int,
