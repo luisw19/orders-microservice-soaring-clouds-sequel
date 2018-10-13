@@ -6,6 +6,7 @@ COPY . /usr/src/api
 
 # Set working dir
 WORKDIR /usr/src/api
+RUN rm -rf node_modules
 
 ############ Install dependencies
 RUN npm install express --save

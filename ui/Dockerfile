@@ -6,6 +6,7 @@ COPY . /usr/src/ui
 
 # Set working dir
 WORKDIR /usr/src/ui
+RUN rm -rf node_modules
 
 ############ Install dependencies
 RUN npm -g install @oracle/ojet-cli

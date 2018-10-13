@@ -27,7 +27,7 @@ spec:
           value: orders-prod-ms
         - name: EVENTAPI_PORT
           value: "4000"
-        image: luisw19/orders-ms:2.0.0
+        image: luisw19/orders-ms:2.0.1
         name: orders-ms
         ports:
         - containerPort: 3000
