@@ -15,7 +15,7 @@ spec:
       - path: /orders-ms/api/
         backend:
           serviceName: {{ .Release.Name }}-{{ .Values.orders.name }}
-          servicePort: 3000
+          servicePort: {{ .Values.orders.port }}
       - path: /orders-ms/ui/
         backend:
           serviceName: {{ .Release.Name }}-{{ .Values.ui.name }}

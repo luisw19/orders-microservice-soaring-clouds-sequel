@@ -108,19 +108,30 @@ Initialise command line with upgrade entry to ensure helm and tiller are on same
 helm init --upgrade
 ```
 
-4) Deploy the Helm package by running
+4) Deploy the Helm chart by running
 
 ```bash
-helm install ./orderspackage/ -n orderspackage
+helm install ./orderspackage -n orderspackage
 ```
 
-Verify pods were created width
+or to create a package and then install from it:
+
+```bash
+helm package ./orderspackage
+```
+
+Then run (note that version of .tgz is same as Chart.yaml)
+```bash
+helm install -n orderspackage orderspackage-2.0.0.tgz
+```
+
+5) Verify pods were created with:
 
 ```bash
 kubectl get pods
 ```
 
-5) To get the external IP of ingress run:
+6) To get the external IP of ingress run:
 
 ```bash
 kubectl get svc
@@ -131,7 +142,7 @@ kubectl get svc
  kubectl get ingress orderspackage-orders-ms-ing
 ```
 
-6) To completely remove the release run
+7) To completely remove the release run
 
 ```bash
 helm delete --purge orderspackage
