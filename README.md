@@ -123,7 +123,7 @@ kubectl get pods
 5) To get the external IP of ingress run:
 
 ```bash
-    kubectl get svc
+kubectl get svc
 ```
  Take note of the "Node" IP for "orders-ms-xxx". Then run the following command to obtain the port:
 
@@ -134,5 +134,5 @@ kubectl get pods
 6) To completely remove the release run
 
 ```bash
-    helm delete --purge orderspackage
+helm delete --purge orderspackage
 ```
