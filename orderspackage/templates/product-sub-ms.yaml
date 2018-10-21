@@ -1,0 +1,36 @@
+# APP DEPLOYMENT
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: {{ .Release.Name }}-{{ .Values.prodSub.name }}
+  name: {{ .Release.Name }}-{{ .Values.prodSub.name }}
+spec:
+  replicas: {{ .Values.prodSub.replicas }}
+  selector:
+    matchLabels:
+      run: {{ .Release.Name }}-{{ .Values.prodSub.name }}-exposed
+  template:
+    metadata:
+      labels:
+        run: {{ .Release.Name }}-{{ .Values.prodSub.name }}-exposed
+    spec:
+      containers:
+      - args:
+        - node
+        - product-subscriber-ms.js
+        env:
+        - name: KAFKA_BROKER
+          value: {{ .Values.env.kafkaBroker }}
+        - name: KAFKA_REGISTRY
+          value: {{ .Values.env.kafkaRegistry }}
+        - name: KAFKA_SHOPPINGCART_TOPIC
+          value: {{ .Values.env.kafkaShoppingCartTopic }}
+        - name: ORDERSAPI_HOST
+          value: {{ .Release.Name }}-{{ .Values.orders.name }}
+        - name: ORDERSAPI_PORT
+          value: "{{ .Values.orders.port }}"
+        image: {{ .Values.prodSub.image.repo }}:{{ .Values.prodSub.image.tag }}
+        name: {{ .Release.Name }}-{{ .Values.prodSub.name }}
+      restartPolicy: Always

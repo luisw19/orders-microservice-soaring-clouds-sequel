@@ -1,0 +1,51 @@
+# APP DEPLOYMENT
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: {{ .Release.Name }}-{{ .Values.ui.name }}
+  name: {{ .Release.Name }}-{{ .Values.ui.name }}
+spec:
+  replicas: {{ .Values.ui.replicas }}
+  selector:
+    matchLabels:
+      run: {{ .Release.Name }}-{{ .Values.ui.name }}
+  template:
+    metadata:
+      labels:
+        run: {{ .Release.Name }}-{{ .Values.ui.name }}
+    spec:
+      containers:
+      - args:
+        - bash
+        - container-entrypoint.sh
+        env:
+        - name: API_HOST
+          value: {{ .Values.env.apiHost }}
+        - name: API_KEY
+          value: {{ .Values.env.apiKey }}
+        image: {{ .Values.ui.image.repo }}:{{ .Values.ui.image.tag }}
+        name: {{ .Release.Name }}-{{ .Values.ui.name }}
+        ports:
+        - containerPort: {{ .Values.ui.port }}
+      restartPolicy: Always
+
+---
+
+# APP SERVICE
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: {{ .Release.Name }}-{{ .Values.ui.name }}
+  name: {{ .Release.Name }}-{{ .Values.ui.name }}
+spec:
+  ports:
+  - port: {{ .Values.ui.port }}
+    protocol: TCP
+    targetPort: {{ .Values.ui.port }}
+  selector:
+    run: {{ .Release.Name }}-{{ .Values.ui.name }}
+  type: NodePort

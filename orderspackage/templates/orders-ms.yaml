@@ -1,0 +1,53 @@
+# APP DEPLOYMENT
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: {{ .Release.Name }}-{{ .Values.orders.name }}
+  name: {{ .Release.Name }}-{{ .Values.orders.name }}
+spec:
+  replicas: {{ .Values.orders.replicas }}
+  selector:
+    matchLabels:
+      run: {{ .Release.Name }}-{{ .Values.orders.name }}
+  template:
+    metadata:
+      labels:
+        run: {{ .Release.Name }}-{{ .Values.orders.name }}
+    spec:
+      containers:
+      - args:
+        - npm
+        - start
+        env:
+        - name: APP_PORT
+          value: "{{ .Values.orders.port }}"
+        - name: EVENTAPI_HOST
+          value: {{ .Release.Name }}-{{ .Values.ordersProd.name }}
+        - name: EVENTAPI_PORT
+          value: "{{ .Values.ordersProd.port }}"
+        image: {{ .Values.orders.image.repo }}:{{ .Values.orders.image.tag }}
+        name: {{ .Release.Name }}-{{ .Values.orders.name }}
+        ports:
+        - containerPort: {{ .Values.orders.port }}
+      restartPolicy: Always
+
+---
+
+# APP SERVICE
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: {{ .Release.Name }}-{{ .Values.orders.name }}
+  name: {{ .Release.Name }}-{{ .Values.orders.name }}
+spec:
+  ports:
+  - port: {{ .Values.orders.port }}
+    protocol: TCP
+    targetPort: {{ .Values.orders.port }}
+  selector:
+    run: {{ .Release.Name }}-{{ .Values.orders.name }}
+  type: NodePort

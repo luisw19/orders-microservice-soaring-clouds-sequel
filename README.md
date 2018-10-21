@@ -53,53 +53,86 @@ This will run 3 instances:
 	dredd --sorted
 ```
 
-## To create Deployment/Service in Kubernetes (tested locally with minikube)
+## To create Deployment/Service in Kubernetes
 
-1) Build the docker image
-
-```bash
-	docker-compose build
-```
-
-2) Set Dockerconfig to match your target Kubernetes environment e.g.
+1) Set KUBECONFIG to match your target Kubernetes environment e.g.
 
 ```bash
-	export KUBECONFIG=$HOME/kubeconfig
+	export KUBECONFIG=$HOME/.kube/config
 ```
 
-3) Create mongo Deployment and Service
+2) Create Orders namespace if it doesn't already exist
+
+```bash
+	 kubectl create -f k8s-namespace-orders.json
+```
+
+Verify that namespace was created
+```bash
+		kubectl get namespaces --show-labels
+```
+
+3) Define “orders” context for the kubectl client to work with.
+
+> NOTE: values for cluster and user were taken from kubeconfig file
+
+```bash
+	 kubectl config set-context orders --namespace=orders-ms --cluster=<cluster value> --user=<user value>
+```
+
+4) Switch to “oders” context
+
+```bash
+	 kubectl config use-context orders
+```
+
+5) Create mongo Deployment and Service
 
 ```bash
     kubectl create -f orders-mongo-db.yml
 ```
+> Note that for now the Mongo DB is not part of the Helm package but released once and separately.
 
-4) Create Deployments and Services
+4) Install and configure [Helm](https://helm.sh)
+
+If Tiller not already installed in the K8s cluster, then installed as per [this link]( https://docs.helm.sh/using_helm/#installing-tiller).
+> Note that OKE has an option to provision a K8s cluster with Tiller enabled.
+
+Install Helm CLI on Mac
+```bash
+	brew install kubernetes-helm
+```
+
+Initialise command line with upgrade entry to ensure helm and tiller are on same version
+```bash
+	helm init --upgrade
+```
+
+4) Deploy the Helm package by running
 
 ```bash
-	kubectl create -f orders-mongo-db.yml
-	kubectl create -f orders-ms.yml
-	kubectl create -f product-sub-ms.yml
+	helm install ./orderspackage/ -n orderspackage
 ```
+
 Verify pods were created width
 
 ```bash
 	kubectl get pods
 ```
 
-5) 4. To get the external IP Orders Microservice is listening to the following commands:
+5) To get the external IP of ingress run:
 
 ```bash
-    kubectl get pods -o wide
+    kubectl get svc
 ```
  Take note of the "Node" IP for "orders-ms-xxx". Then run the following command to obtain the port:
 
 ```bash
- 	kubectl get services orders-ms
+ 	kubectl get ingress orderspackage-orders-ms-ing
 ```
 
-6) To delete the services (if required)
+6) To completely remove the release run
 
 ```bash
-    kubectl delete deploy <e.g. orders-mongo-db>
-    kubectl delete service <e.g. orders-mongo-db>
+    helm delete --purge orderspackage
 ```

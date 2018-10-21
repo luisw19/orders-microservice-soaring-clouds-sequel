@@ -1,0 +1,41 @@
+ingress:
+    name: orders-ms-ing
+
+ui:
+    name: orders-ui
+    replicas: 3
+    image:
+        repo: luisw19/orders-ui
+        tag: 2.0.8
+    port: 8080
+
+orders:
+    name: orders-ms
+    replicas: 3
+    image:
+        repo: luisw19/orders-ms
+        tag: 2.0.1
+    port: 3000
+
+prodSub:
+    name: product-sub-ms
+    replicas: 3
+    image:
+        repo: luisw19/product-sub-ms
+        tag: 2.0.3
+
+ordersProd:
+    name: orders-prod-ms
+    replicas: 3
+    image:
+        repo: luisw19/orders-prod-ms
+        tag: 2.0.1
+    port: 4000
+
+env:
+    apiHost: https://oc-129-156-113-240.compute.oraclecloud.com:9022
+    apiKey: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
+    kafkaBroker: 129.156.113.171:6667
+    kafkaRegistry: http://129.156.113.125:8081
+    kafkaShoppingCartTopic: idcs-1d61df536acb4e9d929e79a92f3414b5-soaringaddtoshoppingcart
+    kafkaOrderTopic: idcs-1d61df536acb4e9d929e79a92f3414b5-soaringordercreated

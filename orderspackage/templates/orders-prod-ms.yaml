@@ -1,0 +1,55 @@
+# APP DEPLOYMENT
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: {{ .Release.Name }}-{{ .Values.ordersProd.name }}
+  name: {{ .Release.Name }}-{{ .Values.ordersProd.name }}
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      run: {{ .Release.Name }}-{{ .Values.ordersProd.name }}-exposed
+  template:
+    metadata:
+      labels:
+        run: {{ .Release.Name }}-{{ .Values.ordersProd.name }}-exposed
+    spec:
+      containers:
+      - args:
+        - npm
+        - start
+        env:
+        - name: APP_PORT
+          value: "{{ .Values.ordersProd.port }}"
+        - name: KAFKA_BROKER
+          value: {{ .Values.env.kafkaBroker }}
+        - name: KAFKA_REGISTRY
+          value: {{ .Values.env.kafkaRegistry }}
+        - name: KAFKA_ORDER_TOPIC
+          value: {{ .Values.env.kafkaOrderTopic }}
+        image: {{ .Values.ordersProd.image.repo }}:{{ .Values.ordersProd.image.tag }}
+        name: {{ .Release.Name }}-{{ .Values.ordersProd.name }}
+        ports:
+        - containerPort: {{ .Values.ordersProd.port }}
+      restartPolicy: Always
+
+---
+
+# APP SERVICE
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: {{ .Release.Name }}-{{ .Values.ordersProd.name }}
+  name: {{ .Release.Name }}-{{ .Values.ordersProd.name }}
+spec:
+  ports:
+  - port: {{ .Values.ordersProd.port }}
+    protocol: TCP
+    targetPort: {{ .Values.ordersProd.port }}
+  selector:
+    run: {{ .Release.Name }}-{{ .Values.ordersProd.name }}-exposed
+  type: NodePort
