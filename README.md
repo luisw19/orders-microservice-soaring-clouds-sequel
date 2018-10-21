@@ -89,7 +89,7 @@ kubectl get namespaces --show-labels
 5) Create mongo Deployment and Service
 
 ```bash
-    kubectl create -f orders-mongo-db.yml
+kubectl create -f orders-mongo-db.yml
 ```
 > Note that for now the Mongo DB is not part of the Helm package but released once and separately.
 
