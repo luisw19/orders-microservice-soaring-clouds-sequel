@@ -5,7 +5,7 @@ Repository for the Orders Microservice, part of the Soaring Through The Clouds S
 ## Clone the repository locally as following:
 
 ```bash
-	git clone https://github.com/luisw19/orders-microservice-soaring-clouds-sequel.git
+git clone https://github.com/luisw19/orders-microservice-soaring-clouds-sequel.git
 ```
 
 ## Run with Docker-Compose
@@ -15,7 +15,7 @@ Repository for the Orders Microservice, part of the Soaring Through The Clouds S
 2) Run the following command
 
 ```bash
-	docker-compose up
+docker-compose up
 ```
 This will run 3 instances:
 
@@ -34,7 +34,7 @@ This will run 3 instances:
 3) To bring down gratefully run:
 
 ```bash
-	docker-compose down
+docker-compose down
 ```
 
 ## To run Dredd unit tests execute
@@ -42,7 +42,7 @@ This will run 3 instances:
 1) Install Dredd locally
 
 ```bash
-	npm install -g dredd
+npm install -g dredd
 ```
 
 2) Start the Microservice (see previous steps)
@@ -50,7 +50,7 @@ This will run 3 instances:
 3) Run Dredd as following (note that "--sorted" is important to ensure HTTP verbs are executed in the right order)
 
 ```bash
-	dredd --sorted
+dredd --sorted
 ```
 
 ## To create Deployment/Service in Kubernetes
@@ -58,18 +58,18 @@ This will run 3 instances:
 1) Set KUBECONFIG to match your target Kubernetes environment e.g.
 
 ```bash
-	export KUBECONFIG=$HOME/.kube/config
+export KUBECONFIG=$HOME/.kube/config
 ```
 
 2) Create Orders namespace if it doesn't already exist
 
 ```bash
-	 kubectl create -f k8s-namespace-orders.json
+kubectl create -f k8s-namespace-orders.json
 ```
 
 Verify that namespace was created
 ```bash
-		kubectl get namespaces --show-labels
+kubectl get namespaces --show-labels
 ```
 
 3) Define “orders” context for the kubectl client to work with.
@@ -77,13 +77,13 @@ Verify that namespace was created
 > NOTE: values for cluster and user were taken from kubeconfig file
 
 ```bash
-	 kubectl config set-context orders --namespace=orders-ms --cluster=<cluster value> --user=<user value>
+ kubectl config set-context orders --namespace=orders-ms --cluster=<cluster value> --user=<user value>
 ```
 
 4) Switch to “oders” context
 
 ```bash
-	 kubectl config use-context orders
+ kubectl config use-context orders
 ```
 
 5) Create mongo Deployment and Service
@@ -100,24 +100,24 @@ If Tiller not already installed in the K8s cluster, then installed as per [this 
 
 Install Helm CLI on Mac
 ```bash
-	brew install kubernetes-helm
+brew install kubernetes-helm
 ```
 
 Initialise command line with upgrade entry to ensure helm and tiller are on same version
 ```bash
-	helm init --upgrade
+helm init --upgrade
 ```
 
 4) Deploy the Helm package by running
 
 ```bash
-	helm install ./orderspackage/ -n orderspackage
+helm install ./orderspackage/ -n orderspackage
 ```
 
 Verify pods were created width
 
 ```bash
-	kubectl get pods
+kubectl get pods
 ```
 
 5) To get the external IP of ingress run:
@@ -128,7 +128,7 @@ Verify pods were created width
  Take note of the "Node" IP for "orders-ms-xxx". Then run the following command to obtain the port:
 
 ```bash
- 	kubectl get ingress orderspackage-orders-ms-ing
+ kubectl get ingress orderspackage-orders-ms-ing
 ```
 
 6) To completely remove the release run
