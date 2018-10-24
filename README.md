@@ -37,22 +37,6 @@ This will run 3 instances:
 docker-compose down
 ```
 
-## To run Dredd unit tests execute
-
-1) Install Dredd locally
-
-```bash
-npm install -g dredd
-```
-
-2) Start the Microservice (see previous steps)
-
-3) Run Dredd as following (note that "--sorted" is important to ensure HTTP verbs are executed in the right order)
-
-```bash
-dredd --sorted
-```
-
 ## To create Deployment/Service in Kubernetes
 
 1) Set KUBECONFIG to match your target Kubernetes environment e.g.
