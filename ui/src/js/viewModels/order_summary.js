@@ -55,8 +55,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/LineItemFactory',
       self.orderId(rootViewModel.order.get("order").order_id);
       self.orderCurrency(rootViewModel.order.get("order").currency);
 
-      //customer = rootViewModel.customer;
-      customer = rootViewModel.customer.get("0");
+      customer = rootViewModel.customer;
+      //customer = rootViewModel.customer.get("0");
 
       oj.Logger.error(rootViewModel.customer);
 
