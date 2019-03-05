@@ -99,10 +99,16 @@
         label-hint="Customer ID:">
       </oj-input-text>
 
-      <oj-input-text id="customerName"
+      <oj-input-text id="firtName"
         readonly=[[!$root.isAnonymousMode]]
-        value="{{$root.customer.get('firstName') + '  ' + $root.customer.get('lastName')}}"
-        label-hint="Customer Name:">
+        value="{{$root.customer.get('firstName')}}"
+        label-hint="Fist Name:">
+      </oj-input-text>
+
+      <oj-input-text id="lastName"
+        readonly=[[!$root.isAnonymousMode]]
+        value="{{$root.customer.get('lastName')}}"
+        label-hint="Last Name:">
       </oj-input-text>
 
       <oj-input-text id="customerPhone"
@@ -113,7 +119,7 @@
 
       <oj-input-text id="customerEmail"
         readonly=[[!$root.isAnonymousMode]]
-        value="{{$root.customer.get('email')}}"
+        value="{{$root.customer.get('phoneNumbers')[0].number}}"
         label-hint="Email Address:">
       </oj-input-text>
 

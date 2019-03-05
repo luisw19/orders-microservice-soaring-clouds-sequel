@@ -1,37 +1,18 @@
 {
   "__v": 0,
-  "_id": "5aa3d2ac19cf310011ca7b90",
-  "firstName": "John",
-  "lastName": "Doe",
-  "title": "Mr",
-  "email": "john.doe@gmail.com",
-  "password": "$2a$10$81O6WHQYQntRV/Qy/VD/mus90PsTCwKvkAb.pJ/4RACn2rMEtnhE.",
-  "dateOfBirth": "1980-01-01T00:00:00.000Z",
+  "_id": "",
+  "firstName": "",
+  "lastName": "",
+  "title": "",
+  "email": "",
+  "password": "",
+  "dateOfBirth": "",
   "preferences": {
-    "_id": "5aa3d2ac19cf310011ca7b8f",
+    "_id": "",
     "newsLetter": false,
     "offers": false
   },
-  "phoneNumbers": [{
-    "type": "HOME",
-    "countryCode": 31,
-    "number": 1234567890,
-    "_id": "5aa3d2ac19cf310011ca7b8c"
-  }],
-  "addresses": [{
-    "type": "BILLING",
-    "streetName": "2nd Street",
-    "streetNumber": "21",
-    "city": "New York",
-    "postcode": "50858",
-    "country": "US",
-    "_id": "5aa3d2ac19cf310011ca7b8d"
-  }],
-  "paymentDetails": [{
-    "type": "CREDIT",
-    "cardNumber": "1234341413231",
-    "expirationDate": "09/22",
-    "nameOnCard": "Doe",
-    "_id": "5aa3d2ac19cf310011ca7b8e"
-  }]
+  "phoneNumbers": [],
+  "addresses": [],
+  "paymentDetails": []
 }
