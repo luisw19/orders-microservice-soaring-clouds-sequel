@@ -1,5 +1,5 @@
-define(['ojs/ojcore'],
-  function(oj) {
+define(['ojs/ojcore','knockout'],
+  function(oj,ko) {
 
     var CustomerFactory = {
 
@@ -8,6 +8,12 @@ define(['ojs/ojcore'],
         //If user is anonymous (meaning not signed in) then don't call customer service
         if (customerId.indexOf("anonymous") == 0) {
           console.log("apiGW in CustomerFactory: " + "Anonymous user. Not calling customer service.");
+
+          //set global isAutonomousMode to true
+          var rootViewModel = ko.dataFor(document.getElementById('globalBody'));
+          rootViewModel.isAutonomousMode(true);
+
+          //return JSON
           return "data/anonymous.json";
         }else{
           ///Added to test locally

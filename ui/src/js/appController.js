@@ -10,6 +10,9 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
     function ControllerViewModel() {
       var self = this;
 
+      //for making customer fields editable in orders_summary page if not using anonymous
+      self.isAutonomousMode = ko.observable(false);
+
       // Media queries for repsonsive layouts
       var smQuery = oj.ResponsiveUtils.getFrameworkQuery(oj.ResponsiveUtils.FRAMEWORK_QUERY_KEY.SM_ONLY);
       self.smScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable(smQuery);

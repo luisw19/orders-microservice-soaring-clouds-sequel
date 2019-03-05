@@ -16,7 +16,7 @@
                   value="[[product.data.product_name]]"
                   label-hint="Product Name:">
                 </oj-input-text>
-          
+
                 <oj-input-text id="productDescription"
                   readonly
                   value="[[product.data.description]]"
@@ -34,7 +34,7 @@
                   value="[[product.data.product_code]]"
                   label-hint="Product Code:">
                 </oj-input-text>
-          
+
                 <oj-input-text id="productPrice"
                   readonly
                   value="[[product.data.price]]"
@@ -43,14 +43,14 @@
 
                 <oj-input-number id="productQuantity"
                   min= "0"
-                  step= "1" 
+                  step= "1"
                   value="{{product.data.quantity}}"
                   label-hint="Product Quantity:"
                   on-value-changed="[[onQuantityChanged]]">
                 </oj-input-number>
-          
+
               </oj-form-layout>
-              
+
             </oj-collapsible>
           </template>
         </oj-bind-for-each>
@@ -64,7 +64,7 @@
       label-edge="start"
       max-columns="2">
 
-      <oj-input-text id="customerId"
+      <!-- <oj-input-text id="customerId"
         readonly
         value="{{customerId}}"
         label-hint="Customer ID:">
@@ -92,9 +92,38 @@
         readonly
         value="{{customerLoyaltyLevel}}"
         label-hint="Loyalty Level:">
+      </oj-input-text>-->
+      <oj-input-text id="customerId"
+        readonly
+        value="{{$root.customer.get('_id')}}"
+        label-hint="Customer ID:">
+      </oj-input-text>
+
+      <oj-input-text id="customerName"
+        readonly=[[!$root.isAutonomousMode]]
+        value="{{$root.customer.get('firstName') + '  ' + $root.customer.get('lastName')}}"
+        label-hint="Customer Name:">
+      </oj-input-text>
+
+      <oj-input-text id="customerPhone"
+        readonly=[[!$root.isAutonomousMode]]
+        value="{{customerPhone}}"
+        label-hint="Phone Number:">
+      </oj-input-text>
+
+      <oj-input-text id="customerEmail"
+        readonly=[[!$root.isAutonomousMode]]
+        value="{{$root.customer.get('email')}}"
+        label-hint="Email Address:">
+      </oj-input-text>
+
+      <oj-input-text id="customerLoyaltyLevel"
+        readonly
+        value="{{customerLoyaltyLevel}}"
+        label-hint="Loyalty Level:">
       </oj-input-text>
 
     </oj-form-layout>
-    
+
   </oj-collapsible>
 </div>
