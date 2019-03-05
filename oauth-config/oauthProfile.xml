@@ -1,0 +1,35 @@
+<OAuth2TokenLocalEnforcerConfig>
+	<Name>DEFAULT</Name>
+	<HeaderNameIDToken>IDToken</HeaderNameIDToken>
+	<!-- Issuer of the token. In this case Oracle Identity Cloud -->
+	<Issuer>https://identity.oraclecloud.com/</Issuer>
+	<AudienceRestrictionFromConfig>true</AudienceRestrictionFromConfig>
+	<!-- Audience should match the Primary Audience in the Resource Server in IDCS -->
+	<Audience>sttc</Audience>
+	<MandatoryClaims></MandatoryClaims>
+	<!-- useFormat has 2 values  PEMFormatPubKey, X509FormatPubKey -->
+	<PublicCertLocation useFormat='JWKFormatPubKey'>
+		<JWKFormatPubKey>{
+			    "keys": [
+			        {
+			            "kty": "RSA",
+			            "x5t#S256": "ZWn8gk9W5ITGuS2cE32ESFXLhwqPHHBhO1onmMOFYHM",
+			            "e": "AQAB",
+			            "x5t": "tdcT2IOf_5Gozo7CHPEGPUZO8zQ",
+			            "kid": "SIGNING_KEY",
+			            "x5c": [
+			                "MIIDXzCCAkegAwIBAgIGAWYlMEPeMA0GCSqGSIb3DQEBCwUAMFcxEzARBgoJkiaJk/IsZAEZFgNjb20xFjAUBgoJkiaJk/IsZAEZFgZvcmFjbGUxFTATBgoJkiaJk/IsZAEZFgVjbG91ZDERMA8GA1UEAxMIQ2xvdWQ5Q0EwHhcNMTgwOTI5MTE1NjUxWhcNMjgwOTI5MTE1NjUxWjBWMRMwEQYDVQQDEwpzc2xEb21haW5zMQ8wDQYDVQQDEwZDbG91ZDkxLjAsBgNVBAMTJWlkY3MtZDFlNjZlNTU4ZDRmNGQyNmExZWJhYTE0ODNjNWUwYzUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC5X1NKDGWUAeaebNmQV9GCw6kGRb6jTF4cXQdej//8+3i+DR83pJxqfVBz8ODzZSEoGHSOAaq/DdzH2C66KKu1dtonI1j5Hs1hE+LuasIVo/26hSTrc3ADD/e8mqQK2l32WMKGjSvH4XnqCmtL9ucYQ3/2KeCd6TcCJhtQeWi4qTxMTj0s/gHSjkevmLjA0PrH2FGViQDGt9OkJHleO5v/yzwQoJqjnhTbUPZ36tEZPu3C4kKnpVsY1TGqoTg6FqAM22bJN+9CYRZmDo57GkgEtmHcIVqORGKllNxO6Ruig+tKFpW+9Q0FsLxxXwgUXPOAwOwKAfVfeD3HIwI7U1a/AgMBAAGjMjAwMA8GA1UdDwEB/wQFAwMH+AAwHQYDVR0OBBYEFIdI6tQESvYNBYy7kNkhZE1Js6tlMA0GCSqGSIb3DQEBCwUAA4IBAQB2RxL6YpyAKIPLoqm30NAZPv5NDAGbNq92FQQgdMAgzRZZDyhDK3hoIv6diJUpxtnwbYGxCn/jj7jLMtMdWIMkXmgVEN/ioFJM9U3fesiD/UoOAO3+2rTO4BzXSH2AcDsp6IpRuBnCeIEE4n702VYEs6VTfbKC8raMPFaAJ3uoyPaZ3tC86FtSwRsgJRiUTKCB2ARDUAfZSkdiSjdA7M1qlhI1O1ml1QV5jM5a/8X6EqIDaTu9+6HmHaWaT0ALkDKmg2k7vgJnKr16HNnTaJQLroZXXS/zn3XznrWG38aujPTNnuBlb3Tjk9my1FVrJ1a8bPCYyg+jZlRCRv2ntV9/",
+			                "MIIDdDCCAlygAwIBAgIGAWUDujAHMA0GCSqGSIb3DQEBCwUAMFcxEzARBgoJkiaJk/IsZAEZFgNjb20xFjAUBgoJkiaJk/IsZAEZFgZvcmFjbGUxFTATBgoJkiaJk/IsZAEZFgVjbG91ZDERMA8GA1UEAxMIQ2xvdWQ5Q0EwHhcNMTcwNTI0MDIwODU0WhcNMzcwNTI0MDIwODU0WjBXMRMwEQYKCZImiZPyLGQBGRYDY29tMRYwFAYKCZImiZPyLGQBGRYGb3JhY2xlMRUwEwYKCZImiZPyLGQBGRYFY2xvdWQxETAPBgNVBAMTCENsb3VkOUNBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArQoqftMLyDAj9Yv/uiGLtJ7PJDzk8xs2dwDxyjnuUbnEk4iDjtY2KLNH52Gi7AUtOKPYr5DPYVHBMT7C3C+4A8qoCvTmay+vdc/xLdUUlnWlvgXECaQWnfPhw8rSjqDxC3CzXohIkDFQZ6Ig0JQz2uXDW7FDySMfBGMK0uVbftwXLha8R4g+MW9YH1yAn5a535Xt+on7UO4/i/qtr8b14+eckE3WvNtZKOwTfO3wTnli/IrauKfLJPOsIGnYy4lohr8k1iuJuroNh1bAY2ZJidoo2zz/pTRRBYGJ00Q+NwrnSUVpHk2qV0N9e6KX9v5jL98SdNjRjoQQ8CQGokNRvwIDAQABo0YwRDASBgNVHRMBAf8ECDAGAQH/AgEAMA8GA1UdDwEB/wQFAwMHxAAwHQYDVR0OBBYEFGz5t22twXpL2FbHOOPaGdnLFLpFMA0GCSqGSIb3DQEBCwUAA4IBAQCL1BuOGgpaT0W+Crxo0hVP26VIFdu1n3ykTSK3e7FSHe94m+3RDSPtCy3H8eYAOcZ2dtkcHBmnh2r76eBZb3tFeboqClaYpueYXpQnX5CIsVGqfbuWpyjkcDViP6lIqTGJMv9gzcz/XOi5jbocrj3Hp3WUke+PZeRRdRRjE6xCKFr2Bs8oXjC5XyNfRQWjedFOL8BRIaIkmCwrBkqHtP6ePAxMtjb6UFdRo0H0OFy8GQrBMVZpfnPAgponq9VicRPiKECLZ1cQV8PNrrwIcLHc+FnhFEY+nr0dMR9BDfdV0qjX9WwyveqW0j30FVOi3yVKZNwdSEUTfmCsvhScX99Y"
+			            ],
+			            "key_ops": [
+			                "wrapKey",
+			                "verify",
+			                "encrypt"
+			            ],
+			            "alg": "RS256",
+			            "n": "uV9TSgxllAHmnmzZkFfRgsOpBkW-o0xeHF0HXo___Pt4vg0fN6Scan1Qc_Dg82UhKBh0jgGqvw3cx9guuiirtXbaJyNY-R7NYRPi7mrCFaP9uoUk63NwAw_3vJqkCtpd9ljCho0rx-F56gprS_bnGEN_9ingnek3AiYbUHlouKk8TE49LP4B0o5Hr5i4wND6x9hRlYkAxrfTpCR5Xjub_8s8EKCao54U21D2d-rRGT7twuJCp6VbGNUxqqE4OhagDNtmyTfvQmEWZg6OexpIBLZh3CFajkRipZTcTukbooPrShaVvvUNBbC8cV8IFFzzgMDsCgH1X3g9xyMCO1NWvw"
+			        }
+			    ]
+			}</JWKFormatPubKey>
+	</PublicCertLocation>
+</OAuth2TokenLocalEnforcerConfig>
