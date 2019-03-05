@@ -9,7 +9,7 @@ define(['ojs/ojcore'],
         var apiGW = "API-GW-PLACEHOLDER";
         if (servingHost.indexOf("localhost") !== -1) {
           //modify apiGW to test locally
-          apiGW = "https://oc-129-156-113-240.compute.oraclecloud.com:9022";
+          apiGW = "https://129.213.126.223:9022";
         }
         console.log("apiGW in OrderFactory: " + apiGW);
         ///

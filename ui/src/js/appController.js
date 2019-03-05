@@ -24,12 +24,12 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
 
         ///Added to test locally
         var servingHost = window.location.host;
+
         var apiKey = "API-KEY-PLACEHOLDER";
         if (servingHost.indexOf("localhost") !== -1) {
           //modify apiKey to test locally
           apiKey = "351801a3-0c02-41c1-b261-d0e5aaa4a0e6";
         }
-        console.log("apiKey: "+ apiKey);
         ////
 
         $.ajaxSetup({
@@ -70,7 +70,8 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
                         success: function(model, response, options) {
 
                           var customerId = model.get("order").customer.customer_id;
-                          console.log("customer: " + customerId);
+                          //alert("Customer ID: " + customerId);
+
                           self.customer = CustomerFactory.createCustomerModel(customerId);
                           self.customer.fetch({
                             success: function(model, response, options) {
@@ -79,7 +80,6 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
                               self.order.get("order").customer = model;
                               self.noShoppingBasket(false);
                               self.contentLoaded(true);
-
                             },
                             error: function(model, xhr, options) {
                               alert("Error fetching Customer ID: " + customerId);

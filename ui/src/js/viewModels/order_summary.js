@@ -55,8 +55,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/LineItemFactory',
       self.orderId(rootViewModel.order.get("order").order_id);
       self.orderCurrency(rootViewModel.order.get("order").currency);
 
-      customer = rootViewModel.customer;
-      //customer = rootViewModel.customer.get("0");
+      //customer = rootViewModel.customer;
+      customer = rootViewModel.customer.get("0");
 
       oj.Logger.error(rootViewModel.customer);
 
@@ -75,7 +75,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/LineItemFactory',
       // Customer Details
       if (customer != null) {
         self.customerId(rootViewModel.order.get('_id'));
-        self.customerName(customer.get("firstName") + " " + customer.get("lastName"));
+        self.customerName(customer.get("firstName") + "  " + customer.get("lastName"));
 
         var tlf="n/a";
         if (customer.get("phoneNumbers").length > 0) {
