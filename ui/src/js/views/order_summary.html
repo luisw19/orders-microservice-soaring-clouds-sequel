@@ -100,19 +100,19 @@
       </oj-input-text>
 
       <oj-input-text id="customerName"
-        readonly=[[!$root.isAutonomousMode]]
+        readonly=[[!$root.isAnonymousMode]]
         value="{{$root.customer.get('firstName') + '  ' + $root.customer.get('lastName')}}"
         label-hint="Customer Name:">
       </oj-input-text>
 
       <oj-input-text id="customerPhone"
-        readonly=[[!$root.isAutonomousMode]]
+        readonly=[[!$root.isAnonymousMode]]
         value="{{customerPhone}}"
         label-hint="Phone Number:">
       </oj-input-text>
 
       <oj-input-text id="customerEmail"
-        readonly=[[!$root.isAutonomousMode]]
+        readonly=[[!$root.isAnonymousMode]]
         value="{{$root.customer.get('email')}}"
         label-hint="Email Address:">
       </oj-input-text>

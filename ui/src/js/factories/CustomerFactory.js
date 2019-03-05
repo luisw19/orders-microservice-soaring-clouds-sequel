@@ -11,7 +11,7 @@ define(['ojs/ojcore','knockout'],
 
           //set global isAutonomousMode to true
           var rootViewModel = ko.dataFor(document.getElementById('globalBody'));
-          rootViewModel.isAutonomousMode(true);
+          rootViewModel.isAnonymousMode(true);
 
           //return JSON
           return "data/anonymous.json";
