@@ -1,4 +1,4 @@
-[{
+{
   "__v":0,
 	"_id":"5aa3d2ac19cf310011ca7b90",
 	"firstName":"John",
@@ -11,7 +11,7 @@
 		"_id":"5aa3d2ac19cf310011ca7b8f",
 		"newsLetter":false,
 		"offers":false
-		
+
 	},
 	"phoneNumbers":[
 		{
@@ -19,7 +19,7 @@
 			"countryCode":31,
 			"number":1234567890,
 			"_id":"5aa3d2ac19cf310011ca7b8c"
-			
+
 		}
 	],
 	"addresses":[
@@ -31,7 +31,7 @@
 			"postcode":"50858",
 			"country":"US",
 			"_id":"5aa3d2ac19cf310011ca7b8d"
-			
+
 		}
 	],
 	"paymentDetails":[
@@ -41,7 +41,7 @@
 			"expirationDate":"09/22",
 			"nameOnCard":"Doe",
 			"_id":"5aa3d2ac19cf310011ca7b8e"
-			
+
 		}
 	]
-}]
+}

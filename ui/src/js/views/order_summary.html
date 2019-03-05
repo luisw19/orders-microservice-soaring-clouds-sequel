@@ -63,7 +63,6 @@
     <oj-form-layout id="customerDetailsLayout"
       label-edge="start"
       max-columns="2">
-
       <!-- <oj-input-text id="customerId"
         readonly
         value="{{customerId}}"
@@ -113,13 +112,13 @@
 
       <oj-input-text id="customerPhone"
         readonly=[[!$root.isAnonymousMode]]
-        value="{{customerPhone}}"
+        value="{{$root.customer.get('phoneNumbers')[0].number}}"
         label-hint="Phone Number:">
       </oj-input-text>
 
       <oj-input-text id="customerEmail"
         readonly=[[!$root.isAnonymousMode]]
-        value="{{$root.customer.get('phoneNumbers')[0].number}}"
+        value="{{$root.customer.get('email')}}"
         label-hint="Email Address:">
       </oj-input-text>
 

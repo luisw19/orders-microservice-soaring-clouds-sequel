@@ -14,6 +14,7 @@ define(['ojs/ojcore','knockout'],
           rootViewModel.isAnonymousMode(true);
 
           //return JSON
+          //return "data/customerData.json";
           return "data/anonymous.json";
         }else{
           ///Added to test locally

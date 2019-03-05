@@ -77,11 +77,11 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/LineItemFactory',
         self.customerId(rootViewModel.order.get('_id'));
         self.customerName(customer.get("firstName") + "  " + customer.get("lastName"));
 
-        var tlf="n/a";
+        var tlf = "n/a";
         if (customer.get("phoneNumbers").length > 0) {
-          tlf='+' + customer.get("phoneNumbers")[0].countryCode + customer.get("phoneNumbers")[0].number;
+          tlf = '+' + customer.get("phoneNumbers")[0].countryCode + customer.get("phoneNumbers")[0].number;
         }
-        console.log("tlf: "+tlf);
+        console.log("tlf: " + tlf);
         self.customerPhone(tlf);
 
         console.log("email:" + customer.get("email"));
