@@ -147,20 +147,37 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
 
             var index = -1;
             var orderAddress = {};
-            var move = false;
+            var move = true;
 
             //validation when clicking next
             if(self.stepModule()==="order_summary"){
                 //if autonomous checkout ensure that all fields are entered
                 if(rootViewModel.isAnonymousMode){
-
-                    alert(rootViewModel.customer.get('email')); 
-
+                    var error = "Please complete the following fields: ";
+                    if (rootViewModel.order.get("order").customer.first_name===undefined){
+                        error = error + "First Name ";
+                        move = false;
+                    }
+                    if (rootViewModel.order.get("order").customer.last_name===undefined){
+                        error = error + "Last Name ";
+                        move = false;
+                    }
+                    if (rootViewModel.order.get("order").customer.phone===undefined){
+                        error = error + "Phone Number ";
+                        move = false;
+                    }
+                    if (rootViewModel.order.get("order").customer.email===undefined){
+                        error = error + "Email ";
+                        move = false;
+                    }
                 }
             };
 
             //only move train if validation is passed. Meaning move=true
-            if(move){
+            if(!move){
+                //present error message
+                alert(error);
+            }else{
                 for (var i = 0; i < self.steps().length; i++) {
                     if (basketTrain.selectedStep === self.steps()[i].id) {
 

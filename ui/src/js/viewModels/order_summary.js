@@ -37,7 +37,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/LineItemFactory',
     });
 
     self.customerId = ko.observable();
-    self.customerName = ko.observable();
+    self.customerFirstName = ko.observable();
+    self.customerLastName = ko.observable();
     self.customerPhone = ko.observable();
     self.customerEmail = ko.observable();
     self.customerLoyaltyLevel = ko.observable();
@@ -51,7 +52,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/LineItemFactory',
     self.handleAttached = function(info) {
 
       self.products(rootViewModel.order.get("order").line_items);
-
       self.orderId(rootViewModel.order.get("order").order_id);
       self.orderCurrency(rootViewModel.order.get("order").currency);
 
@@ -75,19 +75,28 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/LineItemFactory',
       // Customer Details
       if (customer != null) {
 
-        //self.customerId(rootViewModel.order.get('_id'));
         self.customerId(rootViewModel.order.get("order").shoppingCart_id);
-        self.customerName(customer.get("firstName") + "  " + customer.get("lastName"));
+        self.customerFirstName(rootViewModel.order.get("order").customer.first_name);
+        self.customerLastName(rootViewModel.order.get("order").customer.last_name);
+        self.customerPhone(rootViewModel.order.get("order").customer.phone);
+        self.customerEmail(rootViewModel.order.get("order").customer.email);
 
-        var tlf = "n/a";
-        if (customer.get("phoneNumbers").length > 0) {
+        /*
+        self.customerId(rootViewModel.order.get('_id'));
+        self.customerFirstName(customer.get("firstName"));
+        self.customerLastName(customer.get("lastName"));
+
+        var tlf = "";
+        if (customer.get("phoneNumbers").length > 1) {
           tlf = '+' + customer.get("phoneNumbers")[0].countryCode + customer.get("phoneNumbers")[0].number;
         }
+
         console.log("tlf: " + tlf);
         self.customerPhone(tlf);
 
         console.log("email:" + customer.get("email"));
         self.customerEmail(customer.get("email"));
+        */
 
         //TODO this should not be hardcoded
         if (self.customerId().indexOf("anonymous") == 0) {
@@ -96,17 +105,21 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/LineItemFactory',
           //temp as customer object doesn't at the moment has a concept of loyalty
           self.customerLoyaltyLevel("GOLD");
         }
+
       }
 
     };
-    self.onEmailChanged = function(event, arrayItem, context) {
+
+    self.onSummaryFormChange = function(event, arrayItem, context) {
       if (event.detail.originalEvent != null) {
         //set email
-        //rootViewModel.customer.get('email') = self.customerEmail();
-        rootViewModel.customer.get('email') = "worked";
-        alert(rootViewModel.customer.get('email'));
+        rootViewModel.order.get("order").customer.first_name = self.customerFirstName();
+        rootViewModel.order.get("order").customer.last_name = self.customerLastName();
+        rootViewModel.order.get("order").customer.phone = self.customerPhone();
+        rootViewModel.order.get("order").customer.email = self.customerEmail();
       }
     }
+
     self.onQuantityChanged = function(event, arrayItem, context) {
 
       if (event.detail.originalEvent != null) {

@@ -83,6 +83,17 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
                               self.order.get("order").customer = model;
                               self.noShoppingBasket(false);
                               self.contentLoaded(true);
+
+                              //Set customer details in Order model based on response from Customer factory
+                              self.order.get("order").customer.first_name = self.customer.get("firstName");
+                              self.order.get("order").customer.last_name = self.customer.get("lastName");
+                              var tlf = "";
+                              if (self.customer.get("phoneNumbers").length > 1) {
+                                tlf = '+' + self.customer.get("phoneNumbers")[0].countryCode + self.customer.get("phoneNumbers")[0].number;
+                              }
+                              self.order.get("order").customer.phone = tlf;
+                              self.order.get("order").customer.email = self.customer.get("email");
+
                             },
                             error: function(model, xhr, options) {
                               alert("Error fetching Customer ID: " + customerId);

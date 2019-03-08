@@ -4,24 +4,15 @@
 	"firstName":"",
 	"lastName":"",
 	"title":"",
-	"email":"test",
+	"email":"",
 	"password":"",
 	"dateOfBirth":"",
 	"preferences":{
 		"_id":"",
 		"newsLetter":false,
 		"offers":false
-
 	},
-	"phoneNumbers":[
-		{
-			"type":"",
-			"countryCode":null,
-			"number":null,
-			"_id":""
-
-		}
-	],
+	"phoneNumbers":[],
 	"addresses":[],
 	"paymentDetails":[]
 }
