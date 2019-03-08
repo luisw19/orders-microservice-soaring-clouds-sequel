@@ -1,18 +1,27 @@
 {
-  "__v": 0,
-  "_id": "",
-  "firstName": "",
-  "lastName": "",
-  "title": "",
-  "email": "",
-  "password": "",
-  "dateOfBirth": "",
-  "preferences": {
-    "_id": "",
-    "newsLetter": false,
-    "offers": false
-  },
-  "phoneNumbers": [],
-  "addresses": [],
-  "paymentDetails": []
+  "__v":null,
+	"_id":"Anonymous checkout",
+	"firstName":"",
+	"lastName":"",
+	"title":"",
+	"email":"test",
+	"password":"",
+	"dateOfBirth":"",
+	"preferences":{
+		"_id":"",
+		"newsLetter":false,
+		"offers":false
+
+	},
+	"phoneNumbers":[
+		{
+			"type":"",
+			"countryCode":null,
+			"number":null,
+			"_id":""
+
+		}
+	],
+	"addresses":[],
+	"paymentDetails":[]
 }

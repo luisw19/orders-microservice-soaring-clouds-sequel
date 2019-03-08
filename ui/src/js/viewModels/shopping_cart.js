@@ -42,6 +42,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
 
             self.orderComplete(false);
             self.disabledPreviousStep(true);
+            //landing step
             self.stepModule("order_summary");
 
         };
@@ -146,19 +147,32 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
 
             var index = -1;
             var orderAddress = {};
+            var move = false;
 
-            for (var i = 0; i < self.steps().length; i++) {
-                if (basketTrain.selectedStep === self.steps()[i].id) {
+            //validation when clicking next
+            if(self.stepModule()==="order_summary"){
+                //if autonomous checkout ensure that all fields are entered
+                if(rootViewModel.isAnonymousMode){
 
-                    self.apiInteraction(self.steps()[i + 1].id);
-
-                    basketTrain.selectedStep = self.steps()[i + 1].id;
-
-                    return;
+                    alert(rootViewModel.customer.get('email')); 
 
                 }
-            }
+            };
 
+            //only move train if validation is passed. Meaning move=true
+            if(move){
+                for (var i = 0; i < self.steps().length; i++) {
+                    if (basketTrain.selectedStep === self.steps()[i].id) {
+
+                        self.apiInteraction(self.steps()[i + 1].id);
+
+                        basketTrain.selectedStep = self.steps()[i + 1].id;
+
+                        return;
+
+                    }
+                }
+            }
         };
 
         self.onValidate = function() {

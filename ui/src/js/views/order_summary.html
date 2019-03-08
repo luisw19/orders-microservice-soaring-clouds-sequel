@@ -99,27 +99,32 @@
       </oj-input-text>
 
       <oj-input-text id="firtName"
+        required=[[$root.isAnonymousMode]]
         readonly=[[!$root.isAnonymousMode]]
         value="{{$root.customer.get('firstName')}}"
         label-hint="Fist Name:">
       </oj-input-text>
 
       <oj-input-text id="lastName"
+        required=[[$root.isAnonymousMode]]
         readonly=[[!$root.isAnonymousMode]]
         value="{{$root.customer.get('lastName')}}"
         label-hint="Last Name:">
       </oj-input-text>
 
       <oj-input-text id="customerPhone"
+        required=[[$root.isAnonymousMode]]
         readonly=[[!$root.isAnonymousMode]]
         value="{{$root.customer.get('phoneNumbers')[0].number}}"
         label-hint="Phone Number:">
       </oj-input-text>
 
       <oj-input-text id="customerEmail"
+        required=[[$root.isAnonymousMode]]
         readonly=[[!$root.isAnonymousMode]]
-        value="{{$root.customer.get('email')}}"
-        label-hint="Email Address:">
+        value="{{customerEmail}}"
+        label-hint="Email Address:"
+        on-value-changed="[[onEmailChanged]]">
       </oj-input-text>
 
       <oj-input-text id="customerLoyaltyLevel"

@@ -74,7 +74,9 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/LineItemFactory',
 
       // Customer Details
       if (customer != null) {
-        self.customerId(rootViewModel.order.get('_id'));
+
+        //self.customerId(rootViewModel.order.get('_id'));
+        self.customerId(rootViewModel.order.get("order").shoppingCart_id);
         self.customerName(customer.get("firstName") + "  " + customer.get("lastName"));
 
         var tlf = "n/a";
@@ -88,11 +90,23 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/LineItemFactory',
         self.customerEmail(customer.get("email"));
 
         //TODO this should not be hardcoded
-        self.customerLoyaltyLevel("GOLD");
+        if (self.customerId().indexOf("anonymous") == 0) {
+          self.customerLoyaltyLevel("NONE");
+        }else{
+          //temp as customer object doesn't at the moment has a concept of loyalty
+          self.customerLoyaltyLevel("GOLD");
+        }
       }
 
     };
-
+    self.onEmailChanged = function(event, arrayItem, context) {
+      if (event.detail.originalEvent != null) {
+        //set email
+        //rootViewModel.customer.get('email') = self.customerEmail();
+        rootViewModel.customer.get('email') = "worked";
+        alert(rootViewModel.customer.get('email'));
+      }
+    }
     self.onQuantityChanged = function(event, arrayItem, context) {
 
       if (event.detail.originalEvent != null) {

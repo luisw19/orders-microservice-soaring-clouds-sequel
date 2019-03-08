@@ -25,8 +25,7 @@ define(['ojs/ojcore','knockout'],
             apiGW = "https://129.213.126.223:9022";
           }
           console.log("apiGW in CustomerFactory: " + apiGW);
-
-          //return apiGW + "/customer/profile/" + customerId;
+          return apiGW + "/customer/profile/" + customerId;
         };
       },
 
