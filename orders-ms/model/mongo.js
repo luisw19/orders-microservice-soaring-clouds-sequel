@@ -57,6 +57,7 @@ var customerVar = {
 
 //Payment object
 var paymentVar = {
+  name_on_card: String,
   card_type: String,
   card_number: String,
   start_year: Number,

@@ -20,13 +20,16 @@
         </oj-input-text>
 
         <oj-input-date id="eta"
+          required
           value="{{eta}}"
           on-value-changed="[[onEtaChanged]]"
           converter=[[dateConverter]]
-          label-hint="Estimated Arrival:">
+          label-hint="Delivery date:"
+          min="[[minDate]]">
         </oj-input-date>
 
         <oj-radioset id="deliveryMethodOptions"
+          required
           value="{{deliveryMethod}}"
           on-value-changed="[[onDeliveryMethodChanged]]"
           label-hint="Delivery Method:">

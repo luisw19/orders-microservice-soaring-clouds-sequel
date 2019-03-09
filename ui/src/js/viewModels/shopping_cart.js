@@ -204,6 +204,11 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
 
       //validation when clicking next
       if (self.stepModule() === "delivery_address") {
+        //validate that at least one credit card was entered
+        if (document.getElementById("addressLine1") == null) {
+          alert("Please enter a new address");
+          valid = false;
+        };
         //alert(document.getElementById("firstName").valid);
         var error = "Following fields missing or entered incorrectly: ";
         if (document.getElementById("addressLine1").valid.indexOf("invalid") == 0) {
@@ -253,6 +258,14 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
       var valid = true;
       //alert(document.getElementById("firstName").valid);
       var error = "Following fields missing or entered incorrectly: ";
+      if (document.getElementById("eta").valid.indexOf("invalid") == 0) {
+        error = error + "ETA ";
+        valid = false;
+      }
+      if (document.getElementById("deliveryMethodOptions").valid.indexOf("invalid") == 0) {
+        error = error + "Delivery Method ";
+        valid = false;
+      }
       if (document.getElementById("firstName").valid.indexOf("invalid") == 0) {
         error = error + "First Name ";
         valid = false;
@@ -269,6 +282,11 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
         //present error message
         console.log(error);
         alert("Please correct the errors in the form");
+        document.getElementById("firstName").showMessages();
+        document.getElementById("lastName").showMessages();
+        document.getElementById("eta").showMessages();
+        document.getElementById("deliveryMethodOptions").showMessages();
+        document.getElementById("personalMessage").showMessages();
       }
       //only validate if fields are properly entered
       if (valid) {
@@ -355,12 +373,11 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
 
       var valid = true;
       //validate that at least one credit card was entered
-      if(document.getElementById("cardNumber")==null){
-        alert("Please enter a new credit card");
+      if (document.getElementById("cardNumber") == null) {
+        alert("Please enter a credit card");
         valid = false;
       };
-
-      if (valid) {
+      if (document.getElementById("paymentMethod").value == "newPayMethod" && valid) {
         //alert(document.getElementById("firstName").valid);
         var error = "Following fields missing or entered incorrectly: ";
         if (document.getElementById("nameOnCard").valid.indexOf("invalid") == 0) {
@@ -387,15 +404,16 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
           document.getElementById("cardType").showMessages();
           document.getElementById("cardNumber").showMessages();
           document.getElementById("expiryDate").showMessages();
-        }else{
+        } else {
+          var payment = rootViewModel.order.get("order").payment;
           //Name on card not supported at the moment
           //rootViewModel.order.get("order").payment.name_on_card=document.getElementById("nameOnCard").value;
-          rootViewModel.order.get("order").payment.card_type=document.getElementById("cardType").value;
-          rootViewModel.order.get("order").payment.card_number=document.getElementById("cardNumber").value;
-          rootViewModel.order.get("order").payment.start_year=document.getElementById("startDate").value.substr(-2);;
-          rootViewModel.order.get("order").payment.start_month=document.getElementById("startDate").value.substring(0,2);
-          rootViewModel.order.get("order").payment.expiry_year=document.getElementById("expiryDate").value.substr(-2);;
-          rootViewModel.order.get("order").payment.expiry_month=document.getElementById("expiryDate").value.substring(0,2);
+          payment.card_type = document.getElementById("cardType").value;
+          payment.card_number = document.getElementById("cardNumber").value;
+          payment.start_year = parseInt(document.getElementById("startDate").value.substr(-2));
+          payment.start_month = parseInt(document.getElementById("startDate").value.substring(0, 2));
+          payment.expiry_year = parseInt(document.getElementById("expiryDate").value.substr(-2));
+          payment.expiry_month = parseInt(document.getElementById("expiryDate").value.substring(0, 2));
           //safe new card details
           // rootViewModel.order.save(null, {
           //   success: function(model, response, options) {

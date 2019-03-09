@@ -7,7 +7,7 @@ define(['ojs/ojcore','knockout'],
 
         //If user is anonymous (meaning not signed in) then don't call customer service
         if (customerId.indexOf("anonymous") == 0) {
-          console.log("apiGW in CustomerFactory: " + "Anonymous user. Not calling customer service.");
+          console.log("Anonymous user. Not calling customer service.");
 
           //set global isAutonomousMode to true
           var rootViewModel = ko.dataFor(document.getElementById('globalBody'));
@@ -22,7 +22,8 @@ define(['ojs/ojcore','knockout'],
           var apiGW = "API-GW-PLACEHOLDER";
           if (servingHost.indexOf("localhost") !== -1) {
             //modify apiGW to test locally
-            apiGW = "https://129.213.126.223:9022";
+            //apiGW = "https://129.213.126.223:9022";
+            apiGW = "http://localhost:3000";
           }
           console.log("apiGW in CustomerFactory: " + apiGW);
           return apiGW + "/customer/profile/" + customerId;

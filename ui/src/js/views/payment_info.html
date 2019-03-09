@@ -6,6 +6,7 @@
       max-columns="2">
 
       <oj-combobox-one id="paymentMethod"
+        required=[[$root.isAnonymousMode]]
         value="{{selectedPaymentMethod}}"
         on-value-changed="[[onPaymentMethodChanged]]"
         label-hint="Payment Method: ">
@@ -26,7 +27,7 @@
         max-columns="2">
 
         <oj-input-text id="nameOnCard"
-          required
+          required=[[$root.isAnonymousMode]]
           value="{{nameOnCard}}"
           on-value-changed="[[onNameOnCardChange]]"
           label-hint="Name on card:"
@@ -34,7 +35,7 @@
         </oj-input-text>
 
         <oj-combobox-one id="cardType"
-          required
+          required=[[$root.isAnonymousMode]]
           value="{{selectedCardType}}"
           on-value-changed="[[onCardTypeChange]]"
           label-hint="Card Type: ">
@@ -45,7 +46,7 @@
         </oj-combobox-one>
 
         <oj-input-text id="cardNumber"
-          required
+          required=[[$root.isAnonymousMode]]
           value="{{cardNumber}}"
           on-value-changed="[[onCardNumberChanged]]"
           label-hint="Card Number:"
@@ -61,7 +62,7 @@
         </oj-input-text>
 
         <oj-input-text id="expiryDate"
-          required
+          required=[[$root.isAnonymousMode]]
           value="{{expiryDate}}"
           on-value-changed="[[onEndDateChanged]]"
           placeholder="mm/yy"

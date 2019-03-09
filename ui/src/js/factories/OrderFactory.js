@@ -8,25 +8,24 @@ define(['ojs/ojcore'],
         var servingHost = window.location.host;
         var apiGW = "API-GW-PLACEHOLDER";
         if (servingHost.indexOf("localhost") !== -1) {
-          //modify apiGW to test locally
-          apiGW = "https://129.213.126.223:9022";
+          //apiGW = "https://129.213.126.223:9022/api";
+          apiGW = "http://localhost:3000";
         }
         console.log("apiGW in OrderFactory: " + apiGW);
         ///
 
         if (type === "SHOPPING") {
-          return apiGW + "/api/orders?shoppingCart_id=" + orderId + "&status=SHOPPING_CART";
+          return apiGW + "/orders?shoppingCart_id=" + orderId + "&status=SHOPPING_CART";
         } else {
-          return apiGW + "/api/orders/" + orderId;
+          return apiGW + "/orders/" + orderId;
         }
       },
       createOrderModel: function(orderId, type) {
         var Order = oj.Model.extend({
           urlRoot: this.setOrderURI(orderId, type),
           parseSave: function(request) {
-
             if (request.order.payment != null) {
-
+              //alert(JSON.stringify(request.order.payment));
               return {
                 "payment": request.order.payment,
                 "customer": {

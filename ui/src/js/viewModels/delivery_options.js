@@ -24,6 +24,15 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         self.lastName = ko.observable();
         self.deliveryMethod = ko.observableArray();
         self.eta = ko.observable();
+        self.minDate = ko.observable();
+
+        //Set tomorrow's dates
+        var today = new Date();
+        var dd = today.getDate()+1;
+        var mm = today.getMonth(); //January is 0!
+        var yyyy = today.getFullYear();
+        var tomorrow = new Date(yyyy, mm, dd);
+        self.minDate = oj.IntlConverterUtils.dateToLocalIso( tomorrow );
 
         self.dateConverter = ko.observable(
             oj.Validation.converterFactory(oj.ConverterFactory.CONVERTER_TYPE_DATETIME).createConverter(
