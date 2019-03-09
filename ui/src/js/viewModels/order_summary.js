@@ -49,6 +49,41 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/LineItemFactory',
     self.productDescription = ko.observable();
     self.productQuantity = ko.observable();
 
+    self.validators = ko.computed(function() {
+      return [{
+        type: 'regExp',
+        options: {
+          pattern: '[a-zA-Z0-9 ]{2,}',
+          hint: "Enter at least 2 characters",
+          messageDetail: 'Enter at least 2 normal characters'
+        }
+      }];
+    });
+
+    //from: https://www.regextester.com/97440
+    self.validatorPhone = ko.computed(function() {
+      return [{
+        type: 'regExp',
+        options: {
+          pattern: "(([+][(]?[0-9]{1,3}[)]?)|([(]?[0-9]{4}[)]?))\s*[)]?[-\s\.]?[(]?[0-9]{1,3}[)]?([-\s\.]?[0-9]{3})([-\s\.]?[0-9]{3,4})",
+          hint: "Enter a valid phone number e.g. +447575222333",
+          messageDetail: "Not a valid phone number format"
+        }
+      }];
+    });
+
+    //from: https://www.oracle.com/webfolder/technetwork/jet/jetCookbook.html?component=validators&demo=regExpValidator
+    self.validatorEmail = ko.computed(function() {
+      return [{
+        type: 'regExp',
+        options: {
+          pattern: "[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*",
+          hint: "Enter a valid email format",
+          messageDetail: "Not a valid email format"
+        }
+      }];
+    });
+
     self.handleAttached = function(info) {
 
       self.products(rootViewModel.order.get("order").line_items);
@@ -81,43 +116,26 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/LineItemFactory',
         self.customerPhone(rootViewModel.order.get("order").customer.phone);
         self.customerEmail(rootViewModel.order.get("order").customer.email);
 
-        /*
-        self.customerId(rootViewModel.order.get('_id'));
-        self.customerFirstName(customer.get("firstName"));
-        self.customerLastName(customer.get("lastName"));
-
-        var tlf = "";
-        if (customer.get("phoneNumbers").length > 1) {
-          tlf = '+' + customer.get("phoneNumbers")[0].countryCode + customer.get("phoneNumbers")[0].number;
-        }
-
-        console.log("tlf: " + tlf);
-        self.customerPhone(tlf);
-
-        console.log("email:" + customer.get("email"));
-        self.customerEmail(customer.get("email"));
-        */
-
         //TODO this should not be hardcoded
         if (self.customerId().indexOf("anonymous") == 0) {
           self.customerLoyaltyLevel("NONE");
-        }else{
+        } else {
           //temp as customer object doesn't at the moment has a concept of loyalty
           self.customerLoyaltyLevel("GOLD");
         }
-
+        //Set only once as it's no dynamic for now
+        rootViewModel.order.get("order").customer.loyalty_level = self.customerLoyaltyLevel();
       }
 
     };
 
     self.onSummaryFormChange = function(event, arrayItem, context) {
-      if (event.detail.originalEvent != null) {
-        //set email
+
         rootViewModel.order.get("order").customer.first_name = self.customerFirstName();
         rootViewModel.order.get("order").customer.last_name = self.customerLastName();
         rootViewModel.order.get("order").customer.phone = self.customerPhone();
         rootViewModel.order.get("order").customer.email = self.customerEmail();
-      }
+        //alert(document.getElementById("firtName").valid);
     }
 
     self.onQuantityChanged = function(event, arrayItem, context) {

@@ -34,6 +34,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         self.expiryDate = ko.observable();
 
         self.sameAddressAsDelivery = ko.observableArray();
+        self.isRequired = ko.observable(true);
         self.addressReadOnly = ko.observable(false);
         self.addressLine1 = ko.observable();
         self.addressLine2 = ko.observable();
@@ -87,6 +88,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
             if (self.sameAddressAsDelivery().length === 0) {
 
                 self.addressReadOnly(false);
+                self.isRequired(true);
 
             } else {
 
@@ -98,6 +100,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
                 self.country(deliveryAddress.country);
 
                 self.addressReadOnly(true);
+                self.isRequired(false);
 
             }
 
@@ -199,7 +202,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
             deliveryAddress = {};
             billingAddress = {};
-            index = -1; 
+            index = -1;
 
             for (var i = 0; i < order.address.length; i++) {
                 if (order.address[i].name.indexOf("DELIVERY") != -1) {
@@ -228,6 +231,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
                 billingAddress.country = "";
 
                 self.addressReadOnly(false);
+                self.isRequired(true);
 
             } else {
 
@@ -246,7 +250,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
                 billingAddress.country = deliveryAddress.country;
 
                 self.addressReadOnly(true);
-
+                self.isRequired(false);
             }
 
             order.address[index] = billingAddress;
@@ -277,6 +281,39 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         self.onCountryChanged = function(event) {
             rootViewModel.order.get("order").address[index].country = self.country();
         };
+
+        self.validators = ko.computed(function() {
+          return [{
+            type: 'regExp',
+            options: {
+              pattern: '[a-zA-Z0-9 ]{2,}',
+              hint: "Enter at least 2 characters",
+              messageDetail: 'Enter at least 2 normal characters'
+            }
+          }];
+        });
+
+        self.validatorCardNumber = ko.computed(function() {
+          return [{
+            type: 'regExp',
+            options: {
+              pattern: '?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11}',
+              hint: "Enter the full credit card number",
+              messageDetail: 'Enter the full credit card number'
+            }
+          }];
+        });
+
+        self.validatorSimpleDate = ko.computed(function() {
+          return [{
+            type: 'regExp',
+            options: {
+              pattern: '0[13578]|1[02])/(0[1-9]|[12][0-9]|3[01])|(0[469]|11)/(0[1-9]|[12][0-9]|30)|02/(0[1-9]|[12][0-9]',
+              hint: "Enter date in format mm/dd e.g. 01/30",
+              messageDetail: 'Enter date in format mm/dd e.g. 01/30'
+            }
+          }];
+        });
 
     }
 

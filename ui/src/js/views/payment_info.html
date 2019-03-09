@@ -26,12 +26,15 @@
         max-columns="2">
 
         <oj-input-text id="nameOnCard"
+          required
           value="{{nameOnCard}}"
           on-value-changed="[[onNameOnCardChange]]"
-          label-hint="Name on card:">
+          label-hint="Name on card:"
+          validators="[[validators]]">
         </oj-input-text>
 
         <oj-combobox-one id="cardType"
+          required
           value="{{selectedCardType}}"
           on-value-changed="[[onCardTypeChange]]"
           label-hint="Card Type: ">
@@ -42,23 +45,28 @@
         </oj-combobox-one>
 
         <oj-input-text id="cardNumber"
+          required
           value="{{cardNumber}}"
           on-value-changed="[[onCardNumberChanged]]"
-          label-hint="Card Number:">
+          label-hint="Card Number:"
+          validators="[[validatorCardNumber]]">
         </oj-input-text>
 
         <oj-input-text id="startDate"
           value="{{startDate}}"
           on-value-changed="[[onStartDateChanged]]"
           placeholder="mm/yy"
-          label-hint="Start Date:">
+          label-hint="Start Date:"
+          validators="[[validatorSimpleDate]]">
         </oj-input-text>
 
         <oj-input-text id="expiryDate"
+          required
           value="{{expiryDate}}"
           on-value-changed="[[onEndDateChanged]]"
           placeholder="mm/yy"
-          label-hint="Expiry Date:">
+          label-hint="Expiry Date:"
+          validators="[[validatorSimpleDate]]">
         </oj-input-text>
 
       </oj-form-layout>
@@ -89,45 +97,55 @@
       max-columns="2">
 
       <oj-input-text id="addressLine1"
+        required="[[isRequired]]"
         value="{{addressLine1}}"
         readonly="[[addressReadOnly]]"
         on-value-changed="[[onAddressLine1Changed]]"
-        label-hint="Address Line 1:">
+        label-hint="Address Line 1:"
+        validators="[[validators]]">
       </oj-input-text>
 
       <oj-input-text id="addressLine2"
         value="{{addressLine2}}"
         readonly="[[addressReadOnly]]"
         on-value-changed="[[onAddressLine2Changed]]"
-        label-hint="Address Line 2:">
+        label-hint="Address Line 2:"
+        validators="[[validators]]">
       </oj-input-text>
 
       <oj-input-text id="city"
+        required="[[isRequired]]"
         value="{{city}}"
         readonly="[[addressReadOnly]]"
         on-value-changed="[[onCityChanged]]"
-        label-hint="City:">
+        label-hint="City:"
+        validators="[[validators]]">
       </oj-input-text>
 
       <oj-input-text id="county"
         value="{{county}}"
         readonly="[[addressReadOnly]]"
         on-value-changed="[[onCountyChanged]]"
-        label-hint="County:">
+        label-hint="County:"
+        validators="[[validators]]">
       </oj-input-text>
 
       <oj-input-text id="postCode"
+        required="[[isRequired]]"
         value="{{postCode}}"
         readonly="[[addressReadOnly]]"
         on-value-changed="[[onPostCodeChanged]]"
-        label-hint="Post Code:">
+        label-hint="Post Code:"
+        validators="[[validators]]">
       </oj-input-text>
 
       <oj-input-text id="country"
+        required="[[isRequired]]"
         value="{{country}}"
         readonly="[[addressReadOnly]]"
         on-value-changed="[[onCountryChanged]]"
-        label-hint="Country:">
+        label-hint="Country:"
+        validators="[[validators]]">
       </oj-input-text>
 
     </oj-form-layout>

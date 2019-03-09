@@ -56,7 +56,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
             if (specialDetails != null) {
                 self.personalMessage(specialDetails.personal_message);
-    
+
                 if (specialDetails.gift_wrapping) {
                     self.giftWrap(["giftWrap"]);
                 }
@@ -101,8 +101,19 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
         };
 
+        self.validators = ko.computed(function() {
+          return [{
+            type: 'regExp',
+            options: {
+              pattern: '[a-zA-Z0-9 ]{2,}',
+              hint: "Enter at least 2 characters",
+              messageDetail: 'Enter at least 2 normal characters'
+            }
+          }];
+        });
+
     }
-    
+
     return new DeliveryOptionsViewModel();
 
 });

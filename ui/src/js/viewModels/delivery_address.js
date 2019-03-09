@@ -35,11 +35,10 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
             // Read latest Order from controller
             var addressArray = rootViewModel.order.get("order").address;
             order = rootViewModel.order.get("order");
-            
+
             //self.customerAddresses(rootViewModel.customer.get("0").addresses);
             self.customerAddresses(rootViewModel.customer.get("addresses"));
-
-            if (addressArray != null) {
+            if (addressArray != null || addressArray.length>0) {
 
                 for (var i = 0; i < addressArray.length; i++) {
                     if (addressArray[i].name.indexOf("DELIVERY") != -1) {
@@ -136,6 +135,17 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         self.onCountryChange = function() {
             rootViewModel.order.get("order").address[index].country = self.country();
         };
+
+        self.validators = ko.computed(function() {
+          return [{
+            type: 'regExp',
+            options: {
+              pattern: '[a-zA-Z0-9 ]{2,}',
+              hint: "Enter at least 2 characters",
+              messageDetail: 'Enter at least 2 normal characters'
+            }
+          }];
+        });
 
     }
 

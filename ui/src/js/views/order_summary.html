@@ -98,12 +98,13 @@
         label-hint="Customer ID:">
       </oj-input-text>
 
-      <oj-input-text id="firtName"
+      <oj-input-text id="firstName"
         required=[[$root.isAnonymousMode]]
         readonly=[[!$root.isAnonymousMode]]
         value="{{customerFirstName}}"
         label-hint="First Name:"
-        on-value-changed="[[onSummaryFormChange]]">
+        on-value-changed="[[onSummaryFormChange]]"
+        validators="[[validators]]">
       </oj-input-text>
 
       <oj-input-text id="lastName"
@@ -111,7 +112,8 @@
         readonly=[[!$root.isAnonymousMode]]
         value="{{customerLastName}}"
         label-hint="Last Name:"
-        on-value-changed="[[onSummaryFormChange]]">
+        on-value-changed="[[onSummaryFormChange]]"
+        validators="[[validators]]">
       </oj-input-text>
 
       <oj-input-text id="customerPhone"
@@ -119,7 +121,8 @@
         readonly=[[!$root.isAnonymousMode]]
         value="{{customerPhone}}"
         label-hint="Phone Number:"
-        on-value-changed="[[onSummaryFormChange]]">
+        on-value-changed="[[onSummaryFormChange]]"
+        validators="[[validatorPhone]]">
       </oj-input-text>
 
       <oj-input-text id="customerEmail"
@@ -127,7 +130,8 @@
         readonly=[[!$root.isAnonymousMode]]
         value="{{customerEmail}}"
         label-hint="Email Address:"
-        on-value-changed="[[onSummaryFormChange]]">
+        on-value-changed="[[onSummaryFormChange]]"
+        validators="[[validatorEmail]]">
       </oj-input-text>
 
       <oj-input-text id="customerLoyaltyLevel"

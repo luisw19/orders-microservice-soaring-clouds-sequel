@@ -13,12 +13,14 @@ function (oj) {
         var apiGW = "API-GW-PLACEHOLDER";
         if (servingHost.indexOf("localhost") !== -1) {
           //modify apiGW to test locally
-          apiGW = "https://129.213.126.223:9022";
+          //temp pointing to Lucas K8s
+          apiGW = "http://129.213.11.15"
+          //apiGW = "https://129.213.126.223:9022";
         }
         console.log("apiGW in LogisticsFactory: " + apiGW);
         ///
-
-        return apiGW + "/logistics-ms/shipping/validate";
+        return apiGW + "/soaring/logistics/shipping/validate";
+        //return apiGW + "/logistics-ms/shipping/validate";
         },
         createLogisticsModel: function() {
             var Logistics = oj.Model.extend({

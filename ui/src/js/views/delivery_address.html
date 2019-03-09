@@ -1,7 +1,7 @@
 <div class="oj-flex-item oj-panel oj-sm-margin-2x">
   <oj-collapsible id="deliveryAddressCollapsible" expanded={{deliveryAddressExpanded}}>
     <h3 id="header" slot="header">Delivery Address</h3>
-    
+
     <oj-form-layout id="deliveryAddressLayout"
       label-edge="start"
       max-columns="2">
@@ -25,39 +25,49 @@
         max-columns="2">
 
         <oj-input-text id="addressLine1"
+          required
           value="{{addressLine1}}"
           label-hint="Address Line 1:"
-          on-value-changed="[[onAddressLine1Change]]">
+          on-value-changed="[[onAddressLine1Change]]"
+          validators="[[validators]]">
         </oj-input-text>
 
         <oj-input-text id="addressLine2"
           value="{{addressLine2}}"
           label-hint="Address Line 2:"
-          on-value-changed="[[onAddressLine2Change]]">
+          on-value-changed="[[onAddressLine2Change]]"
+          validators="[[validators]]">
         </oj-input-text>
 
         <oj-input-text id="city"
+          required
           value="{{city}}"
           label-hint="City:"
-          on-value-changed="[[onCityChange]]">
+          on-value-changed="[[onCityChange]]"
+          validators="[[validators]]">
         </oj-input-text>
 
         <oj-input-text id="county"
           value="{{county}}"
           label-hint="County:"
-          on-value-changed="[[onCountyChange]]">
+          on-value-changed="[[onCountyChange]]"
+          validators="[[validators]]">
         </oj-input-text>
 
         <oj-input-text id="postCode"
+          required
           value="{{postCode}}"
           label-hint="Post Code:"
-          on-value-changed="[[onPostCodeChange]]">
+          on-value-changed="[[onPostCodeChange]]"
+          validators="[[validators]]">
         </oj-input-text>
 
         <oj-input-text id="country"
+          required
           value="{{country}}"
           label-hint="Country:"
-          on-value-changed="[[onCountryChange]]">
+          on-value-changed="[[onCountryChange]]"
+          validators="[[validators]]">
         </oj-input-text>
 
       </oj-form-layout>
