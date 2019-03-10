@@ -33,9 +33,9 @@ ordersProd:
     port: 4000
 
 env:
-    apiHost: https://oc-129-156-113-240.compute.oraclecloud.com:9022
+    apiHost: https://129.213.126.223:9022
     apiKey: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
-    kafkaBroker: 129.156.113.171:6667
-    kafkaRegistry: http://129.156.113.125:8081
+    kafkaBroker: 130.61.35.61:9092
+    kafkaRegistry: http://130.61.35.61:8081
     kafkaShoppingCartTopic: idcs-1d61df536acb4e9d929e79a92f3414b5-soaringaddtoshoppingcart
     kafkaOrderTopic: idcs-1d61df536acb4e9d929e79a92f3414b5-soaringordercreated

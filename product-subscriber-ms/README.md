@@ -24,8 +24,8 @@ https://github.com/gschmutz/product-soaring-clouds-sequel/tree/master/example/no
 4) Set environment variables as following:
 
 ```bash
-export KAFKA_BROKER=129.156.113.171:6667
-export KAFKA_REGISTRY=http://129.156.113.125:8081
+export KAFKA_BROKER=130.61.35.61:9092
+export KAFKA_REGISTRY=http://130.61.35.61:8081
 export KAFKA_SHOPPINGCART_TOPIC=idcs-1d61df536acb4e9d929e79a92f3414b5-soaringaddtoshoppingcart
 export ORDERSAPI_HOST=127.0.0.1
 export ORDERSAPI_PORT=3000

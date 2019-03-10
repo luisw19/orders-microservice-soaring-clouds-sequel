@@ -1,0 +1,1416 @@
+{
+	"info": {
+		"_postman_id": "a90d404d-cddb-f961-b64f-4af4620edd64",
+		"name": "Soaring Through The Clouds",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "OAuth",
+			"item": [
+				{
+					"name": "Obtain Access Token (for Signing Cert)",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{CLIENT_SECRET}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{CLIENT_ID}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"type": "any"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "urn:opc:idm:__myscopes__",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HOST}}/oauth2/v1/token",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"oauth2",
+								"v1",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtain Signing Cert",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{HOST}}/admin/v1/SigningCert/jwk",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"admin",
+								"v1",
+								"SigningCert",
+								"jwk"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtain Access Token (Resource Owner)",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{CLIENT_ID}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{CLIENT_SECRET}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"type": "any"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "sttcall",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{USER_LOGIN}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{USER_PW}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HOST}}/oauth2/v1/token",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"oauth2",
+								"v1",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtain Access Token (RO & Refresh Token)",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{CLIENT_ID}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{CLIENT_SECRET}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"type": "any"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "sttcall offline_access",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{USER_LOGIN}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{USER_PW}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HOST}}/oauth2/v1/token",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"oauth2",
+								"v1",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "GET ORDERS",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3bf032a5-cb5f-4a04-9c1a-83bd59889ca2",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT}}/{{PREFIX}}orders",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "READ ORDER",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT}}/{{PREFIX}}orders/unittest",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}orders",
+								"unittest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE ORDER",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"currency\":\"GBP\",\n  \"customer\":{\n    \"customer_id\":\"5aa851035511ef001a35430c\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT}}/{{PREFIX}}orders",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE (ANONYMOUS) ORDER",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"currency\":\"GBP\",\n  \"customer\":{\n    \"customer_id\":\"anonymous_123456\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT}}/{{PREFIX}}orders",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE ORDER STATUS",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\":\"PROCESSING\"\n}"
+						},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT}}/{{PREFIX}}orders/unittest",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}orders",
+								"unittest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT ORDER DETAILS",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customer\": {\n      \"loyalty_level\": \"GOLD\",\n      \"first_name\": \"Luis\",\n      \"last_name\": \"Weir\",\n      \"phone\": \"+44 (0) 757 5333 777\",\n      \"email\": \"myemail@email.com\"\n  },\n  \"shipping\": {\n      \"first_name\": \"Lucas\",\n      \"last_name\": \"Jellema\",\n      \"shipping_method\": \"ECONOMY\",\n      \"price\": 15,\n      \"ETA\": \"\"\n  },\n  \"special_details\": {\n      \"personal_message\": \"From Luis with Love!\",\n      \"gift_wrapping\": true,\n      \"delivery_notes\": \"Please try to deliver in the morning\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT}}/{{PREFIX}}orders/unittest",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}orders",
+								"unittest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT ORDER DETAILS 2",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"payment\": {\n    \"name_on_card\": \"Luis Weir\",\n    \"card_type\": \"VISA_DEBIT\",\n    \"start_month\": 2,\n    \"card_number\": \"4111111111111111\",\n    \"start_year\": 1,\n    \"expiry_year\": 1,\n    \"expiry_month\": 2\n  },\n  \"customer\": {\n    \"loyalty_level\": \"NONE\",\n    \"first_name\": \"Luis Augusto\",\n    \"last_name\": \"Weir\",\n    \"phone\": \"07891152051\",\n    \"email\": \"luis.weir@capgemini.com\"\n  },\n  \"shipping\": {\n    \"first_name\": \"Luis\",\n    \"last_name\": \"Weir\",\n    \"ETA\": \"2019-03-09T00:00:00\",\n    \"shipping_method\": \"ECONOMY\",\n    \"price\": 2.1\n  },\n  \"special_details\": {\n    \"delivery_notes\": \"\",\n    \"gift_wrapping\": true,\n    \"personal_message\": \"Test\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT}}/{{PREFIX}}orders/unittest",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}orders",
+								"unittest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE ORDER",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT}}/{{PREFIX}}orders/unittest",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}orders",
+								"unittest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE BY SYSTEM ID",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT}}/{{PREFIX}}orders/systemid/5a78d4ac2d19f039fcd19873",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}orders",
+								"systemid",
+								"5a78d4ac2d19f039fcd19873"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SEARCH ORDERS WITH FILTER",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2f504e2c-0e22-402a-8b26-6a3b295d7f5a",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT}}/{{PREFIX}}orders?shoppingCart_id=5aa851035511ef001a35430c&status=SHOPPING_CART",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}orders"
+							],
+							"query": [
+								{
+									"key": "shoppingCart_id",
+									"value": "5aa851035511ef001a35430c"
+								},
+								{
+									"key": "status",
+									"value": "SHOPPING_CART"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADD LINE ITEM",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"product_id\": \"42905ff6-2612-11e8-b467-0ed5f89f718b\",\n\t\"product_code\": \"B01HJWV6YA\",\n\t\"product_name\": \"P.A.N Harina Blanca - Pre-cooked White Corn Meal 2lbs 3.3oz\",\n\t\"description\": \"Mix and match with Holstein Housewares. This FUN maker makes 4 empanadas or 2 arepas. The included inserts deliver the best of both worlds by allowing you to prepare a combination of healthy empanadas or arepas. It also has a non-stick coating that makes for easy clean-up. The non-slip base provides stability on tables and countertops and upright space saving storage maximizes the use of your kitchen space. In just 3 steps your empanadas and areas are ready to enjoy with family and friends. Simply roll your dough in a ball, place in the center of the maker, and close to make savory and delicious areas. For delicious and perfectly portioned empanadas, fill your dough and place in the insert. The maker's innovative design will make sure that it maintains the optimal heat for baking your favorite snacks. With no oil and no oven you will have plenty of empanadas and areas to share and enjoy in minutes. Makes two 3.7 x 1.8 arepas or four 3.5 x 1.8 empanadas. @!£#*&&^%%@£(){}[]|~\",\n\t\"quantity\": 2,\n\t\"price\": 30,\n\t\"size\": 0,\n\t\"weight\": 1.13,\n\t\"dimensions\": {\n\t\t\"unit\": \"cm\",\n\t\t\"length\": 22,\n\t\t\"height\": 10,\n\t\t\"width\": 22\n\t},\n\t\"color\": \"Black\",\n\t\"sku\": \"S15T-Flo-RS\"\n}\n"
+						},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT}}/{{PREFIX}}orders/unittest/lines",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}orders",
+								"unittest",
+								"lines"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE LINE ITEM QUANTITY",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"quantity\": 10\n}\n"
+						},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT}}/{{PREFIX}}orders/unittest/lines/1",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}orders",
+								"unittest",
+								"lines",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "REMOVE LINE ITEM",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT}}/{{PREFIX}}orders/unittest/lines/1",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}orders",
+								"unittest",
+								"lines",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADD ADDRESS",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"BILLING\",\n\t\"line_1\": \"22\",\n\t\"line_2\": \"King street\",\n\t\"city\": \"Leamington Spa\",\n\t\"county\": \"Warkwickshire\",\n\t\"postcode\": \"CV31\",\n\t\"country\": \"GB\"\n}"
+						},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT}}/{{PREFIX}}orders/unittest/address",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}orders",
+								"unittest",
+								"address"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "REMOVE ADDRESS",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT}}/{{PREFIX}}orders/unittest/address/billing",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}orders",
+								"unittest",
+								"address",
+								"billing"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PRODUCE ORDER EVENT",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"_id\": \"5bb7cac9f2fabd515e2e4d7a\",\n  \"__v\": 2,\n  \"order\": {\n    \"discount\": 0,\n    \"order_id\": \"unittest\",\n    \"shoppingCart_id\": \"5aa851035511ef001a35430c\",\n    \"total_price\": 60,\n    \"_links\": {\n      \"self\": {\n        \"href\": \"/orders/unittest\"\n      }\n    },\n    \"line_items\": [{\n      \"product_id\": \"42905ff6-2612-11e8-b467-0ed5f89f718b\",\n      \"product_code\": \"B01HJWV6YA\",\n      \"product_name\": \"P.A.N Harina Blanca - Pre-cooked White Corn Meal 2lbs 3.3oz\",\n      \"description\": \"description\",\n      \"quantity\": 2,\n      \"price\": 30,\n      \"size\": 0,\n      \"weight\": 1.13,\n      \"color\": \"Black\",\n      \"sku\": \"S15T-Flo-RS\",\n      \"line_id\": 1,\n      \"_id\": \"5bb7cae3f2fabd515e2e4d7b\",\n      \"dimensions\": {\n        \"unit\": \"cm\",\n        \"length\": 22,\n        \"height\": 10,\n        \"width\": 22\n      }\n    }],\n    \"special_details\": {\n      \"delivery_notes\": \"Please try to deliver in the morning\",\n      \"gift_wrapping\": true,\n      \"personal_message\": \"From Luis with Love!\"\n    },\n    \"shipping\": {\n      \"ETA\": \"\",\n      \"price\": 15,\n      \"shipping_method\": \"ECONOMY\",\n      \"last_name\": \"Jellema\",\n      \"first_name\": \"Lucas\"\n    },\n    \"address\": [{\n      \"name\": \"BILLING\",\n      \"line_1\": \"22\",\n      \"line_2\": \"King street\",\n      \"city\": \"Leamington Spa\",\n      \"county\": \"Warkwickshire\",\n      \"postcode\": \"CV31\",\n      \"_id\": \"5bb7caf7f2fabd515e2e4d7c\",\n      \"country\": \"GB\"\n    }],\n    \"customer\": {\n      \"customer_id\": \"5aa851035511ef001a35430c\",\n      \"email\": \"myemail@email.com\",\n      \"first_name\": \"Luis\",\n      \"last_name\": \"Weir\",\n      \"loyalty_level\": \"GOLD\",\n      \"phone\": \"+44 (0) 757 5333 777\"\n    },\n    \"payment\": {\n      \"card_type\": \"VISA_CREDIT\",\n      \"card_number\": \"\",\n      \"start_year\": 0,\n      \"start_month\": 0,\n      \"expiry_month\": 0,\n      \"expiry_year\": 0\n    },\n    \"currency\": \"GBP\",\n    \"updated_at\": \"2018-10-05T20:34:33.079Z\",\n    \"created_at\": \"2018-10-05T20:34:17.534Z\",\n    \"status\": \"SUCCESS\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT2}}/{{PREFIX}}order-event",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT2}}",
+							"path": [
+								"{{PREFIX}}order-event"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PROCESS ORDER",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bbb9add0-f4cb-4d17-8cea-c2244ecf5eed",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "33b36740-656a-4139-9310-710ecd3d2653"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT}}/{{PREFIX}}orders/unittest/process",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}orders",
+								"unittest",
+								"process"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CANCEL ORDER",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4a9563cb-c88b-443d-ae52-d8908ed458cf",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT}}/{{PREFIX}}orders/unittest/cancel",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}orders",
+								"unittest",
+								"cancel"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OPTIONS PUT ORDER",
+					"request": {
+						"method": "OPTIONS",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Accept-Encoding",
+								"value": "gzip, deflate, br"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-GB,en-US;q=0.9,en;q=0.8,es;q=0.7"
+							},
+							{
+								"key": "Access-Control-Request-Headers",
+								"value": "content-type"
+							},
+							{
+								"key": "Access-Control-Request-Method",
+								"value": "PUT"
+							},
+							{
+								"key": "Host",
+								"value": "localhost"
+							},
+							{
+								"key": "Origin",
+								"value": "http://localhost:3000"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.3"
+							},
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT}}/{{PREFIX}}orders/unittest",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}orders",
+								"unittest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "HEALTH",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0d2e2412-7fd3-4441-a519-fff0e5121a56",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT}}/{{PREFIX}}orders/health",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}orders",
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Logistics",
+			"item": [
+				{
+					"name": "Logistics Health Test",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{HTTP}}://{{HOST}}:{{PORT}}/logistics-ms/health",
+							"protocol": "{{HTTP}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"logistics-ms",
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logistics Validate",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orderIdentifier\": \"91839\",\n    \"nameAddressee\": \"Mrs. K. Jones\",\n    \"destination\": {\n        \"country\": \"be\",\n        \"street\": \"Bahnhofgasse\",\n        \"houseNumber\": \"23a\",\n        \"postalCode\": \"50768\",\n        \"city\": \"Köln\"\n    },\n    \"shippingMethod\": \"premium\",\n    \"desiredDeliveryDate\": \"2018-03-21\",\n    \"giftWrapping\": false,\n    \"personalMessage\": \"Ich denke, Sie werden diese Bücher wirklich genießen.\",\n    \"items\": [\n        {\n            \"productIdentifier\": \"42371XX\",\n            \"itemCount\": 1\n        },\n        {\n            \"productIdentifier\": \"XCZ\",\n            \"itemCount\": 1\n        },\n        {\n            \"productIdentifier\": \"AAA\",\n            \"itemCount\": 13\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "http://{{HOST}}:8011/logistics-ms/shipping/validate",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "8011",
+							"path": [
+								"logistics-ms",
+								"shipping",
+								"validate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logistics Validate (No Order ID)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "api-key",
+								"value": "73f1c312-64e1-4069-92d8-0179ac056e90"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nameAddressee\": \"Mrs. K. Jones\",\n    \"destination\": {\n        \"country\": \"be\",\n        \"street\": \"Bahnhofgasse\",\n        \"houseNumber\": \"23a\",\n        \"postalCode\": \"50768\",\n        \"city\": \"Köln\"\n    },\n    \"shippingMethod\": \"premium\",\n    \"desiredDeliveryDate\": \"2018-03-21\",\n    \"giftWrapping\": false,\n    \"personalMessage\": \"Ich denke, Sie werden diese Bücher wirklich genießen.\",\n    \"items\": [\n        {\n            \"productIdentifier\": \"42371XX\",\n            \"itemCount\": 1\n        },\n        {\n            \"productIdentifier\": \"XCZ\",\n            \"itemCount\": 1\n        },\n        {\n            \"productIdentifier\": \"AAA\",\n            \"itemCount\": 13\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "https://oc-144-21-82-92.compute.oraclecloud.com:9129/api/logistics/shipping/validate",
+							"protocol": "https",
+							"host": [
+								"oc-144-21-82-92",
+								"compute",
+								"oraclecloud",
+								"com"
+							],
+							"port": "9129",
+							"path": [
+								"api",
+								"logistics",
+								"shipping",
+								"validate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logistics Validate (Ingress)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "api-key",
+								"value": "73f1c312-64e1-4069-92d8-0179ac056e90"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orderIdentifier\": \"91839\",\n    \"nameAddressee\": \"Mrs. K. Jones\",\n    \"destination\": {\n        \"country\": \"be\",\n        \"street\": \"Bahnhofgasse\",\n        \"houseNumber\": \"23a\",\n        \"postalCode\": \"50768\",\n        \"city\": \"Köln\"\n    },\n    \"shippingMethod\": \"premium\",\n    \"desiredDeliveryDate\": \"2018-03-21\",\n    \"giftWrapping\": false,\n    \"personalMessage\": \"Ich denke, Sie werden diese Bücher wirklich genießen.\",\n    \"items\": [\n        {\n            \"productIdentifier\": \"42371XX\",\n            \"itemCount\": 1\n        },\n        {\n            \"productIdentifier\": \"XCZ\",\n            \"itemCount\": 1\n        },\n        {\n            \"productIdentifier\": \"AAA\",\n            \"itemCount\": 13\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "https://129.213.10.247/logistics-ms/app/shipping/validate",
+							"protocol": "https",
+							"host": [
+								"129",
+								"213",
+								"10",
+								"247"
+							],
+							"path": [
+								"logistics-ms",
+								"app",
+								"shipping",
+								"validate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customers",
+			"item": [
+				{
+					"name": "SignUp",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"title\": \"Mr\",\n  \"email\": \"john.doe@gmail.com\",\n  \"password\": \"apassword\",\n  \"dateOfBirth\": \"1980\",\n  \"phoneNumbers\": [\n    {\n      \"type\": \"HOME\",\n      \"countryCode\": 31,\n      \"number\": 1234567890\n    }\n  ],\n  \"addresses\": [\n    {\n      \"type\": \"BILLING\",\n      \"streetName\": \"2nd Street\",\n      \"streetNumber\": \"21\",\n      \"city\": \"New York\",\n      \"postcode\": \"50858\",\n      \"country\": \"US\"\n    }\n  ],\n  \"paymentDetails\": [\n    {\n      \"type\": \"CREDIT\",\n      \"cardNumber\": \"1234341413231\",\n      \"expirationDate\": \"09/22\",\n      \"preffered\": true,\n      \"nameOnCard\": \"Doe\"\n    }\n  ],\n  \"preferences\": {\n    \"newsLetter\": false,\n    \"offers\": false\n  }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/customer/profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"customer",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET All Customers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{HOST}}:8011/customer/profile",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "8011",
+							"path": [
+								"customer",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Customer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{HOST}}:8011/customer/profile/5bbc5cd590c4920011f96510",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "8011",
+							"path": [
+								"customer",
+								"profile",
+								"5bbc5cd590c4920011f96510"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "K8s SignUp",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "api-key",
+								"value": "73f1c312-64e1-4069-92d8-0179ac056e90"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"phoneNumbers\": [\n            {\n                \"type\": \"HOME\",\n                \"countryCode\": 31,\n                \"number\": 7575339889\n            }\n        ],\n        \"addresses\": [\n            {\n                \"type\": \"DELIVERY\",\n                \"streetName\": \"27 KingsLane\",\n                \"streetNumber\": \"21\",\n                \"city\": \"Leamington\",\n                \"postcode\": \"CV31 1AX\",\n                \"country\": \"UK\"\n            }\n        ],\n        \"paymentDetails\": [\n            {\n                \"type\": \"CREDIT\",\n                \"cardNumber\": \"1234341413231\",\n                \"expirationDate\": \"09/22\",\n                \"preferred\": true,\n                \"nameOnCard\": \"'Doe'\"\n            }\n        ],\n        \"firstName\": \"Luis\",\n        \"lastName\": \"Weir\",\n        \"title\": \"Mr\",\n        \"email\": \"luis.weir@sttc.com\",\n        \"password\": \"apassword\",\n        \"dateOfBirth\": \"1979-06-12T00:00:00.000Z\",\n        \"preferences\": {\n            \"newsLetter\": false,\n            \"offers\": false\n        }\n    }"
+						},
+						"url": {
+							"raw": "http://{{HOST}}:8011/customer/profile",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "8011",
+							"path": [
+								"customer",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "K8s Customer API home",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "73f1c312-64e1-4069-92d8-0179ac056e90"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://oc-144-21-82-92.compute.oraclecloud.com:9129/api/customer",
+							"protocol": "https",
+							"host": [
+								"oc-144-21-82-92",
+								"compute",
+								"oraclecloud",
+								"com"
+							],
+							"port": "9129",
+							"path": [
+								"api",
+								"customer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "K8s GET All Customer Profiles ",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "73f1c312-64e1-4069-92d8-0179ac056e90"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://oc-144-21-82-92.compute.oraclecloud.com:9129/api/customer/profile",
+							"protocol": "https",
+							"host": [
+								"oc-144-21-82-92",
+								"compute",
+								"oraclecloud",
+								"com"
+							],
+							"port": "9129",
+							"path": [
+								"api",
+								"customer",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "K8s GET Customer ",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "73f1c312-64e1-4069-92d8-0179ac056e90"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://oc-144-21-82-92.compute.oraclecloud.com:9129/api/customer/profile/5aa851035511ef001a35430c",
+							"protocol": "https",
+							"host": [
+								"oc-144-21-82-92",
+								"compute",
+								"oraclecloud",
+								"com"
+							],
+							"port": "9129",
+							"path": [
+								"api",
+								"customer",
+								"profile",
+								"5aa851035511ef001a35430c"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

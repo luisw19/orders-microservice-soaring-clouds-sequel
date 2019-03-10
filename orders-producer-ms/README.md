@@ -23,8 +23,8 @@ https://github.com/gschmutz/product-soaring-clouds-sequel/tree/master/example/no
 
 ```bash
 	export APP_PORT=4000
-	export KAFKA_BROKER=129.156.113.171:6667
-	export KAFKA_REGISTRY=http://129.156.113.125:8081
+	export KAFKA_BROKER=130.61.35.61:9092
+	export KAFKA_REGISTRY=http://130.61.35.61:8081
 	export KAFKA_ORDER_TOPIC=idcs-1d61df536acb4e9d929e79a92f3414b5-soaringordercreated
 ```
 4) To produce events run:

@@ -59,8 +59,8 @@ kafkaAvro.init()
 
         //sample order paylaod
         shoppingCart = {
-          "sessionId": "unittest",
-          "customerId": "unittest",
+          "sessionId": "anonymous_123456",
+          "customerId": "anonymous_123456",
           "quantity": 5,
           "priceInCurrency": 10.20,
           "currency": "EUR",
