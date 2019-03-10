@@ -11,8 +11,8 @@ var APP_VERSION = "2.0.0";
 var APP_NAME = "OrdersMS";
 //Set variables for calling the Event Producer API
 var http = require('http');
-var apiHost = process.env.EVENTAPI_HOST;
-var apiPort = process.env.EVENTAPI_PORT;
+var apiHost = process.env.EVENTAPI_HOST || "localhost";
+var apiPort = process.env.EVENTAPI_PORT || 4000;
 
 //Enable CORS pre-flight in all operations
 app.use(cors());
@@ -572,7 +572,7 @@ router.route("/orders/:id/lines")
             //Re-calculate total price by summing up all lines
             var totalPrice = 0;
             //Loop through all order lines and reset  the ids and recalculate total
-            for (var count = 0; count < totalLines; count++) {
+            for (var count = 0; count < data.order.line_items.length; count++) {
               //console.log("Count: " + data.order.line_items[count]);
               data.order.line_items[count].line_id = count + 1;
               //sum up all totals

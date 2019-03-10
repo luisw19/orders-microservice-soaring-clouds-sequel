@@ -41,13 +41,13 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
             self.shippingMethod(shipping.shipping_method);
             self.shippingCost(shipping.price.toFixed(2));
             self.shippingETA(shipping.ETA);
-
+            
             self.totalPrice(parseFloat(order.total_price).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + " " + order.currency);
 
         };
 
     }
-    
+
     return new InvoiceDetailsViewModel();
 
 });

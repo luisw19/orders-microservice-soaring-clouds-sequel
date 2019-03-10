@@ -1,7 +1,7 @@
 <div class="oj-flex-item oj-panel oj-sm-margin-2x">
   <oj-collapsible id="orderItemsCollapsible" expanded={{orderItemsExpanded}}>
     <h3 id="header" slot="header">Items</h3>
-    
+
     <oj-bind-for-each data="{{items}}" as="item">
       <template>
 
@@ -66,22 +66,20 @@
 
       </oj-form-layout>
     </div>
-    
-  </oj-collapsible>
+
+</oj-collapsible>
 </div>
 <div class="oj-flex-item oj-panel oj-sm-margin-2x">
-  
+
   <h3 id="header" slot="header">Total</h3>
 
   <oj-form-layout id="specialDetailsLayout"
     label-edge="start"
     max-columns="1">
-
     <oj-input-text id="totalPrice"
       readonly
       value="{{totalPrice}}"
       label-hint="Total Price:">
     </oj-input-text>
-    
-  </oj-collapsible>
+  </oj-form-layout>
 </div>
