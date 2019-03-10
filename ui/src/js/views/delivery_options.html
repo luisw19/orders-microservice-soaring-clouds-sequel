@@ -6,6 +6,7 @@
         max-columns="2">
 
         <oj-input-text id="firstName"
+          required
           value="{{firstName}}"
           on-value-changed="[[onFirstNameChanged]]"
           label-hint="First Name:"
@@ -13,6 +14,7 @@
         </oj-input-text>
 
         <oj-input-text id="lastName"
+          required
           value="{{lastName}}"
           on-value-changed="[[onLastNameChanged]]"
           label-hint="Last Name:"
@@ -29,7 +31,7 @@
         </oj-input-date>
 
         <oj-radioset id="deliveryMethodOptions"
-          required
+          disabled
           value="{{deliveryMethod}}"
           on-value-changed="[[onDeliveryMethodChanged]]"
           label-hint="Delivery Method:">

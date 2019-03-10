@@ -160,16 +160,21 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
                 order.payment.card_number = paymentMethod.cardNumber;
 
                 if (paymentMethod.startDate != null) {
-                    order.payment.start_month = paymentMethod.startDate.substring(1, paymentMethod.startDate.indexOf("/"));
-                    order.payment.start_year = "20" + paymentMethod.startDate.substring(paymentMethod.startDate.indexOf("/") + 1);
+                    // order.payment.start_month = paymentMethod.startDate.substring(1, paymentMethod.startDate.indexOf("/"));
+                    // order.payment.start_year = "20" + paymentMethod.startDate.substring(paymentMethod.startDate.indexOf("/") + 1);
+                    //Changed as it seems format for Customer response Changed to mm-yy
+                    order.payment.start_month = paymentMethod.startDate.substring(-2, paymentMethod.startDate.indexOf("-"));
+                    order.payment.start_year = "20" + paymentMethod.startDate.substring(paymentMethod.startDate.indexOf("-") + 1);
                 } else {
                     order.payment.start_month = "";
                     order.payment.start_year = "";
                 }
 
-                order.payment.expiry_month = paymentMethod.expirationDate.substring(1, paymentMethod.expirationDate.indexOf("/"));
-                order.payment.expiry_year = "20" + paymentMethod.expirationDate.substring(paymentMethod.expirationDate.indexOf("/") + 1);
-
+                // order.payment.expiry_month = paymentMethod.expirationDate.substring(1, paymentMethod.expirationDate.indexOf("/"));
+                // order.payment.expiry_year = "20" + paymentMethod.expirationDate.substring(paymentMethod.expirationDate.indexOf("/") + 1);
+                //Changed as it seems format for Customer response Changed to mm-yy
+                order.payment.expiry_month = paymentMethod.expirationDate.substring(-2, paymentMethod.expirationDate.indexOf("-"));
+                order.payment.expiry_year = "20" + paymentMethod.expirationDate.substring(paymentMethod.expirationDate.indexOf("-") + 1);
             }
 
             rootViewModel.order.set("order", order);

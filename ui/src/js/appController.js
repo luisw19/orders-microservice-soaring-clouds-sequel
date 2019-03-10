@@ -10,6 +10,14 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
     function ControllerViewModel() {
       var self = this;
 
+      //todays date used in shopping_cart and delivery options view models
+      //Set tomorrow's dates
+      self.today = new Date();
+      self.dd = self.today.getDate()+1;
+      self.mm = self.today.getMonth(); //January is 0!
+      self.yyyy = self.today.getFullYear();
+      self.tomorrow = new Date(self.yyyy, self.mm, self.dd);
+
       //for making customer fields editable in orders_summary page if not using anonymous
       self.isAnonymousMode = ko.observable(false);
 

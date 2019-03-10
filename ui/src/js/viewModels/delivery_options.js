@@ -20,19 +20,16 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         self.deliveryMethodExpanded = ko.observable(true);
         self.specialDetailsExpanded = ko.observable(true);
 
-        self.firstName = ko.observable();
-        self.lastName = ko.observable();
+        //Set first and last name to default as per order details
+        self.firstName = ko.observable( order.customer.first_name );
+        self.lastName = ko.observable( order.customer.last_name );
+
         self.deliveryMethod = ko.observableArray();
         self.eta = ko.observable();
         self.minDate = ko.observable();
 
-        //Set tomorrow's dates
-        var today = new Date();
-        var dd = today.getDate()+1;
-        var mm = today.getMonth(); //January is 0!
-        var yyyy = today.getFullYear();
-        var tomorrow = new Date(yyyy, mm, dd);
-        self.minDate = oj.IntlConverterUtils.dateToLocalIso( tomorrow );
+        //Only allow from tomorrow's dates
+        self.minDate = oj.IntlConverterUtils.dateToLocalIso( rootViewModel.tomorrow );
 
         self.dateConverter = ko.observable(
             oj.Validation.converterFactory(oj.ConverterFactory.CONVERTER_TYPE_DATETIME).createConverter(
@@ -53,14 +50,18 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
 
             // Delivery Method
             if (shipping != null) {
+                //Set default values also in rooViewModel for shipping
                 self.firstName(shipping.first_name);
                 self.lastName(shipping.last_name);
                 self.deliveryMethod(shipping.shipping_method);
                 self.eta(shipping.ETA);
+
             } else {
                 // Add shipping object to model
                 order.shipping = {};
                 rootViewModel.order.set("order", order);
+                rootViewModel.order.get('order').shipping.first_name = self.firstName();
+                rootViewModel.order.get('order').shipping.last_name  = self.lastName();
             }
 
             if (specialDetails != null) {
@@ -86,8 +87,14 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         };
 
         self.onEtaChanged = function(info) {
-            var date = new Date(self.eta());
-            rootViewModel.order.get('order').shipping.ETA = oj.IntlConverterUtils.dateToLocalIso(date);
+            var dateEta = oj.IntlConverterUtils.dateToLocalIso( new Date(self.eta()) );
+            var tomorrowEta = oj.IntlConverterUtils.dateToLocalIso(rootViewModel.tomorrow);
+            if(dateEta == tomorrowEta){
+                self.deliveryMethod("PREMIUM");
+            }else{
+                self.deliveryMethod("ECONOMY");
+            }
+            rootViewModel.order.get('order').shipping.ETA = dateEta;
         };
 
         self.onDeliveryMethodChanged = function() {

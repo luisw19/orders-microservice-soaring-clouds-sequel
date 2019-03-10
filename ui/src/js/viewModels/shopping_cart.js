@@ -373,8 +373,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
 
       var valid = true;
       //validate that at least one credit card was entered
-      if (document.getElementById("cardNumber") == null) {
-        alert("Please enter a credit card");
+      if (document.getElementById("paymentMethod").value == null) {
+        alert("Please select a payment method or enter a new one");
         valid = false;
       };
       if (document.getElementById("paymentMethod").value == "newPayMethod" && valid) {
@@ -404,7 +404,9 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
           document.getElementById("cardType").showMessages();
           document.getElementById("cardNumber").showMessages();
           document.getElementById("expiryDate").showMessages();
-        } else {
+        }
+        //not required as values are set in rootViewModel "on change"
+        /*else {
           var payment = rootViewModel.order.get("order").payment;
           //Name on card not supported at the moment
           //rootViewModel.order.get("order").payment.name_on_card=document.getElementById("nameOnCard").value;
@@ -427,7 +429,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
           //   }
           // });
 
-        }
+        }*/
       }
 
       //If credit card is valid then proceed to verify address

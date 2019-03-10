@@ -27,7 +27,7 @@
         max-columns="2">
 
         <oj-input-text id="nameOnCard"
-          required=[[$root.isAnonymousMode]]
+          required
           value="{{nameOnCard}}"
           on-value-changed="[[onNameOnCardChange]]"
           label-hint="Name on card:"
@@ -35,7 +35,7 @@
         </oj-input-text>
 
         <oj-combobox-one id="cardType"
-          required=[[$root.isAnonymousMode]]
+          required
           value="{{selectedCardType}}"
           on-value-changed="[[onCardTypeChange]]"
           label-hint="Card Type: ">
@@ -46,7 +46,7 @@
         </oj-combobox-one>
 
         <oj-input-text id="cardNumber"
-          required=[[$root.isAnonymousMode]]
+          required
           value="{{cardNumber}}"
           on-value-changed="[[onCardNumberChanged]]"
           label-hint="Card Number:"
@@ -62,7 +62,7 @@
         </oj-input-text>
 
         <oj-input-text id="expiryDate"
-          required=[[$root.isAnonymousMode]]
+          required
           value="{{expiryDate}}"
           on-value-changed="[[onEndDateChanged]]"
           placeholder="mm/yy"
