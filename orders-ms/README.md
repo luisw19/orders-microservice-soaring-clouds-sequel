@@ -15,13 +15,16 @@ This is the orders Microservice.
 	npm install
 ```
 
-3) Set environment variables as following:
+3) Set environment variables as following if wish to change from default:
 
 ```bash
 	export APP_PORT=3000
 	export EVENTAPI_HOST=localhost
 	export EVENTAPI_PORT=4000
+	export MONGODB_NAME=orders-mongo-db
+	export MONGODB_PORT=27017
 ```
+
 4) Run:
 
 ```bash

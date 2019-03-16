@@ -9,12 +9,19 @@ ui:
         tag: 3.0.0
     port: 8080
 
+mongo:
+    name: orders-mongo-db
+    replicas: 1
+    image:
+        repo: mongo
+    port: 27017
+
 orders:
     name: orders-ms
     replicas: 3
     image:
         repo: luisw19/orders-ms
-        tag: 3.0.0
+        tag: 3.0.1
     port: 3000
 
 prodSub:

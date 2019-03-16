@@ -27,6 +27,10 @@ spec:
           value: {{ .Release.Name }}-{{ .Values.ordersProd.name }}
         - name: EVENTAPI_PORT
           value: "{{ .Values.ordersProd.port }}"
+        - name: MONGODB_NAME
+          value: "{{ .Release.Name }}-{{ .Values.mongo.name }}"
+        - name: MONGODB_PORT
+          value: "{{ .Release.Name }}-{{ .Values.mongo.port }}"
         image: {{ .Values.orders.image.repo }}:{{ .Values.orders.image.tag }}
         name: {{ .Release.Name }}-{{ .Values.orders.name }}
         ports:

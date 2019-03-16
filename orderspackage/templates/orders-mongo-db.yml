@@ -1,0 +1,38 @@
+# Mongo Deployment
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.mongo.name }}
+  labels:
+    run: {{ .Release.Name }}-{{ .Values.mongo.name }}
+spec:
+  replicas: {{ .Values.mongo.replicas }}
+  template:
+    metadata:
+      labels:
+        run: {{ .Release.Name }}-{{ .Values.mongo.name }}
+    spec:
+      containers:
+      - image: {{ .Values.mongo.image.repo }}
+        name: {{ .Release.Name }}-{{ .Values.mongo.name }}
+        ports:
+        - containerPort: {{ .Values.mongo.port }}
+          hostPort: {{ .Values.mongo.port }}
+      restartPolicy: Always
+
+---
+
+# Mongo Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.mongo.name }}
+  labels:
+    run: {{ .Release.Name }}-{{ .Values.mongo.name }}
+spec:
+  clusterIP: None
+  ports:
+  - port: {{ .Values.mongo.port }}
+    targetPort: {{ .Values.mongo.port }}
+  selector:
+    run: {{ .Release.Name }}-{{ .Values.mongo.name }}

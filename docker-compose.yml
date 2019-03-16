@@ -31,13 +31,15 @@ services:
   orders-ms:
       #Image
       #image: localhost:3000/orders-ms:0.1.0
-      image: luisw19/orders-ms:3.0.0
+      image: luisw19/orders-ms:3.0.1
       #Uncomment "build" if you wish to build from source code, otherwise it'll pull from registry
       build: ./orders-ms
       environment:
         APP_PORT: 3000
         EVENTAPI_HOST: 'orders-prod-ms'
         EVENTAPI_PORT: 4000
+        MONGODB_NAME: 'orders-mongo-db'
+        MONGODB_PORT: 27017
       depends_on:
         - orders-mongo-db
       ports:

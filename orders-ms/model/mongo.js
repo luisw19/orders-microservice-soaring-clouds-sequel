@@ -3,7 +3,9 @@ var mongoose    =   require("mongoose");
 //if you are running this outside the container, ensure you add in /etc/hosts: 127.0.0.7  orders-mongo-db
 // For localhost Modify /usr/local/etc/mongod.conf for mongo to listen in desired IPs
 // In kubernetes orders-mongo-db = Service name for Mongo
-mongoose.connect('mongodb://orders-mongo-db:27017/ordersMS_db');
+var MONGODB_NAME = process.env.MONGODB_NAME || "orders-mongo-db";
+var MONGODB_PORT = process.env.MONGODB_PORT || 27017;
+mongoose.connect('mongodb://' + MONGODB_NAME + ':' + MONGODB_PORT + '/ordersMS_db');
 // create instance of Schema
 var schema =   mongoose.Schema;
 
