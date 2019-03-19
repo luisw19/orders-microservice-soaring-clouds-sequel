@@ -9,6 +9,7 @@ build
 # Certs and secrets
 *.crt
 *.key
+*.csr
 
 # misc
 .DS_Store

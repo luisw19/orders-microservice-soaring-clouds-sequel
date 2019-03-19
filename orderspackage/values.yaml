@@ -1,5 +1,13 @@
 ingress:
     name: orders-ms-ing
+    #class: 'istio'
+    class: 'nginx'
+    domain: orders.sttc.com
+    sslredirect: false
+    secret: orders-secret
+    paths:
+        orders: /orders-ms/api/
+        ui: /orders-ms/ui/
 
 ui:
     name: orders-ui

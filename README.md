@@ -8,36 +8,48 @@ Repository for the Orders Microservice, part of the Soaring Through The Clouds S
 git clone https://github.com/luisw19/orders-microservice-soaring-clouds-sequel.git
 ```
 
-## Run with Docker-Compose
+## Run locally using Docker-Compose
 
-1) Install docker and docker-compose
+1) Install [Docker](https://www.docker.com/get-started) and [docker-compose](https://docs.docker.com/compose/install/)
 
 2) Run the following command
 
 ```bash
+cd orders-microservice-soaring-clouds-sequel
 docker-compose up
 ```
-This will run 3 instances:
+This will run 5 containers:
 
-- Mongo database for Orders MS
-- Orders Microservice (available in: http://localhost:3000/orders) --see API blueprint for methods supported and sample payloads
-- Shopping Cart subscriber service listening to kafka topic a516817-soaring-add-to-shopping-cart
+- A [Mongo](https://www.mongodb.com/) database
+- Orders microservice (available in: http://localhost:3000/orders) --see API blueprint for methods supported and sample payloads
+- Shopping cart subscriber service listening to kafka topic soaring-add-to-shopping-cart
+- An Order producer service that will produce completed orders to kafka topic soaringordercreated
 
-3) Add a Product Item to the Kafka Topic and verity that Shopping Cart Order is created and a line added to it
+> Check docker-compose.yml for details on the environment variables used.
 
-- Add Product Item to Shopping Cart. This can be done as per instructions in ./product-subscriber-ms/README
+3) Test that the services are running correctly by:
 
-- Check that the Shopping Cart Order was created as per instructions from ./orders-ms/README
+- Follow [these steps](https://github.com/luisw19/orders-microservice-soaring-clouds-sequel/tree/master/orders-producer-ms) to produce a sample item.
 
-- Add more products to Shopping Cart with same "customerId" and read again the order. See how new lines are added.
+- Verity than an Order was created by running:
 
-3) To bring down gratefully run:
+	```bash
+	curl http://localhost:3000/orders
+	```
+
+- Follow [these steps](https://github.com/luisw19/orders-microservice-soaring-clouds-sequel/tree/master/orders-producer-ms) to produce a sample processed order.
+
+- Follow [These steps](https://github.com/luisw19/orders-microservice-soaring-clouds-sequel/tree/master/ui) to run the UI locally against the running services.
+
+	> Note that the UI can be tested stand-alone using docker-compose.
+
+4) To bring down gratefully run:
 
 ```bash
 docker-compose down
 ```
 
-## To create Deployment/Service in Kubernetes
+## To create Deployment/Service in Kubernetes using Helm and Nginx Ingress:
 
 1) Set KUBECONFIG to match your target Kubernetes environment e.g.
 
@@ -45,89 +57,37 @@ docker-compose down
 export KUBECONFIG=$HOME/.kube/config
 ```
 
-2) Create Orders namespace if it doesn't already exist
+2) Configure an Nginx ingress controller by following the instructions [oke-ingress](https://github.com/luisw19/orders-microservice-soaring-clouds-sequel/tree/master/oke-ingress)
 
-```bash
-kubectl create -f k8s-namespace-orders.json
-```
+3) Create the orders-ms namespace. Also a local context and switch to it:
 
-Verify that namespace was created
-```bash
-kubectl get namespaces --show-labels
-```
+	First take note of the default context details by running:
 
-3) Define “orders” context for the kubectl client to work with.
+	```bash
+	kubectl config view
+	```
 
-> NOTE: values for cluster and user were taken from kubeconfig file
+	> Take note of *name*, *user* and *cluster* under section *"- contexts"*.
 
-```bash
- kubectl config set-context orders --namespace=orders-ms --cluster=<cluster value> --user=<user value>
-```
+	Run the following commands to create the *orders-ms* namespace, a local context
+	called *orders* and then switch to it:
 
-4) Switch to “oders” context
+	```bash
+	kubectl create namespace orders-ms
+	kubectl config set-context orders --user=user-c3wczrxmftd --cluster=cluster-c3wczrxmftd --namespace=orders-ms
+	kubectl config use-context orders
+	```
 
-```bash
- kubectl config use-context orders
-```
+4) Create a *TLS certificate* for domain *orders.sttc.com* as per step [6) of the oke-ingress configuration](https://github.com/luisw19/orders-microservice-soaring-clouds-sequel/tree/master/oke-ingress) and then create the secret in the oders-ms namespace:
 
-5) Create mongo Deployment and Service
+	```bash
+	kubectl create secret tls orders-secret --key tls.key --cert tls.crt
+	```
 
-```bash
-kubectl create -f orders-mongo-db.yml
-```
-> Note that for now the Mongo DB is not part of the Helm package but released once and separately.
+5) Deploy the *Orders Package* using [Helm](https://helm.sh/):
 
-4) Install and configure [Helm](https://helm.sh)
+	```bash
+	helm install ./orderspackage/ -n orderspackage
+	```
 
-If Tiller not already installed in the K8s cluster, then installed as per [this link]( https://docs.helm.sh/using_helm/#installing-tiller).
-> Note that OKE has an option to provision a K8s cluster with Tiller enabled.
-
-Install Helm CLI on Mac
-```bash
-brew install kubernetes-helm
-```
-
-Initialise command line with upgrade entry to ensure helm and tiller are on same version
-```bash
-helm init --upgrade
-```
-
-4) Deploy the Helm chart by running
-
-```bash
-helm install ./orderspackage -n orderspackage
-```
-
-or to create a package and then install from it:
-
-```bash
-helm package ./orderspackage
-```
-
-Then run (note that version of .tgz is same as Chart.yaml)
-```bash
-helm install -n orderspackage orderspackage-2.0.0.tgz
-```
-
-5) Verify pods were created with:
-
-```bash
-kubectl get pods
-```
-
-6) To get the external IP of ingress run:
-
-```bash
-kubectl get svc
-```
- Take note of the "Node" IP for "orders-ms-xxx". Then run the following command to obtain the port:
-
-```bash
- kubectl get ingress orderspackage-orders-ms-ing
-```
-
-7) To completely remove the release run
-
-```bash
-helm delete --purge orderspackage
-```
+6)
