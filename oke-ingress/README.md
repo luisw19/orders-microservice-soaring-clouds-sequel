@@ -122,11 +122,10 @@ run the following command to apply a *Load Balancer* service.
 
 10) Try it out as following:
 
-	```
+
 	export INGRESS_HOST=$(kubectl -n ingress-nginx get service ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
   export INGRESS_PORT=$(kubectl -n ingress-nginx get service ingress-nginx -o jsonpath='{.spec.ports[?(@.name=="http")].port}')
   export SECURE_INGRESS_PORT=$(kubectl -n ingress-nginx get service ingress-nginx -o jsonpath='{.spec.ports[?(@.name=="https")].port}')
-	```
 
 	Check that the env variables were set correctly:
 
