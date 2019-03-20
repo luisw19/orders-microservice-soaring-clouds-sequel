@@ -122,7 +122,7 @@ run the following command to apply a *Load Balancer* service.
 
 10) Try it out as following:
 
-	```bash
+	```
 	export INGRESS_HOST=$(kubectl -n ingress-nginx get service ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
   export INGRESS_PORT=$(kubectl -n ingress-nginx get service ingress-nginx -o jsonpath='{.spec.ports[?(@.name=="http")].port}')
   export SECURE_INGRESS_PORT=$(kubectl -n ingress-nginx get service ingress-nginx -o jsonpath='{.spec.ports[?(@.name=="https")].port}')
@@ -201,12 +201,13 @@ run the following command to apply a *Load Balancer* service.
 	kubectl delete -n ingress-nginx Deployment nginx-ingress-controller
 	```
 
-	Delete nginx default backends
+	Delete nginx controller service
 
 	```bash
-	kubectl delete -n ingress-nginx deploy default-http-backend
-	kubectl delete -n ingress-nginx service default-http-backend
+	kubectl delete -n ingress-nginx Service nginx-ingress-controller
 	```
+
+	To delete the HTTPBIN sample:
 
 	Delete nginx controller service
 

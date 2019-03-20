@@ -203,7 +203,7 @@ global:
 ingress:
   #enabled: false
   #Changed to enable Ingress
-  enabled: false
+  enabled: true
   replicaCount: 1
   autoscaleMin: 1
   autoscaleMax: 5
@@ -314,7 +314,7 @@ gateways:
     autoscaleMax: 5
     cpu:
       targetAverageUtilization: 80
-    serviceAnnotations: {}
+    #serviceAnnotations: {}
     type: ClusterIP #change to NodePort or LoadBalancer if need be
     ports:
       - port: 80
@@ -489,7 +489,7 @@ grafana:
     usernameKey: username
     passphraseKey: passphrase
   service:
-    annotations: {}
+    #annotations: {}
     name: http
     type: ClusterIP
     externalPort: 3000
@@ -504,7 +504,7 @@ prometheus:
   tag: v2.5.0
 
   service:
-    annotations: {}
+    #annotations: {}
     nodePort:
       enabled: false
       port: 32090
@@ -516,7 +516,7 @@ servicegraph:
   replicaCount: 1
   image: servicegraph
   service:
-    annotations: {}
+    #annotations: {}
     name: http
     type: ClusterIP
     externalPort: 8088
@@ -569,7 +569,7 @@ tracing:
         #     - jaeger.local
   replicaCount: 1
   service:
-    annotations: {}
+    #annotations: {}
     name: http
     type: ClusterIP
     externalPort: 9411

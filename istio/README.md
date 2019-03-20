@@ -6,7 +6,7 @@
 
 1) Ensure HELM is above 2.10 by running.
 
-  ```
+  ```bash
 	helm version
   ```
 
@@ -14,7 +14,7 @@
 
 - First decide on which location you wish to download Istio then optionally create a folder for the download.
 
-  ```
+  ```bash
 	cd <location where Istio will be downloaded>
 	mkdir istio
 	cd istio
@@ -22,38 +22,33 @@
 
 - Then download with the following command:
 
-  ```
+  ```bash
  	curl -L https://git.io/getLatestIstio | sh -
   ```
 
   > This will create a folder with all Istio executables and configuration files e.g. /istio-1.0.6
 
-3) Enable the Istio CLI by adding /istio-<version>/bin to $PATH
+3) Set *$ISTIO_HOME* and add the *istioctl* to the path in case required.
 
 - From the same location where Istio was downloaded, execute the following:
 
-  ```
+  ```bash
 	cd istio-<version>
-	export PATH=$PWD/bin:$PATH
-  ```
-
-- Also set ISTIO_HOME as following:
-
-  ```
   export ISTIO_HOME=$PWD
+	export PATH=$PWD/bin:$PATH
   ```
 
 4) [Helm installation](https://helm.sh/) and [Tiller](https://helm.sh/docs/glossary/#tiller) installation:
 
 - Ensure Tiller is installed on the server with the command:
 
-  ```
+  ```bash
   kubectl get pods -n kube-system | grep tiller
   ```
 
 - Result from the above command should be similar to:
 
-  ```
+  ```bash
   $kubectl get pods -n kube-system | grep tiller
   tiller-deploy-54885b67b5-pkjnk          1/1     Running   0          26
   ```
@@ -63,20 +58,20 @@
 
 - Ensure Helm is installed on the client. In Mac this can be easily done with brew
 
-  ```
+  ```bash
 	brew install kubernetes-helm
   ```
 
 - Then initialised and ensure version matches the server:
 
-  ```
+  ```bash
 	helm init
 	helm init --upgrade
   ```
-  
+
 6) Create the istio-system namespaces
 
-  ```
+  ```bash
   kubectl create namespace istio-system
   ```
 
@@ -84,7 +79,7 @@
 
 - Create the base64 encoded username and password
 
-   ```
+   ```bash
    $ echo -n 'user' | base64
    dXNlcg==
    $ echo -n 'sample' | base64
@@ -93,7 +88,7 @@
 
 - Create the secret:
 
-  ```
+  ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Secret
@@ -111,7 +106,7 @@ EOF
 
 6) Create a secret for Grafana (in the example using the same base64 credentials)
 
-  ```
+  ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Secret
@@ -131,7 +126,7 @@ EOF
 
 - Basic installation with default settings:
 
-  ```
+  ```bash
   helm install $ISTIO_HOME/install/kubernetes/helm/istio --name istio --namespace istio-system
   ```
 
@@ -143,90 +138,30 @@ EOF
 [Service Graph](https://istio.io/docs/tasks/telemetry/servicegraph/) enabled
 we use a pre-defined Helm chart values and use it to install as following:
 
+  ```bash
+  helm install $ISTIO_HOME/install/kubernetes/helm/istio -f values-custom.yaml --name istio --namespace istio-system
   ```
-  helm install $ISTIO_HOME/install/kubernetes/helm/istio -f values-lw.yaml --name istio --namespace istio-system
-  ```
+  > Note that we're using *values-custom.yaml* which is based on original *values.yaml* from Istio
+  > however parameters has been adjusted to provide support for the above-mentioned add-ons.
+  > For details on options available when setting parameters
+  > [check this URL](https://istio.io/docs/reference/config/installation-options)
 
-  ```
-  helm install $ISTIO_HOME/install/kubernetes/helm/istio \
-  --name istio \
-  --namespace istio-system \
-  --set ingress.enabled=true \
-  --set gateways.istio-ingressgateway.sds.enabled=true \
-  --set tracing.enabled=true \
-  --set pilot.traceSampling=10.0 \
-  --set tracing.ingress.enabled=true \
-  --set tracing.jaeger.ingress.enabled=true \
-  --set telemetry-gateway.grafanaEnabled=true \
-  --set telemetry-gateway.prometheusEnabled=true \
-  --set grafana.enabled=true \
-  --set grafana.security.enabled=true \
-  --set kiali.enabled=true \
-  --set kiali.ingress.enabled=true \
-  --set kiali.ingress.hosts[0]=kiali.local \
-  --set kiali.dashboard.jaegerURL='http://tracing.local:80' \
-  --set kiali.dashboard.grafanaURL='http://grafana.istio-system:3000' \
-  --set servicegraph.enabled=true \
-  --set servicegraph.ingress.enabled=true
-  ```
+- Verify that ingress services are running and that an **EXTERNAL-IP** has been allocated.
 
-- Another example with several custom options:
+	```bash
+	kubectl get svc -n istio-system | grep ingress
+	```
 
-  ```
-  helm install $ISTIO_HOME/install/kubernetes/helm/istio \
-  --name istio \
-  --namespace istio-system \
-  --set proxy.statusPort=15020 \
-  --set proxy_init.defaultResources.requests.cpu=100m \
-  --set ingress.enabled=true \
-  --set ingress.service.annotations[0]='kubernetes.io/ingress.class: nginx' \
-  --set gateways.istio-ingressgateway.sds.enabled=true \
-  --set gateways.istio-ingressgateway.resources.requests.cpu=1800m \
-  --set gateways.istio-ingressgateway.resources.requests.memory=512Mi \
-  --set gateways.istio-ingressgateway.serviceAnnotations[0]='kubernetes.io/ingress.class: nginx' \
-  --set mixer.prometheusStatsdExporter.tag=v0.8.1 \
-  --set pilot.traceSampling=100.0 \
-  --set pilot.resources.requests.cpu=1800m \
-  --set telemetry-gateway.grafanaEnabled=true \
-  --set telemetry-gateway.prometheusEnabled=true \
-  --set grafana.enabled=true \
-  --set grafana.image.tag=5.4.2 \
-  --set grafana.security.enabled=true \
-  --set prometheus.tag=v2.5.0 \
-  --set servicegraph.enabled=true \
-  --set servicegraph.ingress.enabled=true \
-  --set servicegraph.ingress.annotations[0]='kubernetes.io/ingress.class: nginx' \
-  --set tracing.enabled=true \
-  --set tracing.jaeger.tag=1.8.2 \
-  --set tracing.jaeger.ingress.enabled=true \
-  --set tracing.jaeger.ingress.annotations[0]='kubernetes.io/ingress.class: nginx' \
-  --set kiali.enabled=true \
-  --set kiali.ingress.enabled=true \
-  --set kiali.ingress.hosts[0]=kiali.local \
-  --set kiali.ingress.annotations[0]='kubernetes.io/ingress.class: nginx' \
-  --set kiali.dashboard.jaegerURL='http://tracing.local:80' \
-  --set kiali.dashboard.grafanaURL='http://grafana.istio-system:3000'
-  ```
-
-- Optionally add Certificate Manager if not already in use:
-
-  ```
-  --set certmanager.enabled=true \
-  --set certmanager.tag=v0.5.2
-  ```
-  --set ingress.service.type=LoadBalancer \
-  --set ingress.service.loadBalancerIP="129.213.66.57" \
-  --set gateways.istio-ingressgateway.type=LoadBalancer \
-  --set gateways.istio-ingressgateway.loadBalancerIP="129.213.69.3" \
-
-
-  > For more options [check this URL](https://istio.io/docs/reference/config/installation-options)
+	> Repeat the above process until an *EXTERNAL-IP* is assigned.
+	> Note that this may take a few seconds as the controller is
+	> basically creating an OCI load balancer also visible from the
+	> OCI console itself under *Networking > Load Balancers*.
 
 8) Access monitoring services via port-forwarding feature of kubectl:
 
 - For Jaeger run command:
 
-  ```
+  ```bash
   kubectl port-forward -n istio-system $(kubectl get pod -n istio-system -l app=jaeger -o jsonpath='{.items[0].metadata.name}') 16686:16686 &
   ```
 
@@ -234,7 +169,7 @@ we use a pre-defined Helm chart values and use it to install as following:
 
 - For Prometheus run command:
 
-  ```
+  ```bash
   kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=prometheus -o jsonpath='{.items[0].metadata.name}') 9090:9090 &
   ```
 
@@ -242,7 +177,7 @@ we use a pre-defined Helm chart values and use it to install as following:
 
 - For Grafana run command:
 
-  ```
+  ```bash
   kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=grafana -o jsonpath='{.items[0].metadata.name}') 3000:3000 &
   ```
 
@@ -250,7 +185,7 @@ we use a pre-defined Helm chart values and use it to install as following:
 
 - For Kiali run command:
 
-  ```
+  ```bash
   kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=kiali -o jsonpath='{.items[0].metadata.name}') 20001:20001 &
   ```
 
@@ -258,7 +193,7 @@ we use a pre-defined Helm chart values and use it to install as following:
 
 - For Service Graph run command:
 
-  ```
+  ```bash
   kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=servicegraph -o jsonpath='{.items[0].metadata.name}') 8088:8088 &
   ```
 
@@ -266,25 +201,25 @@ we use a pre-defined Helm chart values and use it to install as following:
 
 - To remove kubectl port-forward processes that may still be running:
 
-  ```
+  ```bash
   killall kubectl
   ```
 
 5) To uninstall:
 
-  ```
+  ```bash
   helm delete --purge istio
   ```
 
 - Also had to execute the following to remove the Custom Resource Definitions as it seems Helm didn’t purge it.
 
-  ```
+  ```bash
   kubectl delete -f $ISTIO_HOME/install/kubernetes/helm/istio/templates/crds.yaml -n istio-system
   ```
 
 - To delete the secrets previously created:
 
-  ```
+  ```bash
   kubectl delete secret grafana -n istio-system
   kubectl delete secret kiali -n istio-system
   ```
@@ -294,61 +229,61 @@ the lable **istio-injection=enabled** has to be set to the target namespaces as 
 
 - Create a namespaces
 
-  ```
-  kubectl create namespace httpbin
+  ```bash
+  kubectl create namespace httpbin-istio
   ```
 
 - Set the label
 
-  ```
-  kubectl label namespace httpbin istio-injection=enabled
+  ```bash
+  kubectl label namespace httpbin-istio istio-injection=enabled
   ```
 
 - To verity that the label was properly applied run:
 
-  ```
+  ```bash
   kubectl get namespace -L istio-injection
   ```
 
   Result should be something like:
 
-  ```
+  ```bash
   NAME            STATUS   AGE    ISTIO-INJECTION
-  <name space>    Active   162d   enabled
+  ...
+  httpbin-istio   Active   25s   enabled
   ```
 
 10) From the same namespace where istio-injection was enabled, deploy the Pods and verify that the Istio side-cars are being attached correctly:
 
-- Based on [this Istio sample](https://istio.io/docs/tasks/traffic-management/ingress/), deploy the [HTTPBIN](https://httpbin.org/) service and deployment manifest as following:
+- Based on [this Istio sample](https://istio.io/docs/tasks/traffic-management/ingress/), deploy the [HTTPBIN](https://httpbin.org) service and deployment manifest as following:
 
   First get the latest manifest file:
 
-  ```
+  ```bash
   curl -O https://raw.githubusercontent.com/istio/istio/release-1.0/samples/httpbin/httpbin.yaml
   ```
 
   Then apply the manifest:
 
-
-  ```
-  kubectl apply --namespace httpbin -f httpbin.yaml
+  ```bash
+  kubectl apply --namespace httpbin-istio -f httpbin.yaml
   ```
 
 - First get all pods:
 
-  ```
-  kubectl get pods --namespace httpbin
+  ```bash
+  kubectl get pods --namespace httpbin-istio
   ```
 
 - Copy the name of the pod and execute:
 
-  ```
-  kubectl describe pod <pod name> --namespace httpbin | grep istio-proxy
+  ```bash
+  kubectl describe pod httpbin-5765746fb8-4f6kg --namespace httpbin-istio | grep istio-proxy
   ```
 
 - The result should be something like:
 
-  ```
+  ```bash
   Annotations:       sidecar.istio.io/status:
                     {"version":"887285bb7fa76191bf7f637f283183f0ba057323b078d44c3db45978346cbc1a","initContainers":["istio-init"],"containers":["istio-proxy"]...
   ```
