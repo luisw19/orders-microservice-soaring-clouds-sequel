@@ -208,10 +208,7 @@ ingress:
   autoscaleMin: 1
   autoscaleMax: 5
   service:
-    #Changed to accept additional entries
-    #annotations: {}
-    annotations:
-      kubernetes.io/ingress.class: nginx #Changed to add NGINX as ingress class
+    annotations: #{}
     loadBalancerIP: ""
     type: LoadBalancer #change to NodePort, ClusterIP or LoadBalancer if need be
     # Uncomment the following line to preserve client source ip.
@@ -246,9 +243,8 @@ gateways:
     #Changed (added) to enable secret discovery
     sds:
       enabled: true
-    #Changed at allow additional entries
-    #resources: {}
-    resources:
+    #Changed to comment {}
+    resources: #{}
       # limits:
       #  cpu: 100m
       #  memory: 128Mi
@@ -259,10 +255,8 @@ gateways:
     cpu:
       targetAverageUtilization: 80
     loadBalancerIP: ""
-    #Changed to allow additional entires
-    #serviceAnnotations: {}
-    serviceAnnotations:
-      kubernetes.io/ingress.class: nginx #Changed to add NGINX as ingress class
+    #Changed to comment {}
+    serviceAnnotations: #{}
     type: LoadBalancer #change to NodePort, ClusterIP or LoadBalancer if need be
     # Uncomment the following line to preserve client source ip.
     # externalTrafficPolicy: Local
@@ -314,7 +308,7 @@ gateways:
     autoscaleMax: 5
     cpu:
       targetAverageUtilization: 80
-    #serviceAnnotations: {}
+    #serviceannotations: #{}
     type: ClusterIP #change to NodePort or LoadBalancer if need be
     ports:
       - port: 80
@@ -489,7 +483,7 @@ grafana:
     usernameKey: username
     passphraseKey: passphrase
   service:
-    #annotations: {}
+    annotations: #{}
     name: http
     type: ClusterIP
     externalPort: 3000
@@ -504,7 +498,7 @@ prometheus:
   tag: v2.5.0
 
   service:
-    #annotations: {}
+    annotations: #{}
     nodePort:
       enabled: false
       port: 32090
@@ -516,7 +510,7 @@ servicegraph:
   replicaCount: 1
   image: servicegraph
   service:
-    #annotations: {}
+    annotations: #{}
     name: http
     type: ClusterIP
     externalPort: 8088
@@ -528,7 +522,7 @@ servicegraph:
     hosts:
       - servicegraph.local
     annotations:
-      kubernetes.io/ingress.class: nginx #Changed to add NGINX as ingress class
+      kubernetes.io/ingress.class: istio #Changed to Istio as ingress class
       # kubernetes.io/tls-acme: "true"
     tls:
       # Secrets must be manually created in the namespace.
@@ -560,7 +554,7 @@ tracing:
       hosts:
         - jaeger.local
       annotations:
-        kubernetes.io/ingress.class: nginx #Changed to add NGINX as ingress class
+        kubernetes.io/ingress.class: istio #Changed to Istio as ingress class
         # kubernetes.io/tls-acme: "true"
       tls:
         # Secrets must be manually created in the namespace.
@@ -569,20 +563,17 @@ tracing:
         #     - jaeger.local
   replicaCount: 1
   service:
-    #annotations: {}
+    annotations: #{}
     name: http
     type: ClusterIP
     externalPort: 9411
     internalPort: 9411
   ingress:
-    #enabled: false
-    #Changed to enable ingress
-    enabled: true
+    enabled: false
     # Used to create an Ingress record.
     hosts:
       - tracing.local
     annotations:
-      kubernetes.io/ingress.class: nginx #Changed to add NGINX as ingress class
       # kubernetes.io/tls-acme: "true"
     tls:
       # Secrets must be manually created in the namespace.
@@ -606,7 +597,7 @@ kiali:
     hosts:
       - kiali.local
     annotations:
-      kubernetes.io/ingress.class: nginx #Changed to add NGINX as ingress class
+      kubernetes.io/ingress.class: istio #Changed to Istio as ingress class
       # kubernetes.io/tls-acme: "true"
     tls:
       # Secrets must be manually created in the namespace.

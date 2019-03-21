@@ -1,94 +1,114 @@
 
-# [Istio](https://istio.io/) installation in [Oracle Container Engine for Kubernetes](https://cloud.oracle.com/containers/kubernetes-engine)
+# [Istio](https://istio.io/docs/concepts/what-is-istio/) installation in [Oracle Container Engine for Kubernetes](https://cloud.oracle.com/containers/kubernetes-engine)
 
-> Note that the following installation is based on [Helm](https://istio.io/docs/setup/kubernetes/helm-install).
-> Also note that the instructions below have been tested in Mac OS so for Windows adjustments will likely be needed.
+> Note that the following Istio installation is based on [Helm](https://istio.io/docs/setup/kubernetes/install/helm/)
+> using Mac.
 
-1) Ensure HELM is above 2.10 by running.
+> Also if not already, [Check this link provision a Kubernetes Cluster in OCI ready for Istio](https://istio.io/docs/setup/kubernetes/prepare/platform-setup/oci/).
 
-  ```bash
-	helm version
-  ```
+> This installation has been tested with [Istio version 1.1](https://istio.io/about/notes/1.1/).
 
-2) Download Istio’s [latest release](https://istio.io/docs/setup/kubernetes/download-release/)
+1) Grant the *Kubernetes RBAC cluster-admin clusterrole* to a OCI user based on
+the user's *Oracle Cloud Identifier (OCID)*.
+
+> To obtain the OICD open the OCI Console and from there
+> click on the menu option *Identity > Users*.
+> Then click on *show* under the username and take note of the OID.
+
+```bash
+kubectl create clusterrolebinding sttc_admin --clusterrole=cluster-admin --user=ocid1.user.oc1..aaaaaaaazhciwyt5kooopvnovupyao7v7a73imsvxoqrb2omojbcvcxpgvrq
+```
+
+2) Download Istio’s [latest release](https://istio.io/docs/setup/kubernetes/download/)
 
 - First decide on which location you wish to download Istio then optionally create a folder for the download.
 
-  ```bash
-	cd <location where Istio will be downloaded>
-	mkdir istio
-	cd istio
-  ```
+```bash
+cd <location where Istio will be downloaded>
+mkdir istio
+cd istio
+```
 
 - Then download with the following command:
 
-  ```bash
- 	curl -L https://git.io/getLatestIstio | sh -
-  ```
+```bash
+	curl -L https://git.io/getLatestIstio | ISTIO_VERSION=1.1.0 sh -
+```
 
-  > This will create a folder with all Istio executables and configuration files e.g. /istio-1.0.6
+> This will download istio into the folder **./istio-1.1.0**
 
-3) Set *$ISTIO_HOME* and add the *istioctl* to the path in case required.
+3) Set **$ISTIO_HOME** and add the **istioctl** to the path in case required.
 
 - From the same location where Istio was downloaded, execute the following:
 
-  ```bash
-	cd istio-<version>
-  export ISTIO_HOME=$PWD
-	export PATH=$PWD/bin:$PATH
-  ```
+```bash
+cd istio-1.1.0
+export ISTIO_HOME=$PWD
+export PATH=$PWD/bin:$PATH
+```
+
+> **istioctl** is used when manually injecting Envoy as a sidecar proxy.
 
 4) [Helm installation](https://helm.sh/) and [Tiller](https://helm.sh/docs/glossary/#tiller) installation:
 
-- Ensure Tiller is installed on the server with the command:
+- Ensure **Tiller** is already installed on the server with the command:
 
-  ```bash
-  kubectl get pods -n kube-system | grep tiller
-  ```
+> in Oracle Container Engine for Kubernetes Tiller can be installed
+> during [service is provisioning](https://docs.cloud.oracle.com/iaas/Content/ContEng/Tasks/contengcreatingclusterusingoke.htm)
 
-- Result from the above command should be similar to:
+```bash
+kubectl get pods -n kube-system | grep tiller
+```
 
-  ```bash
-  $kubectl get pods -n kube-system | grep tiller
-  tiller-deploy-54885b67b5-pkjnk          1/1     Running   0          26
-  ```
+Result from the above command should be similar to:
 
-  > in Oracle Container Engine for Kubernetes Tiller can be installed
-  > during [service is provisioning](https://docs.cloud.oracle.com/iaas/Content/ContEng/Tasks/contengcreatingclusterusingoke.htm)
+```bash
+$kubectl get pods -n kube-system | grep tiller
+tiller-deploy-54885b67b5-pkjnk          1/1     Running   0          26
+```
 
-- Ensure Helm is installed on the client. In Mac this can be easily done with brew
+- Also make sure that that a service account with the cluster-admin role has been defined for Tiller.
+This can be done by running the commands:
 
-  ```bash
-	brew install kubernetes-helm
-  ```
+```bash
+kubectl -n kube-system get serviceaccount tiller
+kubectl -n kube-system get clusterrolebinding tiller
+```
 
-- Then initialised and ensure version matches the server:
+> If any of the responses contains **Error from server (NotFound)** it means the service account and cluster role
+> has to be applied. This can be done by running: `kubectl apply -f install/kubernetes/helm/helm-service-account.yaml`
 
-  ```bash
-	helm init
-	helm init --upgrade
-  ```
+- Ensure **Helm** is installed on the client. In Mac this can be easily done with brew
 
-6) Create the istio-system namespaces
+```bash
+brew install kubernetes-helm
+```
 
-  ```bash
-  kubectl create namespace istio-system
-  ```
+- Then initialised and ensure version corresponds to the server:
 
-5) Create a secret for `kiali`:
+```bash
+helm init
+helm init --upgrade
+```
 
-- Create the base64 encoded username and password
+5) Create the **istio-system** namespaces and create secrets for **Grafana** and **Kiali**
 
-   ```bash
-   $ echo -n 'user' | base64
-   dXNlcg==
-   $ echo -n 'sample' | base64
-   c2FtcGxl
-   ```
+```bash
+kubectl create namespace istio-system
+```
 
-- Create the secret:
+- Create the **base64** encoded **username** and **password**
 
-  ```bash
+```bash
+$ echo -n 'user' | base64
+dXNlcg==
+$ echo -n 'sample' | base64
+c2FtcGxl
+ ```
+
+ - Create a secret for **kiali**:
+
+```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Secret
@@ -102,11 +122,11 @@ data:
   username: YWRtaW4=
   passphrase: V2VsY29tZTE=
 EOF
-  ```
+```
 
-6) Create a secret for Grafana (in the example using the same base64 credentials)
+- Create a secret for **Grafana**
 
-  ```bash
+```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Secret
@@ -120,195 +140,193 @@ data:
   username: YWRtaW4=
   passphrase: V2VsY29tZTE=
 EOF
-  ```
+```
 
-7) Install Istio with Helm:
+- To delete the **secrets** previously created:
 
-- Basic installation with default settings:
+```bash
+kubectl delete secret grafana -n istio-system
+kubectl delete secret kiali -n istio-system
+```
 
-  ```bash
-  helm install $ISTIO_HOME/install/kubernetes/helm/istio --name istio --namespace istio-system
-  ```
+6) Install the **istio-init** Helm chart to bootstrap all the Istio’s [Custom Resource Definitions (CRDs)][https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions]
 
-- To install with
+```bash
+helm install $ISTIO_HOME/install/kubernetes/helm/istio-init --name istio-init --namespace istio-system \
+--set certmanager.enabled=true
+```
+
+Verify that all **58** CRDs were created:
+
+```bash
+kubectl get crds | grep 'istio.io\|certmanager.k8s.io' | wc -l
+```
+
+> Note that it may take a few seconds to complete so you may need to
+> run the command multiple times.
+
+7) Install Istio with **Helm** the desired confirmation profile.
+
+- To install with Istio with the
 [Prometheus](https://istio.io/docs/tasks/telemetry/querying-metrics/),
 [Jeager](https://istio.io/docs/tasks/telemetry/distributed-tracing/),
 [Grafana](https://istio.io/docs/tasks/telemetry/using-istio-dashboard/),
 [Kiali](https://istio.io/docs/tasks/telemetry/kiali/) and
-[Service Graph](https://istio.io/docs/tasks/telemetry/servicegraph/) enabled
-we use a pre-defined Helm chart values and use it to install as following:
+[Service Graph](https://istio.io/docs/tasks/telemetry/servicegraph/) add-ons install as following:
 
-  ```bash
-  helm install $ISTIO_HOME/install/kubernetes/helm/istio -f values-custom.yaml --name istio --namespace istio-system
-  ```
-  > Note that we're using *values-custom.yaml* which is based on original *values.yaml* from Istio
-  > however parameters has been adjusted to provide support for the above-mentioned add-ons.
-  > For details on options available when setting parameters
-  > [check this URL](https://istio.io/docs/reference/config/installation-options)
+```bash
+helm install $ISTIO_HOME/install/kubernetes/helm/istio --name istio --namespace istio-system \
+--set sds.enabled=true \
+--set gateways.istio-ingressgateway.sds.enabled=true \
+--set pilot.traceSampling=100.0 \
+--set pilot.resources.requests.cpu=1800m \
+--set telemetry-gateway.grafanaEnabled=true \
+--set telemetry-gateway.prometheusEnabled=true \
+--set grafana.enabled=true \
+--set grafana.security.enabled=true \
+--set servicegraph.enabled=true \
+--set tracing.enabled=true \
+--set tracing.jaeger.ingress.enabled=true \
+--set kiali.enabled=true \
+--set kiali.dashboard.jaegerURL='http://tracing.local:80' \
+--set kiali.dashboard.grafanaURL='http://grafana.istio-system:3000'
+```
 
-- Verify that ingress services are running and that an **EXTERNAL-IP** has been allocated.
+> [Click here](https://istio.io/docs/reference/config/installation-options/) for details of more options available.
 
-	```bash
-	kubectl get svc -n istio-system | grep ingress
-	```
+<!-- - If there is a need to add additional properties (e.g. additional **pilot tracing sampling and CPU**)
+it can be done as following:
 
-	> Repeat the above process until an *EXTERNAL-IP* is assigned.
-	> Note that this may take a few seconds as the controller is
-	> basically creating an OCI load balancer also visible from the
-	> OCI console itself under *Networking > Load Balancers*.
+```bash
+helm template $ISTIO_HOME/install/kubernetes/helm/istio --name istio --namespace istio-system \
+--set pilot.traceSampling=100.0 \
+--set pilot.resources.requests.cpu=1800m \
+| kubectl apply -f -
+```
 
-8) Access monitoring services via port-forwarding feature of kubectl:
+The above didn't work and ended up having to re-install Istio
+-->
 
-- For Jaeger run command:
+- Verity all that **pods** are **running** run:
 
-  ```bash
-  kubectl port-forward -n istio-system $(kubectl get pod -n istio-system -l app=jaeger -o jsonpath='{.items[0].metadata.name}') 16686:16686 &
-  ```
+```bash
+kubectl get pods -n istio-system
+```
 
-  Then access the following link in browser: http://localhost:16686
+- Also Verify that  services were created and that an **EXTERNAL-IP** has been allocated to **istio-ingressgateway**:
 
-- For Prometheus run command:
+```bash
+kubectl get svc -n istio-system
+```
 
-  ```bash
-  kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=prometheus -o jsonpath='{.items[0].metadata.name}') 9090:9090 &
-  ```
+> Repeat the above process until an **EXTERNAL-IP** is assigned.
+> Note that this may take a few seconds as the controller is
+> basically creating an **OCI load balancer** also visible from the
+> OCI console itself under **Networking > Load Balancers**.
 
-  Then access the following link in browser: http://localhost:9090
+- To **uninstall** Istio:
 
-- For Grafana run command:
+```bash
+helm delete --purge istio
+helm delete --purge istio-init
+```
 
-  ```bash
-  kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=grafana -o jsonpath='{.items[0].metadata.name}') 3000:3000 &
-  ```
+To delete all running CRDs execute:
 
-  Then access the following link in browser: http://localhost:3000
+```bash
+for i in $ISTIO_HOME/install/kubernetes/helm/istio-init/files/*crd*yaml; do kubectl delete -f $i; done
+```
 
-- For Kiali run command:
+> note that a **(NotFound)** error will be shown after
+> running the command. This is because Certificate Manager
+> wasn't enabled during the installation so it can be ignored.
 
-  ```bash
-  kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=kiali -o jsonpath='{.items[0].metadata.name}') 20001:20001 &
-  ```
+And finally the namespace:
 
-  Then access the following link in browser: http://localhost:20001
+```Bash
+kubectl delete namespace istio-system
+```
 
-- For Service Graph run command:
+8) For Istio [automatic injection](https://istio.io/docs/setup/kubernetes/sidecar-injection/#automatic-sidecar-injection) of **Envoy side-cars** to work the label **istio-injection=enabled** has to be set to the **target namespaces** as following:
 
-  ```bash
-  kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=servicegraph -o jsonpath='{.items[0].metadata.name}') 8088:8088 &
-  ```
+- Create a **namespaces**
 
-  Then access the following link in browser: http://localhost:8088/force/forcegraph.html
+```bash
+kubectl create namespace httpbin-istio
+```
 
-- To remove kubectl port-forward processes that may still be running:
+- Set the **label**
 
-  ```bash
-  killall kubectl
-  ```
+```bash
+kubectl label namespace httpbin-istio istio-injection=enabled
+```
 
-5) To uninstall:
+- To verity that the **label** was properly applied run:
 
-  ```bash
-  helm delete --purge istio
-  ```
+```bash
+kubectl get namespace -L istio-injection
+```
 
-- Also had to execute the following to remove the Custom Resource Definitions as it seems Helm didn’t purge it.
+Result should be something like:
 
-  ```bash
-  kubectl delete -f $ISTIO_HOME/install/kubernetes/helm/istio/templates/crds.yaml -n istio-system
-  ```
+```bash
+NAME            STATUS   AGE    ISTIO-INJECTION
+...
+httpbin-istio   Active   25s   enabled
+```
 
-- To delete the secrets previously created:
+9) From the same **namespace** where **istio-injection** was enabled, deploy the **Pods** and verify that the **Istio side-cars** are being attached correctly:
 
-  ```bash
-  kubectl delete secret grafana -n istio-system
-  kubectl delete secret kiali -n istio-system
-  ```
+- Based on [this Istio sample](https://istio.io/docs/tasks/traffic-management/ingress/), deploy the [HTTPBIN](https://httpbin.org) **manifest** as following:
 
-9) For Istio [automatic injection](https://istio.io/docs/setup/kubernetes/sidecar-injection/#automatic-sidecar-injection) of Envoy side-cars to work
-the lable **istio-injection=enabled** has to be set to the target namespaces as following:
+First get the latest **manifest** file:
 
-- Create a namespaces
+```bash
+curl -O https://raw.githubusercontent.com/istio/istio/release-1.0/samples/httpbin/httpbin.yaml
+```
 
-  ```bash
-  kubectl create namespace httpbin-istio
-  ```
+Then apply the **manifest**:
 
-- Set the label
+```bash
+kubectl apply -n httpbin-istio -f httpbin.yaml
+```
 
-  ```bash
-  kubectl label namespace httpbin-istio istio-injection=enabled
-  ```
+- Verity that the **side-car** was attached to the pod:
 
-- To verity that the label was properly applied run:
+```bash
+kubectl describe pod $(kubectl get pods -n httpbin-istio -o jsonpath='{.items[0].metadata.name}') -n httpbin-istio | grep istio-proxy
+```
 
-  ```bash
-  kubectl get namespace -L istio-injection
-  ```
+The result should be something like:
 
-  Result should be something like:
+```bash
+Annotations:       sidecar.istio.io/status:
+                  {"version":"887285bb7fa76191bf7f637f283183f0ba057323b078d44c3db45978346cbc1a","initContainers":["istio-init"],"containers":["istio-proxy"]...
+```
 
-  ```bash
-  NAME            STATUS   AGE    ISTIO-INJECTION
-  ...
-  httpbin-istio   Active   25s   enabled
-  ```
-
-10) From the same namespace where istio-injection was enabled, deploy the Pods and verify that the Istio side-cars are being attached correctly:
-
-- Based on [this Istio sample](https://istio.io/docs/tasks/traffic-management/ingress/), deploy the [HTTPBIN](https://httpbin.org) service and deployment manifest as following:
-
-  First get the latest manifest file:
-
-  ```bash
-  curl -O https://raw.githubusercontent.com/istio/istio/release-1.0/samples/httpbin/httpbin.yaml
-  ```
-
-  Then apply the manifest:
-
-  ```bash
-  kubectl apply --namespace httpbin-istio -f httpbin.yaml
-  ```
-
-- First get all pods:
-
-  ```bash
-  kubectl get pods --namespace httpbin-istio
-  ```
-
-- Copy the name of the pod and execute:
-
-  ```bash
-  kubectl describe pod httpbin-5765746fb8-4f6kg --namespace httpbin-istio | grep istio-proxy
-  ```
-
-- The result should be something like:
-
-  ```bash
-  Annotations:       sidecar.istio.io/status:
-                    {"version":"887285bb7fa76191bf7f637f283183f0ba057323b078d44c3db45978346cbc1a","initContainers":["istio-init"],"containers":["istio-proxy"]...
-  ```
-
-11) Creating the Istio [Ingress Gateway](https://istio.io/docs/tasks/traffic-management/ingress/)
+10) Create the Istio [Ingress Gateway](https://istio.io/docs/tasks/traffic-management/ingress/)
 and [Virtual Service](https://istio.io/docs/concepts/traffic-management/#virtual-services)
 
-- First determine the Istio Ingress LB external IP and Ports by running the following commands:
+- First determine the **Istio Ingress LB external IP** and **ports** by running the following commands:
 
-  ```
-  export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-  export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')
-  export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].port}')
-  ```
+```bash
+export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')
+export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].port}')
+```
 
-  You can then echo the variables to see the values.
+You can then verify the values as following:
 
-  ```
-  echo $INGRESS_HOST $INGRESS_PORT $SECURE_INGRESS_PORT
-  ```
+```bash
+echo $INGRESS_HOST $INGRESS_PORT $SECURE_INGRESS_PORT
+```
 
-- Create an Istio Ingress Gateway and Virtual Service as following:
+The result should be an **IP address** along with two **ports**.
 
-  ```
-cat <<EOF | kubectl apply --namespace httpbin -f -
+- Create an **Istio Ingress Gateway** and **Virtual Service** as following:
+
+```yaml
+cat <<EOF | kubectl apply -n httpbin-istio -f -
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
@@ -336,184 +354,253 @@ spec:
   http:
   - match:
     - uri:
-        prefix: /headers
-    - uri:
-        prefix: /status
-    - uri:
-        prefix: /delay
+        prefix: /httpbin
+    rewrite:
+        uri: /
     route:
     - destination:
         port:
           number: 8000
         host: httpbin
 EOF
-  ```
+```
 
 - Test that the routes are working using Curl:
 
-  ```
-  curl -I http://$INGRESS_HOST:$INGRESS_PORT/headers
-  curl -I http://$INGRESS_HOST:$INGRESS_PORT/status/200
-  curl -I http://$INGRESS_HOST:$INGRESS_PORT/delay/5
-  ```
+```bash
+curl -I http://$INGRESS_HOST:$INGRESS_PORT/httpbin/headers
+curl -I http://$INGRESS_HOST:$INGRESS_PORT/httpbin/status/200
+curl -I http://$INGRESS_HOST:$INGRESS_PORT/httpbin/delay/5
+```
 
-  In all cases the response should be a **HTTP/1.1 200 OK**
+In all cases the response should be a **HTTP/1.1 200 OK**
 
-12) [Istio Ingress TLS configuration](https://preliminary.istio.io/docs/tasks/traffic-management/secure-ingress/#configure-a-tls-ingress-gateway-for-multiple-hosts) for adding HTTPS support:
+11) [Istio Ingress TLS configuration](https://preliminary.istio.io/docs/tasks/traffic-management/secure-ingress/#configure-a-tls-ingress-gateway-for-multiple-hosts) for adding HTTPS support (based on Secret [Secret Discovery](https://preliminary.istio.io/docs/tasks/traffic-management/secure-ingress/sds/))
 
 > Note that Istio provides 2 approaches to add TLS support in the Ingress Gateways.
 > The first one is based on a [File Mount](https://preliminary.istio.io/docs/tasks/traffic-management/secure-ingress/mount/)
 > and the second one using [Secret Discovery](https://preliminary.istio.io/docs/tasks/traffic-management/secure-ingress/sds/).
 > Whereas both are approaches are fairly straight forward, when having to support multiple hosts (e.g. several subdomains) the
-> Secret Discovery approach is simpler to implement as it won't require to re-deploy the istio-ingressgateway.
+> **Secret Discovery** approach is simpler to implement as it won't require to re-deploy the istio-ingressgateway.
 
-- Using the [openssl](https://www.openssl.org/) utility [generate a TLS certificate](https://www.linode.com/docs/security/ssl/create-a-self-signed-tls-certificate/) as following:
+<!-- - Enable SDS at ingress gateway level and deploy the ingress gateway agent
 
-  ```
-  openssl req -new -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out httpbin.crt -keyout httpbin.key
-  ```
+```bash
+helm template $ISTIO_HOME/install/kubernetes/helm/istio/ --name istio \
+--namespace istio-system -x charts/gateways/templates/deployment.yaml \
+--set gateways.istio-egressgateway.enabled=false \
+--set gateways.istio-ingressgateway.sds.enabled=true > \
+istio-ingressgateway.yaml
+```
 
-  When prompted enter further details as desired, for example:
+> This is required as this feature is disabled by default hence why the **istio-ingressgateway.sds.enabled** is required.
 
-  ```
-  Country Name (2 letter code) []:GB
-  State or Province Name (full name) []:Warwickshire
-  Locality Name (eg, city) []:Leamington
-  Organization Name (eg, company) []:STTC
-  Organizational Unit Name (eg, section) []:Orders
-  Common Name (eg, fully qualified host name) []:httpbin.adomain.com
-  Email Address []:me@adomain.com
-  ```
+```bash
+kubectl apply -f istio-ingressgateway.yaml
+```
 
-  Once completed this should generate *httpbin.key* and *httpbin.crt*.
+Note that the above step was commented as it was avoided by just adding --set gateways.istio-ingressgateway.sds.enabled=true as part of the istio installation.
+-->
 
-  > Note that **Common Name** is a domain name and should match
-  > the **Hosts** value in the Ingress Gateway.
+- Using the [openssl](https://www.openssl.org/) utility [generate a TLS certificate](https://istio.io/docs/tasks/traffic-management/secure-ingress/sds/) as following:
 
-- Now create the kubernetes secret to hold the server key and certificate just created:
+```bash
+openssl req -new -newkey rsa:4096 -x509 -sha256 -days 365 -nodes \
+-out httpbin.adomain.com.crt -keyout httpbin.adomain.com.key
+```
 
-  ```
-  kubectl create -n istio-system secret tls istio-ingressgateway-httpbin-certs --key httpbin.key --cert httpbin.crt
-  ```
+When prompted enter further details as desired, for example:
 
-  > Note that the secret must be called istio-ingressgateway-certs in
-  > the istio-system namespace or it will not mount.
+```bash
+Country Name (2 letter code) []:GB
+State or Province Name (full name) []:Warwickshire
+Locality Name (eg, city) []:Leamington
+Organization Name (eg, company) []:STTC
+Organizational Unit Name (eg, section) []:Orders
+Common Name (eg, fully qualified host name) []:httpbin.adomain.com
+Email Address []:me@adomain.com
+```
 
-  Verity that the TLS certificates were created on the cluster by running:
+Once completed this should generate the **httpbin.adomain.com.crt** and **httpbin.adomain.com.key** files.
 
-  ```
-  kubectl exec -it -n istio-system $(kubectl -n istio-system get pods -l istio=ingressgateway -o jsonpath='{.items[0].metadata.name}') -- ls -al /etc/istio/ingressgateway-certs
-  ```
+> Note that **Common Name** is a domain name and should match
+> the **Hosts** value in the Ingress Gateway.
 
-  The outcome should be similar to:
+- Create the kubernetes secret **httpbin-istio** to hold the key and cert:
 
-  ```
-  drwxrwxrwt. 3 root root  120 Mar 18 08:59 .
-  drwxr-xr-x. 1 root root 4096 Mar 17 12:56 ..
-  drwxr-xr-x. 2 root root   80 Mar 18 08:59 ..2019_03_18_08_59_38.839129076
-  lrwxrwxrwx. 1 root root   31 Mar 18 08:59 ..data -> ..2019_03_18_08_59_38.839129076
-  lrwxrwxrwx. 1 root root   14 Mar 18 08:59 tls.crt -> ..data/tls.crt
-  lrwxrwxrwx. 1 root root   14 Mar 18 08:59 tls.key -> ..data/tls.key
-  ```
-  >Note that it my take a few seconds for the tls files to be created.
+```bash
+kubectl create -n istio-system secret generic httpbin-istio-secret \
+--from-file=key=httpbin.adomain.com.key \
+--from-file=cert=httpbin.adomain.com.crt
+```
 
-- Re-create an Istio Ingress Gateway as following:
+> Note that **istio-system** must be the namespace for the secret containing the certificate.
 
-  > Notice that HTTPS support has been added to the Gateway
+- And re-apply an **Gateway** and **Virtual Service** with TLS support against domain **httpbin.adomain.com**:
 
-  ```
-  cat <<EOF | kubectl apply --namespace httpbin -f -
-  apiVersion: networking.istio.io/v1alpha3
-  kind: Gateway
-  metadata:
-    name: istiosystem-gateway
-  spec:
-    selector:
-      istio: ingressgateway # use Istio default gateway implementation
-    servers:
-    - port:
-        number: 80
-        name: http
-        protocol: HTTP
-      hosts:
-      - "httpbin.adomain.com"
-    - port:
-        number: 443
-        name: https
-        protocol: HTTPS
-      tls:
-        mode: SIMPLE
-        serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
-        privateKey: /etc/istio/ingressgateway-certs/tls.key
-      hosts:
-      - "httpbin.adomain.com"
-  ---
-  apiVersion: networking.istio.io/v1alpha3
-  kind: VirtualService
-  metadata:
-    name: httpbin-vts
-  spec:
+```yaml
+cat <<EOF | kubectl apply -n httpbin-istio -f -
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: httpbin-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default ingress gateway
+  servers:
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE
+      credentialName: "httpbin-istio-secret" # must be the same as secret
     hosts:
     - "httpbin.adomain.com"
-    gateways:
-    - istiosystem-gateway
-    http:
-    - match:
-      - uri:
-          prefix: /headers
-      - uri:
-          prefix: /status
-      - uri:
-          prefix: /delay
-      route:
-      - destination:
-          port:
-            number: 8000
-          host: httpbin
-  EOF
-  ```
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: httpbin-vts
+spec:
+  hosts:
+  - "httpbin.adomain.com"
+  gateways:
+  - httpbin-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /httpbin
+    rewrite:
+        uri: /
+    route:
+    - destination:
+        port:
+          number: 8000
+        host: httpbin
+EOF
+```
 
-- Test that the routes are working using Curl:
+- Test that the route is working using Curl:
 
-  HTTPS:
-  ```
-  curl -I --insecure \
-  -HHost:httpbin.adomain.com \
-  --resolve httpbin.adomain.com:$SECURE_INGRESS_PORT:$INGRESS_HOST \
-  https://httpbin.adomain.com:$SECURE_INGRESS_PORT/headers
-  ```
+```bash
+curl -v -HHost:httpbin.adomain.com \
+--resolve httpbin.adomain.com:$SECURE_INGRESS_PORT:$INGRESS_HOST \
+--cacert httpbin.adomain.com.crt \
+https://httpbin.adomain.com:$SECURE_INGRESS_PORT/httpbin/status/418
+```
 
-  Responses should be a **HTTP/2 200**
+> It may take a couple of minutes for the certificates to load. So you may
+> need to retry a few times.
 
-  and HTTP:
-  ```
-  curl -I --insecure \
-  -HHost:httpbin.adomain.com \
-  --resolve httpbin.adomain.com:$INGRESS_PORT:$INGRESS_HOST \
-  http://httpbin.adomain.com:$INGRESS_PORT/headers
-  ```
+> Also notice the curl parameters -**HHost** and **--resolve**. These were added
+> to resolve the domain **httpbin.adomain.com** against the ingress IP and Port.
+> Alternatively add an entry to the /etc/hosts file to match
+> the Ingress IP to the domain used.
 
-  Both responses should be a **HTTP/1.1 200 OK**
+The responses should be:
 
-  > Note that the curl parameters -HHost and --resolve were added
-  > to resolve the domain httpbin.adomain.com against the ingress IP and Port.
-  > Alternatively add an entry to the /etc/hosts file to match
-  > the Ingress IP to the domain used.
+```
+...
+HTTP/2 418
+...
+SSL certificate verify ok.
+...
+    -=[ teapot ]=-
+
+       _...._
+     .'  _ _ `.
+    | ."` ^ `". _,
+    \_;`"---"`|//
+      |       ;/
+      \_     _/
+        `"""`
+```
+
+or
+
+```bash
+curl -I --insecure -HHost:httpbin.adomain.com \
+--resolve httpbin.adomain.com:$SECURE_INGRESS_PORT:$INGRESS_HOST \
+https://httpbin.adomain.com:$SECURE_INGRESS_PORT/httpbin/headers
+```
+
+Responses should be a **HTTP/2 200**
+
+- To do a recursive test:
+
+```bash
+for ((i=1;i<=10;i++)); do curl -I --insecure -HHost:httpbin.adomain.com --resolve httpbin.adomain.com:$SECURE_INGRESS_PORT:$INGRESS_HOST https://httpbin.adomain.com:$SECURE_INGRESS_PORT/httpbin/headers; done
+```
 
 - Delete the sample if desired by running the following commands:
 
-  ```
-  kubectl delete -n httpbin service httpbin
-  kubectl delete -n httpbin deployment httpbin
-  kubectl delete -n httpbin gateway httpbin-gateway
-  kubectl delete -n httpbin virtualservice httpbin-vts
-  kubectl delete secret istio-ingressgateway-certs -n istio-system
-  ```
+```
+kubectl delete -n httpbin-istio service httpbin
+kubectl delete -n httpbin-istio deployment httpbin
+kubectl -n httpbin-istio delete gateway httpbin-gateway
+kubectl -n httpbin-istio delete virtualservice httpbin-vts
+kubectl -n istio-system delete secret httpbin-istio-secret
+```
 
-13) Allowing HTTPS access to Grafana and Kiali via the Ingress Gateway.
+12) Access the monitoring services via **port-forwarding** as following:
 
-  kubectl create -n istio-system secret tls istio-ingressgateway-certs --key mykey.key --cert mycert.crt
-  kubectl apply -f grafana-ingress.yaml -n istio-system
+- For **Jaeger** run command:
 
-  kubectl delete gateway istiosystem-gateway -n istio-system
-  kubectl delete virtualservice grafana-vts -n istio-system
+```bash
+kubectl port-forward -n istio-system $(kubectl get pod -n istio-system -l app=jaeger -o jsonpath='{.items[0].metadata.name}') 16686:16686 &
+```
+
+Then access the following link in browser: http://localhost:16686
+
+- For **Prometheus** run command:
+
+```bash
+kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=prometheus -o jsonpath='{.items[0].metadata.name}') 9090:9090 &
+```
+
+Then access the following link in browser: http://localhost:9090
+
+- For **Grafana** run command:
+
+```bash
+kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=grafana -o jsonpath='{.items[0].metadata.name}') 3000:3000 &
+```
+
+Then access the following link in browser: http://localhost:3000
+
+- For **Kiali** run command:
+
+```bash
+kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=kiali -o jsonpath='{.items[0].metadata.name}') 20001:20001 &
+```
+
+Then access the following link in browser: http://localhost:20001/kiali/
+
+- For **Service Graph** run command:
+
+```bash
+kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=servicegraph -o jsonpath='{.items[0].metadata.name}') 8088:8088 &
+```
+
+Then access the following link in browser: http://localhost:8088/force/forcegraph.html
+
+- To **kill** all `kubectl port-forward` processes run:
+
+```bash
+killall kubectl
+```
+
+# Other useful tips:
+
+- To read the **logs** of **Ingress Gateway** execute:
+
+```bash
+kubectl -n istio-system logs $(kubectl -n istio-system get pods -listio=ingressgateway -o jsonpath='{.items[0].metadata.name}') istio-proxy --tail=300
+```
+
+- To **bash** into a container (e.g. **Ingress Gateway**) execute:
+
+```bash
+kubectl -n istio-system exec -it $(kubectl -n istio-system get pods -l istio=ingressgateway -o jsonpath='{.items[0].metadata.name}') bash
+```

@@ -131,7 +131,7 @@ export SECURE_INGRESS_PORT=$(kubectl -n ingress-nginx get service ingress-nginx 
 Check that the env variables were set correctly:
 
 ```bash
-echo http://$INGRESS_HOST:$INGRESS_PORT and https://$INGRESS_HOST:$SECURE_INGRESS_PORT
+echo $INGRESS_HOST $INGRESS_PORT $SECURE_INGRESS_PORT
 ```
 
 Then make a simple test to verify that the ingress works for HTTP traffic:
