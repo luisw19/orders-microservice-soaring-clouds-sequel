@@ -1,4 +1,4 @@
-# Oracle Kubernetes Ingress Set up
+# Oracle Kubernetes [Nginx Ingress](https://kubernetes.github.io/ingress-nginx/) Installation
 The steps described in this page are based on [this OCI page](https://docs.cloud.oracle.com/iaas/Content/ContEng/Tasks/contengsettingupingresscontroller.htm)
 
 1) Switch to default context.

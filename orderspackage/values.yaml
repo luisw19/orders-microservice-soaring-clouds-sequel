@@ -1,14 +1,22 @@
 ingress:
-    name: orders-ms-ing
-    #class: 'istio'
-    class: 'nginx'
-    domain: orders.sttc.com
-    sslredirect: false
-    secret: orders-secret
-    paths:
-        orders: /orders-ms/api/
-        ui: /orders-ms/ui/
-
+    nginx:
+        enable: true
+        name: orders-ingress-nginx
+        domain: orders.sttc.com
+        sslredirect: false
+        secret: orders.sttc.com.secret
+        paths:
+            orders: /orders-ms/api/
+            ui: /orders-ms/ui/
+    istio:
+        enable: false
+        gatewayName: orders-gateway
+        virtualServiceName: orders-vts
+        domain: orders.sttc.com
+        secret: orders.sttc.com.secret
+        paths:
+            orders: /orders-ms/api/
+            ui: /orders-ms/ui/
 ui:
     name: orders-ui
     replicas: 3

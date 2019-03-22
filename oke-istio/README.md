@@ -535,12 +535,13 @@ for ((i=1;i<=10;i++)); do curl -I --insecure -HHost:httpbin.adomain.com --resolv
 
 - Delete the sample if desired by running the following commands:
 
-```
+```bash
 kubectl delete -n httpbin-istio service httpbin
 kubectl delete -n httpbin-istio deployment httpbin
 kubectl -n httpbin-istio delete gateway httpbin-gateway
 kubectl -n httpbin-istio delete virtualservice httpbin-vts
 kubectl -n istio-system delete secret httpbin-istio-secret
+kubectl delete namespace httpbin-istio
 ```
 
 12) Access the monitoring services via **port-forwarding** as following:
