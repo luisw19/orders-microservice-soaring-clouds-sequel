@@ -51,8 +51,7 @@ docker-compose down
 
 ## To install Orders Microservice in [Oracle Container Engine for Kubernetes](https://cloud.oracle.com/containers/kubernetes-engine) using [Helm](https://helm.sh/) and [Nginx Ingress](https://kubernetes.github.io/ingress-nginx/):
 
-1) Configure an Nginx ingress controller by following the instructions [oke-ingress](https://github.com/luisw19/orders-microservice-soaring-clouds-sequel/tree/master/oke-ingress)
-
+1) Configure an Nginx ingress controller by following the instructions [oke-ingress](https://github.com/luisw19/oci-series/tree/master/oke-istio)
 
 2) Set KUBECONFIG to match your target Kubernetes environment e.g.
 
@@ -75,7 +74,7 @@ called *orders* and then switch to it:
 
 ```bash
 kubectl create namespace orders-ms
-kubectl config set-context orders --user=user-c3wczrxmftd --cluster=cluster-c3wczrxmftd --namespace=orders-ms
+kubectl config set-context orders --user=user-c3tayteg5st --cluster=cluster-c3tayteg5st --namespace=orders-ms
 kubectl config use-context orders
 ```
 
@@ -146,7 +145,7 @@ kubectl create -n istio-system secret generic orders.sttc.com.secret \
 --from-file=cert=orders.sttc.com.crt
 ```
 
-3) Uninstall **orderspackage**
+3) Uninstall **orderspackage** (if previously deployed)
 
 ```bash
 helm delete --purge orderspackage
@@ -158,23 +157,13 @@ helm delete --purge orderspackage
 kubectl label namespace orders-ms istio-injection=enabled
 ```
 
-4) Reinstall:
+4) Install the package:
 
 ```bash
 helm install ./orderspackage/ -n orderspackage \
 --set ingres.nginx.enable=false \
 --set ingres.istio.enable=true
 ```
-
-kubectl apply -f ./oke-istio/ingress-istio.yaml
-
-
-kubectl delete gateway orders-gateway -n orders-ms
-kubectl delete virtualservice orders-vts -n orders-ms
-kubectl delete secret orders.sttc.com.secret -n istio-system
-
-
-helm delete --purge orderspackage
 
 5) Test the service as following:
 
@@ -183,12 +172,28 @@ export ORDERS_DOMAIN=orders.sttc.com
 export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 ```
 
+First try with HTTP:
 ```bash
 curl http://$INGRESS_HOST/orders-ms/api/health
 ```
 
+Then HTTPS:
 ```bash
-curl -I --insecure -HHost:$ORDERS_DOMAIN \
+curl --insecure -HHost:$ORDERS_DOMAIN \
 --resolve $ORDERS_DOMAIN:$SECURE_INGRESS_PORT:$INGRESS_HOST \
 https://$ORDERS_DOMAIN/orders-ms/api/health
+```
+
+> It may take a couple of minutes for the certificates to load. So you may need to retry a few times before it works.
+
+> Also notice the curl parameters **--insecure**, **-HHost** and **--resolve**. These were added
+> to resolve the domain **httpbin.adomain.com** against the ingress IP and Port using the self-signed cert.
+> Alternatively add an entry to the /etc/hosts file to match
+> the Ingress IP to the domain used.
+
+6) To delete the package and the secret run:
+
+```bash
+helm delete --purge orderspackage
+kubectl delete secret orders.sttc.com.secret -n istio-system
 ```

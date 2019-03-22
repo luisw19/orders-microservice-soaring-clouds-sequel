@@ -12,7 +12,10 @@ ingress:
         enable: false
         gatewayName: orders-gateway
         virtualServiceName: orders-vts
-        domain: orders.sttc.com
+        domain:
+            http: "*"
+            https: orders.sttc.com
+            vts: "*"
         secret: orders.sttc.com.secret
         paths:
             orders: /orders-ms/api/
