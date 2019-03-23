@@ -52,7 +52,7 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
         // Listener to handle content from embedding application
         // Only applies as running in iFrame
         window.addEventListener("message", function(event) {
-          console.log("Received message from embedding application " + event);
+          console.log("Embedding application event:" + event);
           console.log("Payload =  " + JSON.stringify(event.data));
 
           if (event.data.eventType === "globalContext") {
@@ -138,13 +138,15 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
 
         oj.Logger.error(location);
         self.init();
-
-        //added to test locally
+        console.log("Event payload in document.ready=  " + JSON.stringify(event));
+        
+        //added to test only if run in localhost or event is not present
         var servingHost = window.location.host;
         console.log("servingHost: " + servingHost);
-        if (servingHost.indexOf("localhost") !== -1) {
+         if ( (servingHost.indexOf("localhost") !== -1) || (event == undefined)) {
           if (location.search != null) {
             var cartId = location.search.substr(location.search.indexOf("cartId=") + 7);
+            console.log("setting customerIdentifier in event to URI value:" + cartId);
             // Simulate inbound event
             var event = new MessageEvent("message", {
               data: {
