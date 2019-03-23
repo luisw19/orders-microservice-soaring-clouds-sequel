@@ -43,9 +43,14 @@ metadata:
   name: {{ .Release.Name }}-{{ .Values.ui.name }}
 spec:
   ports:
-  - port: {{ .Values.ui.port }}
-    protocol: TCP
-    targetPort: {{ .Values.ui.port }}
+  - name: http
+    port: {{ .Values.ui.port }}
   selector:
     app: {{ .Release.Name }}-{{ .Values.ui.name }}
-  type: NodePort
+  # ports:
+  # - port: {{ .Values.ui.port }}
+  #   protocol: TCP
+  #   targetPort: {{ .Values.ui.port }}
+  # selector:
+  #   app: {{ .Release.Name }}-{{ .Values.ui.name }}
+  # type: NodePort

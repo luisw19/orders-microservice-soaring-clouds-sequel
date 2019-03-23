@@ -7,7 +7,7 @@ metadata:
     app: {{ .Release.Name }}-{{ .Values.ordersProd.name }}
   name: {{ .Release.Name }}-{{ .Values.ordersProd.name }}
 spec:
-  replicas: 3
+  replicas: {{ .Values.ordersProd.replicas }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}-{{ .Values.ordersProd.name }}-exposed
@@ -47,9 +47,14 @@ metadata:
   name: {{ .Release.Name }}-{{ .Values.ordersProd.name }}
 spec:
   ports:
-  - port: {{ .Values.ordersProd.port }}
-    protocol: TCP
-    targetPort: {{ .Values.ordersProd.port }}
+  - name: http
+    port: {{ .Values.ordersProd.port }}
   selector:
     app: {{ .Release.Name }}-{{ .Values.ordersProd.name }}-exposed
-  type: NodePort
+  # ports:
+  # - port: {{ .Values.ordersProd.port }}
+  #   protocol: TCP
+  #   targetPort: {{ .Values.ordersProd.port }}
+  # selector:
+  #   app: {{ .Release.Name }}-{{ .Values.ordersProd.name }}-exposed
+  # type: NodePort

@@ -22,7 +22,7 @@ ingress:
             ui: /orders-ms/ui/
 ui:
     name: orders-ui
-    replicas: 3
+    replicas: 1
     image:
         repo: luisw19/orders-ui
         tag: 3.0.0
@@ -37,7 +37,7 @@ mongo:
 
 orders:
     name: orders-ms
-    replicas: 3
+    replicas: 1
     image:
         repo: luisw19/orders-ms
         tag: 3.0.1
@@ -45,14 +45,14 @@ orders:
 
 prodSub:
     name: product-sub-ms
-    replicas: 3
+    replicas: 1
     image:
         repo: luisw19/product-sub-ms
         tag: 3.0.0
 
 ordersProd:
     name: orders-prod-ms
-    replicas: 3
+    replicas: 1
     image:
         repo: luisw19/orders-prod-ms
         tag: 3.0.0

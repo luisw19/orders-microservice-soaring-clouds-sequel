@@ -49,9 +49,15 @@ metadata:
   name: {{ .Release.Name }}-{{ .Values.orders.name }}
 spec:
   ports:
-  - port: {{ .Values.orders.port }}
-    protocol: TCP
-    targetPort: {{ .Values.orders.port }}
+  - name: http
+    port: {{ .Values.orders.port }}
   selector:
     app: {{ .Release.Name }}-{{ .Values.orders.name }}
-  type: NodePort
+# spec:
+#   ports:
+#   - port: {{ .Values.orders.port }}
+#     protocol: TCP
+#     targetPort: {{ .Values.orders.port }}
+#   selector:
+#     app: {{ .Release.Name }}-{{ .Values.orders.name }}
+#   type: NodePort
