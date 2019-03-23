@@ -8,8 +8,8 @@ define(['ojs/ojcore'],
         var servingHost = window.location.host;
         var apiGW = "API-GW-PLACEHOLDER";
         if (servingHost.indexOf("localhost") !== -1) {
-          //apiGW = "https://129.213.126.223:9022/api";
-          apiGW = "http://localhost:3000";
+          apiGW = "https://129.213.126.223:9022/api";
+          //apiGW = "http://localhost:3000";
         }
         console.log("apiGW in OrderFactory: " + apiGW);
         ///
