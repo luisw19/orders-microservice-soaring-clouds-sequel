@@ -222,6 +222,7 @@ kubectl delete secret orders.sttc.com.secret -n istio-system
 - Start the **port-forwards** for **Grafana**, **Jaeger** and **Kiali** in this same order by running:
 
 ```bash
+kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=prometheus -o jsonpath='{.items[0].metadata.name}') 9090:9090 &
 kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=grafana -o jsonpath='{.items[0].metadata.name}') 3000:3000 &
 kubectl port-forward -n istio-system $(kubectl get pod -n istio-system -l app=jaeger -o jsonpath='{.items[0].metadata.name}') 16686:16686 &
 kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=kiali -o jsonpath='{.items[0].metadata.name}') 20001:20001 &
@@ -229,18 +230,15 @@ kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=ki
 
 - Then access the service consoles:
 
-Grafana: http://localhost:3000
-Jaeger: http://localhost:16686
-Kiali: http://localhost:20001/kiali/
+[Prometheus](http://localhost:9090/graph):  http://localhost:9090/graph
+[Grafana](http://localhost:9090/graph): http://localhost:3000
+[Jaeger](http://localhost:9090/graph): http://localhost:16686
+[Kiali](http://localhost:9090/graph): http://localhost:20001/kiali/
 
 - Generate a few calls:
 
 ```bash
-ab -k -c 10 -n 10000 http://$INGRESS_HOST/orders-ms/api/orders
-```
-
-```bash
-for ((i=1;i<=100;i++)); do curl --insecure https://$ORDERS_DOMAIN/orders-ms/api/orders --resolve $ORDERS_DOMAIN:$SECURE_INGRESS_PORT:$INGRESS_HOST; done
+for ((i=1;i<=1000;i++)); do curl --insecure https://$ORDERS_DOMAIN/orders-ms/api/orders --resolve $ORDERS_DOMAIN:$SECURE_INGRESS_PORT:$INGRESS_HOST; done
 ```
 
 - To **kill** all running port-forward prcoesses:
