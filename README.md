@@ -51,7 +51,7 @@ docker-compose down
 
 ## To install Orders Microservice in [Oracle Container Engine for Kubernetes](https://cloud.oracle.com/containers/kubernetes-engine) using [Helm](https://helm.sh/) and [Nginx Ingress](https://kubernetes.github.io/ingress-nginx/):
 
-1) Configure an Nginx ingress controller by following the instructions [oke-ingress](https://github.com/luisw19/oci-series/tree/master/oke-istio)
+1) Configure an Nginx ingress controller by following the instructions [oke-ingress](https://luisw19.github.io/oci-series/oke-istio/)
 
 2) Set KUBECONFIG to match your target Kubernetes environment e.g.
 
