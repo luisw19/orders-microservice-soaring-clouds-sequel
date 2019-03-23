@@ -1,5 +1,5 @@
-#include the body if ingress.nginx.enable exists and is set to true
-{{ if eq .Values.ingress.nginx.enable true }}
+#include the body if ingress.nginx.enabled exists and is set to true
+{{- if eq .Values.ingress.nginx.enabled true }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -30,4 +30,4 @@ spec:
         backend:
           serviceName: {{ .Release.Name }}-{{ .Values.ui.name }}
           servicePort: {{ .Values.ui.port }}
-{{ end }}
+{{- end }}

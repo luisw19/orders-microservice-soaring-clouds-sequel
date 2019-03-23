@@ -1,3 +1,5 @@
+#include the body if ingress.ingress.enabled exists and is set to true
+{{- if eq .Values.ingress.istio.enabled true }}
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
@@ -11,7 +13,7 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - "{{ .Values.ingress.istio.domain.http }}"
+    - {{ .Values.ingress.istio.domain.http | quote}}
   - port:
       number: 443
       name: https
@@ -20,7 +22,7 @@ spec:
       mode: SIMPLE
       credentialName: {{ .Values.ingress.istio.secret }} # must be the same as secret
     hosts:
-    - "{{ .Values.ingress.istio.domain.https }}"
+    - {{ .Values.ingress.istio.domain.http | quote}}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -28,7 +30,7 @@ metadata:
   name: {{ .Release.Name }}-{{ .Values.ingress.istio.virtualServiceName }}
 spec:
   hosts:
-  - "{{ .Values.ingress.istio.domain.vts }}"
+  - {{ .Values.ingress.istio.domain.http | quote}}
   gateways:
   - {{ .Release.Name }}-{{ .Values.ingress.istio.gatewayName }}
   http:
@@ -52,3 +54,4 @@ spec:
         port:
           number: {{ .Values.ui.port }}
         host: {{ .Release.Name }}-{{ .Values.ui.name }}
+{{- end }}

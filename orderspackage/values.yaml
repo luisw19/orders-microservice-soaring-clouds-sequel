@@ -1,6 +1,6 @@
 ingress:
     nginx:
-        enable: true
+        enabled: false
         name: orders-ingress-nginx
         domain: orders.sttc.com
         sslredirect: false
@@ -9,7 +9,7 @@ ingress:
             orders: /orders-ms/api/
             ui: /orders-ms/ui/
     istio:
-        enable: false
+        enabled: false
         gatewayName: orders-gateway
         virtualServiceName: orders-vts
         domain:

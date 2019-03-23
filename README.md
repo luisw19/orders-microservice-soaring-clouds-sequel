@@ -113,7 +113,8 @@ kubectl create secret tls orders.sttc.com.secret --key orders.sttc.com.key --cer
 6) Deploy the *Orders Package* using [Helm](https://helm.sh/):
 
 ```bash
-helm install ./orderspackage/ -n orderspackage
+helm install orderspackage -n orderspackage \
+--set ingress.nginx.enabled=true
 ```
 
 - To **uninstall** run:
@@ -168,10 +169,14 @@ kubectl create -n istio-system secret generic orders.secret \
 6) Install the package:
 
 ```bash
-helm install ./orderspackage/ -n orderspackage \
---set ingres.nginx.enable=false \
---set ingres.istio.enable=true
+helm install orderspackage -n orderspackage \
+--set ingress.istio.enabled=true
 ```
+
+> Add the flags `--dry-run --debug` to verity the installation before applying it.
+
+> After installing, **helm upgrade** can be run instead to only apply changes.
+> e.g. `helm upgrade orderspackage orderspackage`.
 
 7) Test the service as following:
 
