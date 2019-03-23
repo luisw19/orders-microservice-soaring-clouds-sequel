@@ -2,7 +2,7 @@ version: '2'
 services:
   orders-ui:
       #Image
-      image: luisw19/orders-ui:3.0.0
+      image: luisw19/orders-ui:3.0.1
       #Uncomment "build" if you wish to build from source code, otherwise it'll pull from registry
       build: ./ui
       environment:
