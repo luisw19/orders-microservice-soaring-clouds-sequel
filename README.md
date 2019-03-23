@@ -189,14 +189,19 @@ export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressga
 
 First try with HTTP:
 ```bash
-curl http://$INGRESS_HOST/orders-ms/api/health
+curl -I http://$INGRESS_HOST/orders-ms/api/health
+curl -I http://$INGRESS_HOST/orders-ms/ui/
 ```
+
+Both should respond with a **HTTP/1.1 200 OK**
 
 Then HTTPS:
 ```bash
-curl --insecure https://$ORDERS_DOMAIN/orders-ms/api/health \
---resolve $ORDERS_DOMAIN:$SECURE_INGRESS_PORT:$INGRESS_HOST
+curl -I --insecure https://$ORDERS_DOMAIN/orders-ms/api/health --resolve $ORDERS_DOMAIN:$SECURE_INGRESS_PORT:$INGRESS_HOST
+curl -I --insecure https://$ORDERS_DOMAIN/orders-ms/ui/ --resolve $ORDERS_DOMAIN:$SECURE_INGRESS_PORT:$INGRESS_HOST
 ```
+
+Both should respond with a **HTTP/2 200**
 
 > It may take a couple of minutes for the certificates to load. So you may need to retry a few times before it works.
 
