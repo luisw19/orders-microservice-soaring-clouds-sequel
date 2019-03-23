@@ -8,16 +8,16 @@ define(['ojs/ojcore'],
         var servingHost = window.location.host;
         var apiGW = "API-GW-PLACEHOLDER";
         if (servingHost.indexOf("localhost") !== -1) {
-          apiGW = "https://129.213.126.223:9022/api";
+          apiGW = "https://129.213.126.223:9022";
           //apiGW = "http://localhost:3000";
         }
         console.log("apiGW in OrderFactory: " + apiGW);
         ///
 
         if (type === "SHOPPING") {
-          return apiGW + "/orders?shoppingCart_id=" + orderId + "&status=SHOPPING_CART";
+          return apiGW + "/api/orders?shoppingCart_id=" + orderId + "&status=SHOPPING_CART";
         } else {
-          return apiGW + "/orders/" + orderId;
+          return apiGW + "/api/orders/" + orderId;
         }
       },
       createOrderModel: function(orderId, type) {

@@ -9,13 +9,13 @@ define(['ojs/ojcore'],
         var servingHost = window.location.host;
         var apiGW = "API-GW-PLACEHOLDER";
         if (servingHost.indexOf("localhost") !== -1) {
-          apiGW = "https://129.213.126.223:9022/api";
+          apiGW = "https://129.213.126.223:9022";
           //apiGW = "http://localhost:3000";
         }
         console.log("apiGW in LineItemFactory: " + apiGW);
         ///
 
-        return apiGW + "/orders/" + orderId + "/lines/" + lineItemId;
+        return apiGW + "/api/orders/" + orderId + "/lines/" + lineItemId;
       },
       createLineItemModel: function(orderId, lineItemId) {
         var LineItem = oj.Model.extend({

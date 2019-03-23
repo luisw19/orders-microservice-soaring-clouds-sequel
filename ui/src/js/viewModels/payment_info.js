@@ -264,26 +264,44 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         };
 
         self.onAddressLine1Changed = function(event) {
+            if(index<0){
+                index = 1;
+            }
             rootViewModel.order.get("order").address[index].line_1 = self.addressLine1();
         };
 
         self.onAddressLine2Changed = function(event) {
+            if(index<0){
+                index = 1;
+            }
             rootViewModel.order.get("order").address[index].line_2 = self.addressLine2();
         };
 
         self.onCityChanged = function(event) {
+            if(index<0){
+                index = 1;
+            }
             rootViewModel.order.get("order").address[index].city = self.city();
         };
 
         self.onCountyChanged = function(event) {
+            if(index<0){
+                index = 1;
+            }
             rootViewModel.order.get("order").address[index].county = self.county();
         };
 
         self.onPostCodeChanged = function(event) {
+            if(index<0){
+                index = 1;
+            }
             rootViewModel.order.get("order").address[index].postcode = self.postCode();
         };
 
         self.onCountryChanged = function(event) {
+            if(index<0){
+                index = 1;
+            }
             rootViewModel.order.get("order").address[index].country = self.country();
         };
 

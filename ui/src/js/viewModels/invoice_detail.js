@@ -38,11 +38,17 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
             shipping = order.shipping;
             self.items = order.line_items;
 
+            // var shippingPrice = shipping.price.toFixed(2);
+            // var preTotal = parseFloat(order.total_price).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            var shippingPrice = parseFloat(shipping.price);
+            var preTotal = parseFloat(order.total_price);
+            var total = (shippingPrice + preTotal);
+
             self.shippingMethod(shipping.shipping_method);
-            self.shippingCost(shipping.price.toFixed(2));
+            self.shippingCost(shippingPrice.toFixed(2));
             self.shippingETA(shipping.ETA);
-            
-            self.totalPrice(parseFloat(order.total_price).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + " " + order.currency);
+
+            self.totalPrice( total.toFixed(2) + " " + order.currency);
 
         };
 
