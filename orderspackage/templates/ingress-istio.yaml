@@ -42,3 +42,13 @@ spec:
         port:
           number: {{ .Values.orders.port }}
         host: {{ .Release.Name }}-{{ .Values.orders.name }}
+  - match:
+    - uri:
+        prefix: {{ .Values.ingress.istio.paths.ui }}
+    rewrite:
+        uri: /
+    route:
+    - destination:
+        port:
+          number: {{ .Values.ui.port }}
+        host: {{ .Release.Name }}-{{ .Values.ui.name }}

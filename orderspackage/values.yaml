@@ -22,6 +22,7 @@ ingress:
             ui: /orders-ms/ui/
 ui:
     name: orders-ui
+    version: v1
     replicas: 1
     image:
         repo: luisw19/orders-ui
@@ -30,6 +31,7 @@ ui:
 
 mongo:
     name: orders-mongo-db
+    version: v1
     replicas: 1
     image:
         repo: mongo
@@ -37,6 +39,7 @@ mongo:
 
 orders:
     name: orders-ms
+    version: v1
     replicas: 1
     image:
         repo: luisw19/orders-ms
@@ -45,6 +48,7 @@ orders:
 
 prodSub:
     name: product-sub-ms
+    version: v1
     replicas: 1
     image:
         repo: luisw19/product-sub-ms
@@ -52,6 +56,7 @@ prodSub:
 
 ordersProd:
     name: orders-prod-ms
+    version: v1
     replicas: 1
     image:
         repo: luisw19/orders-prod-ms

@@ -10,11 +10,12 @@ spec:
   replicas: {{ .Values.ordersProd.replicas }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-{{ .Values.ordersProd.name }}-exposed
+      app: {{ .Release.Name }}-{{ .Values.ordersProd.name }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-{{ .Values.ordersProd.name }}-exposed
+        app: {{ .Release.Name }}-{{ .Values.ordersProd.name }}
+        version: {{ .Values.ordersProd.version }}
     spec:
       containers:
       - args:
@@ -50,11 +51,11 @@ spec:
   - name: http
     port: {{ .Values.ordersProd.port }}
   selector:
-    app: {{ .Release.Name }}-{{ .Values.ordersProd.name }}-exposed
+    app: {{ .Release.Name }}-{{ .Values.ordersProd.name }}
   # ports:
   # - port: {{ .Values.ordersProd.port }}
   #   protocol: TCP
   #   targetPort: {{ .Values.ordersProd.port }}
   # selector:
-  #   app: {{ .Release.Name }}-{{ .Values.ordersProd.name }}-exposed
+  #   app: {{ .Release.Name }}-{{ .Values.ordersProd.name }}
   # type: NodePort

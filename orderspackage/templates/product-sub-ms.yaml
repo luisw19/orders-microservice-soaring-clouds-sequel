@@ -10,11 +10,12 @@ spec:
   replicas: {{ .Values.prodSub.replicas }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-{{ .Values.prodSub.name }}-exposed
+      app: {{ .Release.Name }}-{{ .Values.prodSub.name }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-{{ .Values.prodSub.name }}-exposed
+        app: {{ .Release.Name }}-{{ .Values.prodSub.name }}
+        version: {{ .Values.prodSub.version }}
     spec:
       containers:
       - args:

@@ -15,6 +15,7 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}-{{ .Values.ui.name }}
+        version: {{ .Values.ui.version }}
     spec:
       containers:
       - args:

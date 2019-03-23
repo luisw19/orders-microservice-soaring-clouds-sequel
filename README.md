@@ -226,16 +226,15 @@ Kiali: http://localhost:20001/kiali/
 - Generate a few calls:
 
 ```bash
-ab -k -c 10 -n 10000 http://$INGRESS_HOST/orders-ms/api/health
+ab -k -c 10 -n 10000 http://$INGRESS_HOST/orders-ms/api/orders
+```
+
+```bash
+for ((i=1;i<=100;i++)); do curl --insecure https://$ORDERS_DOMAIN/orders-ms/api/orders --resolve $ORDERS_DOMAIN:$SECURE_INGRESS_PORT:$INGRESS_HOST; done
 ```
 
 - To **kill** all running port-forward prcoesses:
 
 ```bash
 killall kubectl
-```
-
-
-```yaml
-match: (context.protocol == "http" || context.protocol == "grpc") && (match((request.useragent | "-"), "kube-probe*") == false) && (match((request.useragent | "-"), "Prometheus*")  == false)
 ```
