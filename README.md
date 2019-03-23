@@ -125,25 +125,25 @@ kubectl delete namespace orders-ms
 
 ## To install Orders Microservice in [Oracle Container Engine for Kubernetes](https://cloud.oracle.com/containers/kubernetes-engine) using [Helm](https://helm.sh/) and using Helm and [Istio Service Mesh](https://istio.io/docs/concepts/what-is-istio/):
 
-1) Configure Istio as described in [oke-istio](https://github.com/luisw19/orders-microservice-soaring-clouds-sequel/tree/master/oke-istio). Once completed, delete the **httpbin** sample as following:
+1) Configure **Istio** as described in [oke-istio](https://github.com/luisw19/orders-microservice-soaring-clouds-sequel/tree/master/oke-istio).
+
+- If the **httpbin** sample was created, delete it following:
 
 ```bash
-kubectl delete namespace httpbin-istio
+kubectl -n httpbin-istio delete service httpbin
+kubectl -n httpbin-istio delete deployment httpbin
+kubectl -n httpbin-istio delete gateway httpbin-gateway
+kubectl -n httpbin-istio delete virtualservice httpbin-vts
 kubectl -n istio-system delete secret httpbin-istio-secret
+kubectl delete namespace httpbin-istio
 ```
 
-> This is required because **Istio's Ingress Controller** doesn't support
-> certificates of two different domains mapped against the same **Gateway**.
+> This is required because the HTTPS configuration was failing when using two
+> certificates for two different domains mapped against the same **Gateway**.
+> Could be that this feature is not supported so further investigation is required.
 
 2) Follow steps **2** to **4** as described in the previous section.
 
-3) Create the Kubernetes secret **orders.sttc.com.secret** in the **istio-system** namespace:
-
-```bash
-kubectl create -n istio-system secret generic orders.sttc.com.secret \
---from-file=key=orders.sttc.com.key \
---from-file=cert=orders.sttc.com.crt
-```
 
 3) Uninstall **orderspackage** (if previously deployed)
 
@@ -151,13 +151,21 @@ kubectl create -n istio-system secret generic orders.sttc.com.secret \
 helm delete --purge orderspackage
 ```
 
-3) **Label** the **orders-ms** namespace as following:
+4) **Label** the **orders-ms** namespace as following:
 
 ```bash
 kubectl label namespace orders-ms istio-injection=enabled
 ```
 
-4) Install the package:
+5) Create the Kubernetes secret **orders.sttc.com.secret** in the **istio-system** namespace:
+
+```bash
+kubectl create -n istio-system secret generic orders.secret \
+--from-file=key=orders.sttc.com.key \
+--from-file=cert=orders.sttc.com.crt
+```
+
+6) Install the package:
 
 ```bash
 helm install ./orderspackage/ -n orderspackage \
@@ -165,11 +173,13 @@ helm install ./orderspackage/ -n orderspackage \
 --set ingres.istio.enable=true
 ```
 
-5) Test the service as following:
+7) Test the service as following:
 
 ```bash
 export ORDERS_DOMAIN=orders.sttc.com
 export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')
+export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].port}')
 ```
 
 First try with HTTP:
@@ -179,9 +189,8 @@ curl http://$INGRESS_HOST/orders-ms/api/health
 
 Then HTTPS:
 ```bash
-curl --insecure -HHost:$ORDERS_DOMAIN \
---resolve $ORDERS_DOMAIN:$SECURE_INGRESS_PORT:$INGRESS_HOST \
-https://$ORDERS_DOMAIN/orders-ms/api/health
+curl --insecure https://$ORDERS_DOMAIN/orders-ms/api/health \
+--resolve $ORDERS_DOMAIN:$SECURE_INGRESS_PORT:$INGRESS_HOST
 ```
 
 > It may take a couple of minutes for the certificates to load. So you may need to retry a few times before it works.
@@ -191,9 +200,42 @@ https://$ORDERS_DOMAIN/orders-ms/api/health
 > Alternatively add an entry to the /etc/hosts file to match
 > the Ingress IP to the domain used.
 
-6) To delete the package and the secret run:
+- To delete the package and the secret run:
 
 ```bash
 helm delete --purge orderspackage
 kubectl delete secret orders.sttc.com.secret -n istio-system
+```
+
+8) **Monitor** and **observe**:
+
+- Start the **port-forwards** for **Grafana**, **Jaeger** and **Kiali** in this same order by running:
+
+```bash
+kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=grafana -o jsonpath='{.items[0].metadata.name}') 3000:3000 &
+kubectl port-forward -n istio-system $(kubectl get pod -n istio-system -l app=jaeger -o jsonpath='{.items[0].metadata.name}') 16686:16686 &
+kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=kiali -o jsonpath='{.items[0].metadata.name}') 20001:20001 &
+```
+
+- Then access the service consoles:
+
+Grafana: http://localhost:3000
+Jaeger: http://localhost:16686
+Kiali: http://localhost:20001/kiali/
+
+- Generate a few calls:
+
+```bash
+ab -k -c 10 -n 10000 http://$INGRESS_HOST/orders-ms/api/health
+```
+
+- To **kill** all running port-forward prcoesses:
+
+```bash
+killall kubectl
+```
+
+
+```yaml
+match: (context.protocol == "http" || context.protocol == "grpc") && (match((request.useragent | "-"), "kube-probe*") == false) && (match((request.useragent | "-"), "Prometheus*")  == false)
 ```

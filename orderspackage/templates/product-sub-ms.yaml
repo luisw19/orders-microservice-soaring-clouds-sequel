@@ -4,17 +4,17 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    run: {{ .Release.Name }}-{{ .Values.prodSub.name }}
+    app: {{ .Release.Name }}-{{ .Values.prodSub.name }}
   name: {{ .Release.Name }}-{{ .Values.prodSub.name }}
 spec:
   replicas: {{ .Values.prodSub.replicas }}
   selector:
     matchLabels:
-      run: {{ .Release.Name }}-{{ .Values.prodSub.name }}-exposed
+      app: {{ .Release.Name }}-{{ .Values.prodSub.name }}-exposed
   template:
     metadata:
       labels:
-        run: {{ .Release.Name }}-{{ .Values.prodSub.name }}-exposed
+        app: {{ .Release.Name }}-{{ .Values.prodSub.name }}-exposed
     spec:
       containers:
       - args:

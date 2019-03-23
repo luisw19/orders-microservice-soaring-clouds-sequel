@@ -4,13 +4,13 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-{{ .Values.mongo.name }}
   labels:
-    run: {{ .Release.Name }}-{{ .Values.mongo.name }}
+    app: {{ .Release.Name }}-{{ .Values.mongo.name }}
 spec:
   replicas: {{ .Values.mongo.replicas }}
   template:
     metadata:
       labels:
-        run: {{ .Release.Name }}-{{ .Values.mongo.name }}
+        app: {{ .Release.Name }}-{{ .Values.mongo.name }}
     spec:
       containers:
       - image: {{ .Values.mongo.image.repo }}
@@ -28,11 +28,11 @@ kind: Service
 metadata:
   name: {{ .Release.Name }}-{{ .Values.mongo.name }}
   labels:
-    run: {{ .Release.Name }}-{{ .Values.mongo.name }}
+    app: {{ .Release.Name }}-{{ .Values.mongo.name }}
 spec:
   clusterIP: None
   ports:
   - port: {{ .Values.mongo.port }}
     targetPort: {{ .Values.mongo.port }}
   selector:
-    run: {{ .Release.Name }}-{{ .Values.mongo.name }}
+    app: {{ .Release.Name }}-{{ .Values.mongo.name }}

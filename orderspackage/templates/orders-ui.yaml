@@ -4,17 +4,17 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    run: {{ .Release.Name }}-{{ .Values.ui.name }}
+    app: {{ .Release.Name }}-{{ .Values.ui.name }}
   name: {{ .Release.Name }}-{{ .Values.ui.name }}
 spec:
   replicas: {{ .Values.ui.replicas }}
   selector:
     matchLabels:
-      run: {{ .Release.Name }}-{{ .Values.ui.name }}
+      app: {{ .Release.Name }}-{{ .Values.ui.name }}
   template:
     metadata:
       labels:
-        run: {{ .Release.Name }}-{{ .Values.ui.name }}
+        app: {{ .Release.Name }}-{{ .Values.ui.name }}
     spec:
       containers:
       - args:
@@ -39,7 +39,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    run: {{ .Release.Name }}-{{ .Values.ui.name }}
+    app: {{ .Release.Name }}-{{ .Values.ui.name }}
   name: {{ .Release.Name }}-{{ .Values.ui.name }}
 spec:
   ports:
@@ -47,5 +47,5 @@ spec:
     protocol: TCP
     targetPort: {{ .Values.ui.port }}
   selector:
-    run: {{ .Release.Name }}-{{ .Values.ui.name }}
+    app: {{ .Release.Name }}-{{ .Values.ui.name }}
   type: NodePort

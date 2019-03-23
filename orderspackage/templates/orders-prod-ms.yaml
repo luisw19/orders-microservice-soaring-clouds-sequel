@@ -4,17 +4,17 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    run: {{ .Release.Name }}-{{ .Values.ordersProd.name }}
+    app: {{ .Release.Name }}-{{ .Values.ordersProd.name }}
   name: {{ .Release.Name }}-{{ .Values.ordersProd.name }}
 spec:
   replicas: 3
   selector:
     matchLabels:
-      run: {{ .Release.Name }}-{{ .Values.ordersProd.name }}-exposed
+      app: {{ .Release.Name }}-{{ .Values.ordersProd.name }}-exposed
   template:
     metadata:
       labels:
-        run: {{ .Release.Name }}-{{ .Values.ordersProd.name }}-exposed
+        app: {{ .Release.Name }}-{{ .Values.ordersProd.name }}-exposed
     spec:
       containers:
       - args:
@@ -43,7 +43,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    run: {{ .Release.Name }}-{{ .Values.ordersProd.name }}
+    app: {{ .Release.Name }}-{{ .Values.ordersProd.name }}
   name: {{ .Release.Name }}-{{ .Values.ordersProd.name }}
 spec:
   ports:
@@ -51,5 +51,5 @@ spec:
     protocol: TCP
     targetPort: {{ .Values.ordersProd.port }}
   selector:
-    run: {{ .Release.Name }}-{{ .Values.ordersProd.name }}-exposed
+    app: {{ .Release.Name }}-{{ .Values.ordersProd.name }}-exposed
   type: NodePort
