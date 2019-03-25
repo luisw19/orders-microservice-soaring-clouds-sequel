@@ -246,3 +246,24 @@ for ((i=1;i<=1000;i++)); do curl --insecure https://$ORDERS_DOMAIN/orders-ms/api
 ```bash
 killall kubectl
 ```
+## Tips:
+
+- To **inspect** the **logs** within a **container** in a **pod**:
+
+First **get** the pods:
+
+```bash
+kubectl get pods
+```
+
+Then **describe** one of the pods to get the name of the container:
+
+```bash
+kubectl describe pod orderspackage-product-sub-ms-5f6b7c8b97-z27cl
+```
+
+**Find** the name of the container to inspect and then run:
+
+```bash
+kubectl logs orderspackage-product-sub-ms-5f6b7c8b97-z27cl orderspackage-product-sub-ms
+```
