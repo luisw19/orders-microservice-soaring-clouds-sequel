@@ -10,9 +10,9 @@ git clone https://github.com/luisw19/orders-microservice-soaring-clouds-sequel.g
 
 ## Run locally using Docker-Compose
 
-1) Install [Docker](https://www.docker.com/get-started) and [docker-compose](https://docs.docker.com/compose/install/)
+1. Install [Docker](https://www.docker.com/get-started) and [docker-compose](https://docs.docker.com/compose/install/)
 
-2) Run the following command
+2. Run the following command
 
 ```bash
 cd orders-microservice-soaring-clouds-sequel
@@ -27,7 +27,7 @@ This will run 5 containers:
 
 > Check docker-compose.yml for details on the environment variables used.
 
-3) Test that the services are running correctly by:
+3. Test that the services are running correctly by:
 
 - Follow [these steps](https://github.com/luisw19/orders-microservice-soaring-clouds-sequel/tree/master/orders-producer-ms) to produce a sample item.
 
@@ -43,7 +43,7 @@ curl http://localhost:3000/orders
 
 > Note that the UI can be tested stand-alone using docker-compose.
 
-4) To bring down gratefully run:
+4. To bring down gratefully run:
 
 ```bash
 docker-compose down
@@ -51,15 +51,15 @@ docker-compose down
 
 ## To install Orders Microservice in [Oracle Container Engine for Kubernetes](https://cloud.oracle.com/containers/kubernetes-engine) using [Helm](https://helm.sh/) and [Nginx Ingress](https://kubernetes.github.io/ingress-nginx/):
 
-1) Configure an Nginx ingress controller by following the instructions [oke-ingress](https://luisw19.github.io/oci-series/oke-istio/)
+1. Configure an Nginx ingress controller by following the instructions [oke-ingress](https://luisw19.github.io/oci-series/oke-istio/)
 
-2) Set KUBECONFIG to match your target Kubernetes environment e.g.
+2. Set KUBECONFIG to match your target Kubernetes environment e.g.
 
 ```bash
 export KUBECONFIG=$HOME/.kube/config
 ```
 
-3) Create the orders-ms namespace. Also a local context and switch to it:
+3. Create the orders-ms namespace. Also a local context and switch to it:
 
 First take note of the default context details by running:
 
@@ -78,7 +78,7 @@ kubectl config set-context orders --user=user-c3tayteg5st --cluster=cluster-c3ta
 kubectl config use-context orders
 ```
 
-4) Using the [openssl](https://www.openssl.org/) utility [generate a TLS certificate](https://istio.io/docs/tasks/traffic-management/secure-ingress/sds/) for domain **orders.sttc.com**:
+4. Using the [openssl](https://www.openssl.org/) utility [generate a TLS certificate](https://istio.io/docs/tasks/traffic-management/secure-ingress/sds/) for domain **orders.sttc.com**:
 
 ```bash
 openssl req -new -newkey rsa:4096 -x509 -sha256 -days 365 -nodes \
@@ -102,7 +102,7 @@ Once completed this should generate the **httpbin.adomain.com.crt** and **httpbi
 > Note that **Common Name** is a domain name and should match
 > the **Hosts** value in the Ingress Gateway.
 
-5) Create the Kubernetes secret **orders.sttc.com.secret** in the **oders-ms** namespace:
+5. Create the Kubernetes secret **orders.sttc.com.secret** in the **oders-ms** namespace:
 
 ```bash
 kubectl create secret tls orders.sttc.com.secret --key orders.sttc.com.key --cert orders.sttc.com.crt
@@ -110,7 +110,7 @@ kubectl create secret tls orders.sttc.com.secret --key orders.sttc.com.key --cer
 
 > note that `-n orders-ms` is **not** included as **kubectl config context **should be set to **orders**
 
-6) Deploy the *Orders Package* using [Helm](https://helm.sh/):
+6. Deploy the *Orders Package* using [Helm](https://helm.sh/):
 
 ```bash
 helm install orderspackage -n orderspackage \
@@ -126,7 +126,7 @@ kubectl delete namespace orders-ms
 
 ## To install Orders Microservice in [Oracle Container Engine for Kubernetes](https://cloud.oracle.com/containers/kubernetes-engine) using [Helm](https://helm.sh/) and using Helm and [Istio Service Mesh](https://istio.io/docs/concepts/what-is-istio/):
 
-1) Configure **Istio** as described in [oke-istio](https://github.com/luisw19/orders-microservice-soaring-clouds-sequel/tree/master/oke-istio).
+1. Configure **Istio** as described in [oke-istio](https://github.com/luisw19/orders-microservice-soaring-clouds-sequel/tree/master/oke-istio).
 
 - If the **httpbin** sample was created, delete it following:
 
@@ -143,22 +143,22 @@ kubectl delete namespace httpbin-istio
 > certificates for two different domains mapped against the same **Gateway**.
 > Could be that this feature is not supported so further investigation is required.
 
-2) Follow steps **2** to **4** as described in the previous section.
+2. Follow steps **2** to **4** as described in the previous section.
 
 
-3) Uninstall **orderspackage** (if previously deployed)
+3. Uninstall **orderspackage** (if previously deployed)
 
 ```bash
 helm delete --purge orderspackage
 ```
 
-4) **Label** the **orders-ms** namespace as following:
+4. **Label** the **orders-ms** namespace as following:
 
 ```bash
 kubectl label namespace orders-ms istio-injection=enabled
 ```
 
-5) Create the Kubernetes secret **orders.sttc.com.secret** in the **istio-system** namespace:
+5. Create the Kubernetes secret **orders.sttc.com.secret** in the **istio-system** namespace:
 
 ```bash
 kubectl create -n istio-system secret generic orders.secret \
@@ -166,7 +166,7 @@ kubectl create -n istio-system secret generic orders.secret \
 --from-file=cert=orders.sttc.com.crt
 ```
 
-6) Install the package:
+6. Install the package:
 
 ```bash
 helm install orderspackage -n orderspackage \
