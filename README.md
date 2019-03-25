@@ -228,12 +228,12 @@ kubectl -n istio-system port-forward $(kubectl get pod -n istio-system -l app=ja
 kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=kiali -o jsonpath='{.items[0].metadata.name}') 20001:20001 &
 ```
 
-- Then access the service consoles:
+Then access the service consoles:
 
-[Prometheus](http://localhost:9090/graph):  http://localhost:9090/graph
-[Grafana](http://localhost:9090/graph): http://localhost:3000
-[Jaeger](http://localhost:9090/graph): http://localhost:16686
-[Kiali](http://localhost:9090/graph): http://localhost:20001/kiali/
+- [Prometheus](http://localhost:9090/graph):  http://localhost:9090/graph
+- [Grafana](http://localhost:9090/graph): http://localhost:3000
+- [Jaeger](http://localhost:9090/graph): http://localhost:16686
+- [Kiali](http://localhost:9090/graph): http://localhost:20001/kiali/
 
 - Generate a few calls:
 
