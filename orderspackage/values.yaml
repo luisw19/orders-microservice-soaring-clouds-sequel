@@ -68,5 +68,5 @@ env:
     apiKey: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
     kafkaBroker: 130.61.35.61:9092
     kafkaRegistry: http://130.61.35.61:8081
-    kafkaShoppingCartTopic: idcs-1d61df536acb4e9d929e79a92f3414b5-soaringaddtoshoppingcart
-    kafkaOrderTopic: idcs-1d61df536acb4e9d929e79a92f3414b5-soaringordercreated
+    kafkaShoppingCartTopic: soaring-add-to-shopping-cart
+    kafkaOrderTopic: soaring-ordercreated

@@ -21,7 +21,7 @@ services:
       environment:
         KAFKA_BROKER: '130.61.35.61:9092'
         KAFKA_REGISTRY: 'http://130.61.35.61:8081'
-        KAFKA_SHOPPINGCART_TOPIC: 'idcs-1d61df536acb4e9d929e79a92f3414b5-soaringaddtoshoppingcart'
+        KAFKA_SHOPPINGCART_TOPIC: 'soaring-add-to-shopping-cart'
         ORDERSAPI_HOST: 'orders-ms'
         ORDERSAPI_PORT: 3000
       command: node product-subscriber-ms.js
@@ -59,7 +59,7 @@ services:
         APP_PORT: 4000
         KAFKA_BROKER: '130.61.35.61:9092'
         KAFKA_REGISTRY: 'http://130.61.35.61:8081'
-        KAFKA_ORDER_TOPIC: 'idcs-1d61df536acb4e9d929e79a92f3414b5-soaringordercreated'
+        KAFKA_ORDER_TOPIC: 'soaring-ordercreated'
       ports:
             - "4000:4000"
       command: npm start
