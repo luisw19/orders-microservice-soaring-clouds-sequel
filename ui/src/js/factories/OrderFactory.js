@@ -7,17 +7,19 @@ define(['ojs/ojcore'],
         ///Added to test locally
         var servingHost = window.location.host;
         var apiGW = "API-GW-PLACEHOLDER";
+        var prefix = "/api";
         if (servingHost.indexOf("localhost") !== -1) {
-          apiGW = "https://129.213.126.223:9022";
-          //apiGW = "http://localhost:3000";
+          //apiGW = "https://129.213.126.223:9022";
+          apiGW = "http://localhost:3000";
+          prefix = "";
         }
         console.log("apiGW in OrderFactory: " + apiGW);
         ///
 
         if (type === "SHOPPING") {
-          return apiGW + "/api/orders?shoppingCart_id=" + orderId + "&status=SHOPPING_CART";
+          return apiGW + prefix + "/orders?shoppingCart_id=" + orderId + "&status=SHOPPING_CART";
         } else {
-          return apiGW + "/api/orders/" + orderId;
+          return apiGW + prefix + "/orders/" + orderId;
         }
       },
       createOrderModel: function(orderId, type) {

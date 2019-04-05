@@ -25,7 +25,7 @@ kafkaLog.addStream({
 });
 
 kafkaAvro.getConsumer({
-  'group.id': 'consumer-group1',
+  'group.id': 'consumer-group-test',
   'socket.keepalive.enable': true,
   'enable.auto.commit': true,
 })
@@ -46,6 +46,6 @@ kafkaAvro.getConsumer({
         });
 
         stream.on('data', function(message) {
-            console.log('Received Orders message:', message.parsed);
+            console.log('Received Orders message: ', message.parsed);
         });
     });

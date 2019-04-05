@@ -267,3 +267,9 @@ kubectl describe pod orderspackage-product-sub-ms-7c9b46ccb-grnjq
 ```bash
 kubectl logs orderspackage-product-sub-ms-7c9b46ccb-grnjq orderspackage-product-sub-ms
 ```
+
+- To **bash** into a **container** in a **pod**:
+
+```bash
+kubectl exec -it orderspackage-orders-prod-ms-5bdd446bb6-8g59h bash
+```

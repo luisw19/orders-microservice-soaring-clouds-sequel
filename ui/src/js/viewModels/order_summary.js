@@ -122,6 +122,10 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/LineItemFactory',
         } else {
           //temp as customer object doesn't at the moment has a concept of loyalty
           self.customerLoyaltyLevel("GOLD");
+          document.getElementById('firstName').readonly=true;
+          document.getElementById('firstName').required=false;
+          document.getElementById('lastName').readonly=true;
+          document.getElementById('lastName').required=false;
         }
         //Set only once as it's no dynamic for now
         rootViewModel.order.get("order").customer.loyalty_level = self.customerLoyaltyLevel();

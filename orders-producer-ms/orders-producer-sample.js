@@ -59,150 +59,364 @@ kafkaAvro.init()
           'request.required.acks': 1
         });
 
-        //sample order paylaod
+        // //sample order paylaod
+        // outOrder = {
+        //   "orderId": "unittest",
+        //   "shoppingCartId": "CUST0001",
+        //   "status": "SUCCESS",
+        //   "createdAt": "2018-03-04T07:22:35.718Z",
+        //   "updatedAt": "2018-03-04T09:00:58.984Z",
+        //   "totalPrice": 68.39,
+        //   "discount": 0,
+        //   "currency": "GBP",
+        //   "payment": {
+        //     "cardType": "VISA_CREDIT",
+        //     "cardNumber": {
+        //       "string": "**** **** **** 1111"
+        //     },
+        //     "startYear": {
+        //       "int": 2018
+        //     },
+        //     "startMonth": {
+        //       "int": 1
+        //     },
+        //     "expiryYear": {
+        //       "int": 2020
+        //     },
+        //     "expiryMonth": {
+        //       "int": 6
+        //     }
+        //   },
+        //   "customer": {
+        //     "customerId": {
+        //       "string": "CUST0001"
+        //     },
+        //     "loyaltyLevel": "GOLD",
+        //     "firstName": {
+        //       "string": "Luis"
+        //     },
+        //     "lastName": {
+        //       "string": "Weir"
+        //     },
+        //     "phone": {
+        //       "string": "+44 (0) 757 5333 777"
+        //     },
+        //     "email": {
+        //       "string": "myemail@email.com"
+        //     }
+        //   },
+        //   "addresses": {
+        //     "array": [{
+        //       "name": {
+        //         "string": "BILLING"
+        //       },
+        //       "line1": {
+        //         "string": "22"
+        //       },
+        //       "line2": {
+        //         "string": "King street"
+        //       },
+        //       "city": {
+        //         "string": "Leamington Spa"
+        //       },
+        //       "county": {
+        //         "string": "Warkwickshire"
+        //       },
+        //       "postcode": {
+        //         "string": "CV31"
+        //       },
+        //       "country": {
+        //         "string": "GB"
+        //       }
+        //     }]
+        //   },
+        //   "shipping": {
+        //     "firstName": {
+        //       "string": "Lucas"
+        //     },
+        //     "lastName": {
+        //       "string": "Jellema"
+        //     },
+        //     "shippingMethod": "ECONOMY",
+        //     "price": {
+        //       "double": 10.00
+        //     },
+        //     "ETA": "2018-06-05T07:11:00.000Z"
+        //   },
+        //   "specialDetails": {
+        //     "personalMessage": {
+        //       "string": "From Luis with Love!"
+        //     },
+        //     "giftWrapping": {
+        //       "boolean": true
+        //     },
+        //     "deliveryNotes": {
+        //       "string": "Please try to deliver in the morning"
+        //     }
+        //   },
+        //   "items": {
+        //     "array": [{
+        //       "productId": {
+        //         "string": "abbfc4f9-83d5-49ac-9fa5-2909c5dc86e6"
+        //       },
+        //       "productCode": {
+        //         "string": "AX330T"
+        //       },
+        //       "productName": {
+        //         "string": "Light Brown Men Shoe 1"
+        //       },
+        //       "description": {
+        //         "string": "Light Brown Men Shoe 1"
+        //       },
+        //       "quantity": {
+        //         "int": 2
+        //       },
+        //       "price": {
+        //         "double": 68.39
+        //       },
+        //       "size": {
+        //         "int": 43
+        //       },
+        //       "weight": {
+        //         "double": 0
+        //       },
+        //       "dimension": {
+        //         "unit": {
+        //           "string": "cm"
+        //         },
+        //         "length": {
+        //           "double": 10.2
+        //         },
+        //         "height": {
+        //           "double": 10.4
+        //         },
+        //         "width": {
+        //           "double": 5.4
+        //         }
+        //       },
+        //       "color": {
+        //         "string": "White"
+        //       },
+        //       "sku": {
+        //         "string": "S15T-Flo-RS"
+        //       }
+        //     }]
+        //   }
+        // };
+
+
         outOrder = {
-          "orderId": "unittest",
-          "shoppingCartId": "CUST0001",
+          "orderId": "1kun290fm",
+          "shoppingCartId": "5c92a8acd55a44001a0f703a",
           "status": "SUCCESS",
-          "createdAt": "2018-03-04T07:22:35.718Z",
-          "updatedAt": "2018-03-04T09:00:58.984Z",
-          "totalPrice": 68.39,
+          "createdAt": "2019-03-31T11:46:11.170Z",
+          "updatedAt": "2019-03-31T11:47:30.391Z",
+          "totalPrice": 55,
           "discount": 0,
-          "currency": "GBP",
+          "currency": "EUR",
           "payment": {
             "cardType": "VISA_CREDIT",
             "cardNumber": {
-              "string": "**** **** **** 1111"
+              "string": "4111111111111111"
             },
             "startYear": {
-              "int": 2018
+              "int": 1
             },
             "startMonth": {
               "int": 1
             },
             "expiryYear": {
-              "int": 2020
+              "int": 20
             },
             "expiryMonth": {
-              "int": 6
+              "int": 1
             }
           },
           "customer": {
             "customerId": {
-              "string": "CUST0001"
+              "string": "5c92a8acd55a44001a0f703a"
             },
             "loyaltyLevel": "GOLD",
             "firstName": {
-              "string": "Luis"
+              "string": "John"
             },
             "lastName": {
-              "string": "Weir"
+              "string": "Doe"
             },
             "phone": {
-              "string": "+44 (0) 757 5333 777"
+              "string": ""
             },
             "email": {
-              "string": "myemail@email.com"
+              "string": "john.doe@gmail.com"
             }
           },
           "addresses": {
             "array": [{
               "name": {
+                "string": "DELIVERY"
+              },
+              "line1": {
+                "string": "22c Rembrandtlaan"
+              },
+              "line2": {
+                "string": ""
+              },
+              "city": {
+                "string": "Bilthoven"
+              },
+              "county": {
+                "string": ""
+              },
+              "postcode": {
+                "string": "3432BJ"
+              },
+              "country": {
+                "string": "Netherlands"
+              }
+            }, {
+              "name": {
                 "string": "BILLING"
               },
               "line1": {
-                "string": "22"
+                "string": "22c Rembrandtlaan"
               },
               "line2": {
-                "string": "King street"
+                "string": ""
               },
               "city": {
-                "string": "Leamington Spa"
+                "string": "Bilthoven"
               },
               "county": {
-                "string": "Warkwickshire"
+                "string": ""
               },
               "postcode": {
-                "string": "CV31"
+                "string": "3432BJ"
               },
               "country": {
-                "string": "GB"
+                "string": "Netherlands"
               }
             }]
           },
           "shipping": {
             "firstName": {
-              "string": "Lucas"
+              "string": "John"
             },
             "lastName": {
-              "string": "Jellema"
+              "string": "Doe"
             },
             "shippingMethod": "ECONOMY",
             "price": {
-              "double": 10.00
+              "double": 2.1
             },
-            "ETA": "2018-06-05T07:11:00.000Z"
+            "ETA": "2019-04-01T01:00:00"
           },
           "specialDetails": {
             "personalMessage": {
-              "string": "From Luis with Love!"
+              "string": ""
             },
             "giftWrapping": {
-              "boolean": true
+              "boolean": false
             },
             "deliveryNotes": {
-              "string": "Please try to deliver in the morning"
+              "string": ""
             }
           },
           "items": {
             "array": [{
               "productId": {
-                "string": "abbfc4f9-83d5-49ac-9fa5-2909c5dc86e6"
+                "string": "42905ff6-2612-11e8-b467-0ed5f89f718b"
               },
               "productCode": {
-                "string": "AX330T"
+                "string": "B01HJWV6YA"
               },
               "productName": {
-                "string": "Light Brown Men Shoe 1"
+                "string": "Holstein Housewares HH-0937013SS Fun Arepa and Mini Empanada Maker - Stainless Steel"
               },
               "description": {
-                "string": "Light Brown Men Shoe 1"
+                "string": "Mix and match with Holstein Housewares This FUN maker makes 4 empanadas or 2 arepas The included inserts deliver the best of both worlds by allowing you to prepare a combination of healthy empanadas or arepas It also has a nonstick coating that makes for easy cleanup The nonslip base provides stability on tables and countertops and upright space saving storage maximizes the use of your kitchen space In just 3 steps your empanadas and areas are ready to enjoy with family and friends Simply roll your dough in a ball place in the center of the maker and close to make savory and delicious areas For delicious and perfectly portioned empanadas fill your dough and place in the insert The makers innovative design will make sure that it maintains the optimal heat for baking your favorite snacks With no oil and no oven you will have plenty of empanadas and areas to share and enjoy in minutes Makes two 37 x 18 arepas or four 35 x 18 empanadas"
               },
               "quantity": {
-                "int": 2
+                "int": 1
               },
               "price": {
-                "double": 68.39
+                "double": 30
               },
               "size": {
-                "int": 43
+                "int": 0
               },
               "weight": {
-                "double": 0
+                "double": 1.13
               },
               "dimension": {
                 "unit": {
                   "string": "cm"
                 },
                 "length": {
-                  "double": 10.2
+                  "double": 22
                 },
                 "height": {
-                  "double": 10.4
+                  "double": 10
                 },
                 "width": {
-                  "double": 5.4
+                  "double": 22
                 }
               },
               "color": {
-                "string": "White"
+                "string": "black"
               },
               "sku": {
-                "string": "S15T-Flo-RS"
+                "string": ""
+              }
+            }, {
+              "productId": {
+                "string": "53c09c52-2615-11e8-b467-0ed5f89f718b"
+              },
+              "productCode": {
+                "string": "B01MAV7SVC"
+              },
+              "productName": {
+                "string": "Cocosette, Wafer Cookie Filled with Coconut Cream, (pack of 21 - 50 g. each) - 37 oz"
+              },
+              "description": {
+                "string": "Nestles Cocosette is an exquisite combination of a crunchy cookie wafer filled with rich coconut cream Each box contains 21 pieces  Imported from Venezuela"
+              },
+              "quantity": {
+                "int": 1
+              },
+              "price": {
+                "double": 25
+              },
+              "size": {
+                "int": 0
+              },
+              "weight": {
+                "double": 1.17
+              },
+              "dimension": {
+                "unit": {
+                  "string": "cm"
+                },
+                "length": {
+                  "double": 20.32
+                },
+                "height": {
+                  "double": 7.62
+                },
+                "width": {
+                  "double": 10.16
+                }
+              },
+              "color": {
+                "string": "brown"
+              },
+              "sku": {
+                "string": ""
               }
             }]
           }
         };
+
+
 
         console.log("Producing Order: " + JSON.stringify(outOrder));
 

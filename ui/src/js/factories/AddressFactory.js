@@ -8,15 +8,17 @@ define(['ojs/ojcore'],
         ///Added to test locally
         var servingHost = window.location.host;
         var apiGW = "API-GW-PLACEHOLDER";
+        var prefix = "/api";
         if (servingHost.indexOf("localhost") !== -1) {
           //modify apiGW to test locally
-          apiGW = "https://129.213.126.223:9022";
-          //apiGW = "http://localhost:3000";
+          //apiGW = "https://129.213.126.223:9022";
+          apiGW = "http://localhost:3000";
+          prefix = "";
         }
         console.log("apiGW in AddressFactory: " + apiGW);
         ///
 
-        return apiGW + "/api/orders/" + orderId + "/address";
+        return apiGW + prefix + "/orders/" + orderId + "/address";
       },
       createAddressModel: function(orderId) {
         var Address = oj.Model.extend({

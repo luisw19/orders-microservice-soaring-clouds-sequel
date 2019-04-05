@@ -87,14 +87,14 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
         };
 
         self.onEtaChanged = function(info) {
-            var dateEta = oj.IntlConverterUtils.dateToLocalIso( new Date(self.eta()) );
-            var tomorrowEta = oj.IntlConverterUtils.dateToLocalIso(rootViewModel.tomorrow);
-            if(dateEta == tomorrowEta){
+            var selectedEta =  new Date(self.eta()) ;
+            var tomorrowDate = rootViewModel.tomorrow;
+            if(selectedEta.getDay() + selectedEta.getMonth() + selectedEta.getYear() === tomorrowDate.getDay() + tomorrowDate.getMonth() + tomorrowDate.getYear()){
                 self.deliveryMethod("PREMIUM");
             }else{
                 self.deliveryMethod("ECONOMY");
             }
-            rootViewModel.order.get('order').shipping.ETA = dateEta;
+            rootViewModel.order.get('order').shipping.ETA = oj.IntlConverterUtils.dateToLocalIso(selectedEta);
         };
 
         self.onDeliveryMethodChanged = function() {

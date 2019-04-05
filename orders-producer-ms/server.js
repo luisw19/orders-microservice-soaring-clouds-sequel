@@ -154,6 +154,14 @@ function produceOrderEvent(inOrder,response) {
               "country": {"string": inOrder.order.address[count].country}
             };
         };
+        ///Fix certain in values when applicable
+        if(inOrder.order.payment.start_year==null){
+          inOrder.order.payment.start_year=0;
+        }
+        if(inOrder.order.payment.start_month==null){
+          inOrder.order.payment.start_month=0;
+        }
+        ///
         outOrder = {
             "orderId": inOrder.order.order_id,
             "shoppingCartId": inOrder.order.shoppingCart_id,

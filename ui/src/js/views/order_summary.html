@@ -99,8 +99,7 @@
       </oj-input-text>
 
       <oj-input-text id="firstName"
-        required=[[$root.isAnonymousMode]]
-        readonly=[[!$root.isAnonymousMode]]
+        required
         value="{{customerFirstName}}"
         label-hint="First Name:"
         on-value-changed="[[onSummaryFormChange]]"
@@ -108,8 +107,7 @@
       </oj-input-text>
 
       <oj-input-text id="lastName"
-        required=[[$root.isAnonymousMode]]
-        readonly=[[!$root.isAnonymousMode]]
+        required
         value="{{customerLastName}}"
         label-hint="Last Name:"
         on-value-changed="[[onSummaryFormChange]]"
@@ -117,8 +115,7 @@
       </oj-input-text>
 
       <oj-input-text id="customerPhone"
-        required=[[$root.isAnonymousMode]]
-        readonly=[[!$root.isAnonymousMode]]
+        required
         value="{{customerPhone}}"
         label-hint="Phone Number:"
         on-value-changed="[[onSummaryFormChange]]"
@@ -126,8 +123,7 @@
       </oj-input-text>
 
       <oj-input-text id="customerEmail"
-        required=[[$root.isAnonymousMode]]
-        readonly=[[!$root.isAnonymousMode]]
+        required
         value="{{customerEmail}}"
         label-hint="Email Address:"
         on-value-changed="[[onSummaryFormChange]]"

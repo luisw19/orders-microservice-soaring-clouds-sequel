@@ -342,9 +342,19 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
 
         logisticsValidation.save(null, {
           success: function(model, response, options) {
-            self.deliveryCost(parseFloat(response.shippingCosts).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
-            self.currency(order.currency);
-            document.getElementById("confirmationDialog").open();
+            if(response.status == "NOK"){
+              if(response.validationFindings[0].findingType="invalidDestination"){
+                alert("There is a mistake in the destination address. Please correct the address details and try again");
+                self.onPreviousStep();
+              }else{
+                alert(response.validationFindings[0].findingType);
+              }
+            }else{
+              self.deliveryCost(parseFloat(response.shippingCosts).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+              self.currency(order.currency);
+              document.getElementById("confirmationDialog").open();
+            }
+
           }
         });
       }
@@ -431,6 +441,16 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
 
         }*/
       }
+
+      //////////////////////////////////////////////////////////////
+      //WORKAROUND For invalid CC Type "CREDIT"
+      //This has to be fixed either by adding "CREDIT" as type
+      //in the order-created Avro schema or by aligning types in
+      //customer address in customer BC
+      if(rootViewModel.order.get("order").payment.card_type=="CREDIT"){
+        rootViewModel.order.get("order").payment.card_type="VISA_CREDIT";
+      }
+      //////////////////////////////////////////////////////////////
 
       //If credit card is valid then proceed to verify address
       if (valid & document.getElementById("sameAddressAsDeliveryCheckbox").value != "deliveryAddress") {
