@@ -26,7 +26,7 @@ ui:
     replicas: 1
     image:
         repo: luisw19/orders-ui
-        tag: 3.0.2
+        tag: 3.0.3
     port: 8080
 
 mongo:
@@ -37,6 +37,14 @@ mongo:
         repo: mongo
     port: 27017
 
+prodSub:
+    name: product-sub-ms
+    version: v1
+    replicas: 1
+    image:
+        repo: luisw19/product-sub-ms
+        tag: 3.0.0
+
 orders:
     name: orders-ms
     version: v1
@@ -46,21 +54,13 @@ orders:
         tag: 3.0.1
     port: 3000
 
-prodSub:
-    name: product-sub-ms
-    version: v1
-    replicas: 1
-    image:
-        repo: luisw19/product-sub-ms
-        tag: 3.0.0
-
 ordersProd:
     name: orders-prod-ms
     version: v1
     replicas: 1
     image:
         repo: luisw19/orders-prod-ms
-        tag: 3.0.0
+        tag: 3.0.1
     port: 4000
 
 env:
