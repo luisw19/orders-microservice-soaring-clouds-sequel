@@ -15,7 +15,7 @@ services:
   product-sub-ms:
       #Image
       #image: localhost/product-sub-ms:0.1.1
-      image: luisw19/product-sub-ms:3.0.0
+      image: luisw19/product-sub-ms:3.0.1
       #Uncomment "build" if you wish to build from source code, otherwise it'll pull from registry
       build: ./product-subscriber-ms
       environment:

@@ -43,7 +43,7 @@ prodSub:
     replicas: 1
     image:
         repo: luisw19/product-sub-ms
-        tag: 3.0.0
+        tag: 3.0.1
 
 orders:
     name: orders-ms
