@@ -343,7 +343,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
         logisticsValidation.save(null, {
           success: function(model, response, options) {
             if(response.status == "NOK"){
-              if(response.validationFindings[0].findingType="invalidDestination"){
+              if(response.validationFindings[0].findingType == "invalidDestination"){
                 alert("There is a mistake in the destination address. Please correct the address details and try again");
                 self.onPreviousStep();
               }else{
