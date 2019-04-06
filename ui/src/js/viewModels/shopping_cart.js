@@ -343,18 +343,24 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
         logisticsValidation.save(null, {
           success: function(model, response, options) {
             if(response.status == "NOK"){
-              if(response.validationFindings[0].findingType == "invalidDestination"){
-                alert("There is a mistake in the destination address. Please correct the address details and try again");
-                self.onPreviousStep();
-              }else{
-                alert(response.validationFindings[0].findingType);
+              var validateError = response.validationFindings[0].findingType;
+              console.log("stock validation response:" + JSON.stringify(response));
+              switch (validateError) {
+                case "invalidDestination":
+                  alert("There is a mistake in the destination address. Please correct the address details and try again");
+                  self.onPreviousStep();
+                  break;
+                case "outOfStockItem":
+                  alert("There is no stock available. We apologize for the inconvenience");
+                  break;
+                default:
+                  alert(validateError);
               }
             }else{
               self.deliveryCost(parseFloat(response.shippingCosts).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
               self.currency(order.currency);
               document.getElementById("confirmationDialog").open();
             }
-
           }
         });
       }
