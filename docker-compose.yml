@@ -2,7 +2,7 @@ version: '2'
 services:
   orders-ui:
       #Image
-      image: luisw19/orders-ui:3.0.4
+      image: luisw19/orders-ui:4.0.0
       #Uncomment "build" if you wish to build from source code, otherwise it'll pull from registry
       build: ./ui
       environment:
@@ -14,8 +14,7 @@ services:
 
   product-sub-ms:
       #Image
-      #image: localhost/product-sub-ms:0.1.1
-      image: luisw19/product-sub-ms:3.0.1
+      image: luisw19/product-sub-ms:4.0.0
       #Uncomment "build" if you wish to build from source code, otherwise it'll pull from registry
       build: ./product-subscriber-ms
       environment:
@@ -30,8 +29,7 @@ services:
 
   orders-ms:
       #Image
-      #image: localhost:3000/orders-ms:0.1.0
-      image: luisw19/orders-ms:3.0.1
+      image: luisw19/orders-ms:4.0.0
       #Uncomment "build" if you wish to build from source code, otherwise it'll pull from registry
       build: ./orders-ms
       environment:
@@ -51,8 +49,7 @@ services:
 
   orders-prod-ms:
       #Image
-      #image: localhost/product-sub-ms:0.1.1
-      image: luisw19/orders-prod-ms:3.0.1
+      image: luisw19/orders-prod-ms:4.0.0
       #Uncomment "build" if you wish to build from source code, otherwise it'll pull from registry
       build: ./orders-producer-ms
       environment:
