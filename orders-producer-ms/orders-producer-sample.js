@@ -206,48 +206,48 @@ kafkaAvro.init()
 
 
         outOrder = {
-          "orderId": "1kun290fm",
-          "shoppingCartId": "5c92a8acd55a44001a0f703a",
+          "orderId": "unittest",
+          "shoppingCartId": "5ca07c80d55a44001a0f70c4",
           "status": "SUCCESS",
-          "createdAt": "2019-03-31T11:46:11.170Z",
-          "updatedAt": "2019-03-31T11:47:30.391Z",
-          "totalPrice": 55,
+          "createdAt": "2019-04-07T15:05:48.896Z",
+          "updatedAt": "2019-04-07T15:12:45.562Z",
+          "totalPrice": 60,
           "discount": 0,
-          "currency": "EUR",
+          "currency": "GBP",
           "payment": {
             "cardType": "VISA_CREDIT",
             "cardNumber": {
-              "string": "4111111111111111"
+              "string": "4111222233334444"
             },
             "startYear": {
-              "int": 1
+              "int": 0
             },
             "startMonth": {
-              "int": 1
+              "int": 0
             },
             "expiryYear": {
-              "int": 20
+              "int": 2022
             },
             "expiryMonth": {
-              "int": 1
+              "int": 9
             }
           },
           "customer": {
             "customerId": {
-              "string": "5c92a8acd55a44001a0f703a"
+              "string": "5ca07c80d55a44001a0f70c4"
             },
             "loyaltyLevel": "GOLD",
             "firstName": {
-              "string": "John"
+              "string": "Luis"
             },
             "lastName": {
-              "string": "Doe"
+              "string": "Weir"
             },
             "phone": {
-              "string": ""
+              "string": "+447572339889"
             },
             "email": {
-              "string": "john.doe@gmail.com"
+              "string": "luisw19@gmail.com"
             }
           },
           "addresses": {
@@ -256,59 +256,65 @@ kafkaAvro.init()
                 "string": "DELIVERY"
               },
               "line1": {
-                "string": "22c Rembrandtlaan"
+                "string": "21 27 KingsLane"
               },
               "line2": {
                 "string": ""
               },
               "city": {
-                "string": "Bilthoven"
+                "string": "Leamington"
               },
               "county": {
                 "string": ""
               },
               "postcode": {
-                "string": "3432BJ"
+                "string": "CV31 1AX"
               },
               "country": {
-                "string": "Netherlands"
+                "string": "UK"
               }
             }, {
               "name": {
                 "string": "BILLING"
               },
               "line1": {
-                "string": "22c Rembrandtlaan"
+                "string": "21 27 KingsLane"
               },
               "line2": {
                 "string": ""
               },
               "city": {
-                "string": "Bilthoven"
+                "string": "Leamington"
               },
               "county": {
                 "string": ""
               },
               "postcode": {
-                "string": "3432BJ"
+                "string": "CV31 1AX"
               },
               "country": {
-                "string": "Netherlands"
+                "string": "UK"
               }
             }]
           },
           "shipping": {
             "firstName": {
-              "string": "John"
+              "string": "Luis"
             },
             "lastName": {
-              "string": "Doe"
+              "string": "Weir"
             },
-            "shippingMethod": "ECONOMY",
+            "shippingMethod": "MARKETPLACE",
+            "shippingCompany": {
+              "string": "Edfex"
+            },
+            "shippingId": {
+              "string": "1"
+            },
             "price": {
-              "double": 2.1
+              "double": 4.5
             },
-            "ETA": "2019-04-01T01:00:00"
+            "ETA": "2019-04-11T01:00:00"
           },
           "specialDetails": {
             "personalMessage": {
@@ -330,13 +336,13 @@ kafkaAvro.init()
                 "string": "B01HJWV6YA"
               },
               "productName": {
-                "string": "Holstein Housewares HH-0937013SS Fun Arepa and Mini Empanada Maker - Stainless Steel"
+                "string": "P.A.N Harina Blanca - Pre-cooked White Corn Meal 2lbs 3.3oz"
               },
               "description": {
-                "string": "Mix and match with Holstein Housewares This FUN maker makes 4 empanadas or 2 arepas The included inserts deliver the best of both worlds by allowing you to prepare a combination of healthy empanadas or arepas It also has a nonstick coating that makes for easy cleanup The nonslip base provides stability on tables and countertops and upright space saving storage maximizes the use of your kitchen space In just 3 steps your empanadas and areas are ready to enjoy with family and friends Simply roll your dough in a ball place in the center of the maker and close to make savory and delicious areas For delicious and perfectly portioned empanadas fill your dough and place in the insert The makers innovative design will make sure that it maintains the optimal heat for baking your favorite snacks With no oil and no oven you will have plenty of empanadas and areas to share and enjoy in minutes Makes two 37 x 18 arepas or four 35 x 18 empanadas"
+                "string": "Mix and match with Holstein Housewares This FUN maker makes 4 empanadas or 2 arepas The included inserts deliver the best of both worlds by allowing you to prepare a combination of healthy empanadas or arepas It also has a nonstick coating that makes for easy cleanup The nonslip base provides stability on tables and countertops and upright space saving storage maximizes the use of your kitchen space In just 3 steps your empanadas and areas are ready to enjoy with family and friends Simply roll your dough in a ball place in the center of the maker and close to make savory and delicious areas For delicious and perfectly portioned empanadas fill your dough and place in the insert The makers innovative design will make sure that it maintains the optimal heat for baking your favorite snacks With no oil and no oven you will have plenty of empanadas and areas to share and enjoy in minutes Makes two 37 x 18 arepas or four 35 x 18 empanadas "
               },
               "quantity": {
-                "int": 1
+                "int": 2
               },
               "price": {
                 "double": 30
@@ -362,55 +368,10 @@ kafkaAvro.init()
                 }
               },
               "color": {
-                "string": "black"
+                "string": "Black"
               },
               "sku": {
-                "string": ""
-              }
-            }, {
-              "productId": {
-                "string": "53c09c52-2615-11e8-b467-0ed5f89f718b"
-              },
-              "productCode": {
-                "string": "B01MAV7SVC"
-              },
-              "productName": {
-                "string": "Cocosette, Wafer Cookie Filled with Coconut Cream, (pack of 21 - 50 g. each) - 37 oz"
-              },
-              "description": {
-                "string": "Nestles Cocosette is an exquisite combination of a crunchy cookie wafer filled with rich coconut cream Each box contains 21 pieces  Imported from Venezuela"
-              },
-              "quantity": {
-                "int": 1
-              },
-              "price": {
-                "double": 25
-              },
-              "size": {
-                "int": 0
-              },
-              "weight": {
-                "double": 1.17
-              },
-              "dimension": {
-                "unit": {
-                  "string": "cm"
-                },
-                "length": {
-                  "double": 20.32
-                },
-                "height": {
-                  "double": 7.62
-                },
-                "width": {
-                  "double": 10.16
-                }
-              },
-              "color": {
-                "string": "brown"
-              },
-              "sku": {
-                "string": ""
+                "string": "S15T-Flo-RS"
               }
             }]
           }
