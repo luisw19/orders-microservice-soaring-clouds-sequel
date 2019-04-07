@@ -1,70 +1,135 @@
 <div class="oj-flex-item oj-panel oj-sm-margin-2x">
-    <oj-collapsible id="deliveryMethodCollapsible" expanded={{deliveryMethodExpanded}}>
-      <h3 id="header" slot="header">Delivery Method</h3>
-      <oj-form-layout id="deliveryMethodLayout"
-        label-edge="start"
-        max-columns="2">
+  <oj-collapsible id="deliveryMethodCollapsible" expanded={{deliveryMethodExpanded}}>
+    <h3 id="header" slot="header">Delivery Method</h3>
+    <oj-form-layout id="deliveryMethodLayout"
+      label-edge="start"
+      max-columns="2">
 
-        <oj-input-text id="firstName"
-          required
-          value="{{firstName}}"
-          on-value-changed="[[onFirstNameChanged]]"
-          label-hint="First Name:"
-          validators="[[validators]]">
-        </oj-input-text>
+      <oj-input-text id="firstName"
+        required
+        value="{{firstName}}"
+        on-value-changed="[[onFirstNameChanged]]"
+        label-hint="First Name:"
+        validators="[[validators]]">
+      </oj-input-text>
 
-        <oj-input-text id="lastName"
-          required
-          value="{{lastName}}"
-          on-value-changed="[[onLastNameChanged]]"
-          label-hint="Last Name:"
-          validators="[[validators]]">
-        </oj-input-text>
+      <oj-input-text id="lastName"
+        required
+        value="{{lastName}}"
+        on-value-changed="[[onLastNameChanged]]"
+        label-hint="Last Name:"
+        validators="[[validators]]">
+      </oj-input-text>
 
-        <oj-input-date id="eta"
-          required
-          value="{{eta}}"
-          on-value-changed="[[onEtaChanged]]"
-          converter=[[dateConverter]]
-          label-hint="Delivery date:"
-          min="[[minDate]]">
-        </oj-input-date>
+      <oj-input-date id="eta"
+        required
+        value="{{eta}}"
+        on-value-changed="[[onEtaChanged]]"
+        converter=[[dateConverter]]
+        label-hint="Desired delivery date:"
+        min="[[minDate]]">
+      </oj-input-date>
 
-        <oj-radioset id="deliveryMethodOptions"
-          disabled
-          value="{{deliveryMethod}}"
-          on-value-changed="[[onDeliveryMethodChanged]]"
-          label-hint="Delivery Method:">
-          <oj-option id="economyOpt" value="ECONOMY">Economy</oj-option>
-          <oj-option id="premiumOpt" value="PREMIUM">Premium</oj-option>
-        </oj-radioset>
+      <oj-radioset id="deliveryMethodOptions"
+        disabled
+        value="{{deliveryMethod}}"
+        on-value-changed="[[onDeliveryMethodChanged]]"
+        label-hint="Delivery Method:">
+        <oj-option id="economyOpt" value="ECONOMY">Economy (Default shipping company)</oj-option>
+        <oj-option id="premiumOpt" value="PREMIUM">Premium (Default shipping company)</oj-option>
+        <oj-option id="marketplaceOpt" value="MARKETPLACE">Marketplace</oj-option>
+      </oj-radioset>
 
-      </oj-form-layout>
+    </oj-form-layout>
 
-    </oj-collapsible>
-  </div>
+  </oj-collapsible>
+</div>
+<div class="oj-flex-item oj-panel oj-sm-margin-2x">
+  <oj-collapsible id="specialDetailsCollapsible" expanded={{specialDetailsExpanded}}>
+    <h3 id="header" slot="header">Special Details</h3>
+    <oj-form-layout id="specialDetailsLayout"
+      label-edge="start"
+      max-columns="2">
+
+      <oj-input-text id="personalMessage"
+        value="{{personalMessage}}"
+        on-value-changed="[[onPersonalMessageChanged]]"
+        label-hint="Personal Message:"
+        validators="[[validators]]">
+      </oj-input-text>
+
+      <oj-checkboxset id="giftWrappingCheckbox"
+        value="{{giftWrap}}"
+        on-value-changed="[[onGiftWrapChanged]]"
+        label-hint="Gift Wrap:">
+        <oj-option id="giftWrapOpt" value="giftWrap"></oj-option>
+      </oj-checkboxset>
+
+    </oj-form-layout>
+
+  </oj-collapsible>
+</div>
+<!-- ######################### -->
+<!-- added for Shipping Offers -->
+<div data-bind="if: $root.displayOffersBlock">
+
   <div class="oj-flex-item oj-panel oj-sm-margin-2x">
-    <oj-collapsible id="specialDetailsCollapsible" expanded={{specialDetailsExpanded}}>
-      <h3 id="header" slot="header">Special Details</h3>
-      <oj-form-layout id="specialDetailsLayout"
-        label-edge="start"
-        max-columns="2">
+    <oj-collapsible id="shippingOffersCollapsible" expanded={{shippingOffersExpanded}}>
+      <h3 id="header" slot="header">Shipping offers:</h3>
 
-        <oj-input-text id="personalMessage"
-          value="{{personalMessage}}"
-          on-value-changed="[[onPersonalMessageChanged]]"
-          label-hint="Personal Message:"
-          validators="[[validators]]">
-        </oj-input-text>
+      <div data-bind="if: $root.displayLoading">
+        <div id="progressBarWrapper">
+          <div class="oj-label">
+              <label>Finding offers</label>
+          </div>
+          <br/>
+          <oj-progress style="width:100%" value="{{$root.offersLoadProgress}}"></oj-progress>
+          <br/>
+        </div>
+      </div>
 
-        <oj-checkboxset id="giftWrappingCheckbox"
-          value="{{giftWrap}}"
-          on-value-changed="[[onGiftWrapChanged]]"
-          label-hint="Gift Wrap:">
-          <oj-option id="giftWrapOpt" value="giftWrap"></oj-option>
-        </oj-checkboxset>
+      <div data-bind="if: $root.displayOffers">
+        <oj-form-layout id="shippingOffersLayout"
+          label-edge="start"
+          max-columns="1">
 
-      </oj-form-layout>
+          <oj-list-view id="shippersOffers" aria-label="Shipping offers"
+                    data="[[dataProvider]]"
+                    first-selected-item="{{selectedOfferItem}}"
+                    selection-required=true
+                    selection-mode="single"
+                    on-selection-changed="[[offersSelectionChanged]]">
+                <template slot="itemTemplate">
+                    <div class="oj-flex">
+                        <div class="oj-flex-item" style="width:75%">
+                            <div class="oj-lg-10 oj-md-10 oj-sm-12">
+                                <div class="oj-flex row">
+                                    <div class="oj-lg-12">
+                                        <span class="header"><oj-bind-text value="[[$current.data.name]]"></oj-bind-text></span>
+                                    </div>
+                                </div>
+                                <div class="oj-flex row">
+                                    <div class="oj-lg-4 oj-md-4 oj-sm-12">
+                                        <span class="data"><b>Delivery Date: </b><span><oj-bind-text value="[[$current.data.deliveryDate]]"></oj-bind-text></span></span>
+                                    </div>
+                                    <div class="oj-lg-4 oj-md-4 oj-sm-12">
+                                        <span class="data"><b>Price: </b><span><oj-bind-text value="[[$current.data.price]]"></oj-bind-text></span></span>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                    </div>
+                </template>
+          </oj-list-view>
+
+          <div class="oj-label">
+              <label for="curr-selection">Selected:&nbsp;</label>
+              <span id="curr-selection-value" data-bind="text: selectedOfferName"></span>
+          </div>
+        </oj-form-layout>
+      </div>
 
     </oj-collapsible>
   </div>
+
+</div>

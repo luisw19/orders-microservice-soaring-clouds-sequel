@@ -69,4 +69,4 @@ env:
     kafkaBroker: 130.61.35.61:9092
     kafkaRegistry: http://130.61.35.61:8081
     kafkaShoppingCartTopic: soaring-add-to-shopping-cart
-    kafkaOrderTopic: soaring-ordercreated
+    kafkaOrderTopic: soaring-ordercreated-2

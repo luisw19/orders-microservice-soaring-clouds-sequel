@@ -3,9 +3,10 @@
  */
 define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
   'factories/LogisticsFactory', 'factories/OrderFactory',
+  'factories/ShippingFactory', 'factories/OffersFactory',
   'ojs/ojknockout', 'ojs/ojmodel', 'ojs/ojtrain', 'ojs/ojbutton',
   'ojs/ojcollapsible', 'ojs/ojmodule', 'ojs/ojdialog', 'ojs/ojradioset'
-], function(oj, ko, $, AddressFactory, LogisticsFactory, OrderFactory) {
+], function(oj, ko, $, AddressFactory, LogisticsFactory, OrderFactory, ShippingFactory, OffersFactory) {
   /**
    * The view model for the shopping cart view template
    */
@@ -254,18 +255,219 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
       }
     };
 
-    self.onLogisticsValidate = function() {
+
+    ///////////////////////////////////////////////
+    //////// Added for Shipping Offers Feature
+    self.onFindOffers = function() {
+      var valid = true;
+      if (document.getElementById("eta").valid.indexOf("invalid") == 0) {
+        valid = false;
+        alert("Please select a delivery date");
+        document.getElementById("eta").showMessages();
+      }
+
+      if (valid) {
+        rootViewModel.displayOffersBlock(true);
+        rootViewModel.displayOffers(false);
+        rootViewModel.displayLoading(true);
+
+        //common models to call 3 APIs (logistics, shipping Offers)
+        var logisticsCM = LogisticsFactory.createLogisticsModel();
+        var shipmentCM = ShippingFactory.createShippingModel();
+        var offersCM = OffersFactory.createOffersModel();
+
+        //get all values to prepare the payload
+        var order = rootViewModel.order.get("order");
+        var shipping = order.shipping;
+        var address = order.address;
+        var items = [];
+        var addressItem = null;
+        var defaultOffer = null;
+
+        //Find the delivery address
+        for (var j = 0; j < address.length; j++) {
+          if (address[j].name === "DELIVERY") {
+            addressItem = address[j];
+            break;
+          }
+        }
+
+        //prepare line items for logistics
+        for (var i = 0; i < order.line_items.length; i++) {
+          items[i] = {};
+          items[i].productIdentifier = order.line_items[i].product_id;
+          items[i].itemCount = order.line_items[i].quantity;
+        }
+
+        var logisticsPaylaod = {
+          "nameAddressee": shipping.first_name + " " + shipping.last_name,
+          "destination": {
+            "houseNumber": "",
+            "street": addressItem.line_1,
+            "city": addressItem.city,
+            "postCode": addressItem.postcode,
+            "county": addressItem.county,
+            "country": addressItem.country
+          },
+          "shippingMethod": shipping.shipping_method,
+          "desiredDeliveryDate": shipping.ETA,
+          "giftWrapping": order.special_details.gift_wrapping,
+          "personalMessage": order.special_details.personal_message,
+          "items": items
+        };
+
+        console.log("logistics paylaod:" + JSON.stringify(logisticsPaylaod));
+
+        logisticsCM.set(logisticsPaylaod);
+
+        //Just in case there is no CORS support in the Shipment API
+        oj.ajax = function(ajaxOptions) {
+          //ajaxOptions.type = "GET";
+          //Changed to POST as logistics expects it
+          ajaxOptions.type = "POST";
+          return $.ajax(ajaxOptions);
+        };
+
+        logisticsCM.save(null, {
+          success: function(model, response, options) {
+            if (response.status == "NOK") {
+              var validateError = response.validationFindings[0].findingType;
+              console.log("stock validation response:" + JSON.stringify(response));
+              switch (validateError) {
+                case "invalidDestination":
+                  alert("There is a mistake in the destination address. Please correct the address details and try again");
+                  self.onPreviousStep();
+                  break;
+                case "outOfStockItem":
+                  alert("There is no stock available. We apologize for the inconvenience");
+                  break;
+                default:
+                  alert(validateError);
+              }
+            } else {
+              //start displaying the offers
+              rootViewModel.displayOffers(true);
+
+              //format Price
+              var price = parseFloat(response.shippingCosts).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+
+              //Not sure what's this is used for but will leave for now
+              self.deliveryCost(price);
+              self.currency(order.currency);
+
+              //convert iso date to simple format to display
+              var deliveryDate = new Date(shipping.ETA);
+              var dd = deliveryDate.getDate().toString();
+              var mm = (deliveryDate.getMonth()+1).toString();
+              var yyyy = deliveryDate.getFullYear().toString();
+              //If day or month is only one char add a zero
+              if(dd.length < 2){
+                dd = "0" + dd;
+              }
+              if(mm.length < 2){
+                mm = "0" + mm;
+              }
+              //then construct the date
+              var formattedDate = yyyy + "-" + mm + "-" + dd;
+
+              //add the default logistic validate delivery into the array
+              defaultOffer = {id: 0, name: "Default", deliveryDate: formattedDate, price: price};
+              rootViewModel.offersDataSet = [defaultOffer];
+              rootViewModel.shippingOffers(rootViewModel.offersDataSet);
+
+              //Only if Logistics Validate is successful continue to the next call with the market place
+              //prepare payload to request shippment offers
+              var requestShipment = {
+                "orderId": order.order_id,
+                "product": order.line_items[0].product_id,
+                "customer": order.customer.email,
+                "shippingAddress": {
+                  "streetName": addressItem.line_2,
+                  "streetNumber": addressItem.line_1,
+                  "city": addressItem.city,
+                  "postcode": addressItem.postcode,
+                  "country": addressItem.country
+                },
+                "orderDate": shipping.ETA,
+              };
+              //log the payload
+              console.log("requestShipping: " + JSON.stringify(requestShipment));
+              //Request a new Shipment
+              shipmentCM.set(requestShipment);
+              shipmentCM.save(order.order_id, {
+                success: function(model, response, options) {
+                  console.log("requestShipping response:" + response.returnCode);
+                  if(response.returnCode !== "Success"){
+                    alert("There was an error when contacting the shippers market. Only standard delivery options will be displayed");
+                  }else{
+
+                    //set the URI including the GET parameter. Note that for some reason &{} is also appended to URL
+                    oj.ajax = function(ajaxOptions) {
+                      ajaxOptions.url = OffersFactory.setOffersURI(order.order_id);
+                      ajaxOptions.type = "GET";
+                      return $.ajax(ajaxOptions);
+                    };
+
+                    //show the increase in progress bar
+                    rootViewModel.offersLoadProgress(0)
+                    setInterval(function() {
+                      //in the first loop make the call POST to request a shipment
+                      if (rootViewModel.offersLoadProgress() !== -1) {
+                        rootViewModel.offersLoadProgress(rootViewModel.offersLoadProgress() + 1);
+                      }
+
+                      //pull 3 times
+                      if (rootViewModel.offersLoadProgress() == 10 || rootViewModel.offersLoadProgress() == 40 || rootViewModel.offersLoadProgress() == 90) {
+                        //if the shipping request is successfully created, then we can get the list of offers
+                        offersCM.save(null, {
+                          success: function(model, response, options) {
+                            //display the response of the call
+                            console.log("Offers response:" + JSON.stringify(response));
+                            //loop through the results
+                            for(var i = 0; i < response.length; i++){
+                              //verify to see if shipper was already added
+                              var found = rootViewModel.offersDataSet.find(function(data) {
+                                     return data.id == response[i].id;
+                                   });
+                              //if not added then is pushed into the array
+                              console.log("found: " + JSON.stringify(found));
+                              //If undefined it means this offer Id is new thus can be added
+                              if(found == undefined){
+                                rootViewModel.offersDataSet.push(
+                                    {id: response[i].id, name: response[i].shipper, deliveryDate: response[i].deliveryDate, price: response[i].price}
+                                );
+                                rootViewModel.shippingOffers(rootViewModel.offersDataSet);
+                              }
+                            }
+                          }
+                        });
+                      }
+
+                      if (rootViewModel.offersLoadProgress() == 100) {
+                        //no need to display the loading anymore
+                        rootViewModel.displayLoading(false);
+                        //rootViewModel.displayOffers(true);
+                      }
+                    }, 30);
+
+                  }
+                }
+              });
+
+
+
+            }
+          }
+        });
+
+      }
+    };
+
+    //re-implemented in support of Shipping Offers Feature
+    self.onLogisticsNext = function() {
       var valid = true;
       //alert(document.getElementById("firstName").valid);
       var error = "Following fields missing or entered incorrectly: ";
-      if (document.getElementById("eta").valid.indexOf("invalid") == 0) {
-        error = error + "ETA ";
-        valid = false;
-      }
-      if (document.getElementById("deliveryMethodOptions").valid.indexOf("invalid") == 0) {
-        error = error + "Delivery Method ";
-        valid = false;
-      }
       if (document.getElementById("firstName").valid.indexOf("invalid") == 0) {
         error = error + "First Name ";
         valid = false;
@@ -284,106 +486,160 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
         alert("Please correct the errors in the form");
         document.getElementById("firstName").showMessages();
         document.getElementById("lastName").showMessages();
-        document.getElementById("eta").showMessages();
-        document.getElementById("deliveryMethodOptions").showMessages();
         document.getElementById("personalMessage").showMessages();
       }
+
       //only validate if fields are properly entered
+      //changed from (valid) for Shipping Offers feature
       if (valid) {
-        var logisticsValidation = LogisticsFactory.createLogisticsModel();
+        //Set below for displaying current and price in the invoice overview page
         var order = rootViewModel.order.get("order");
-        var shipping = order.shipping;
-        var address = order.address;
-        var items = [];
-        var addressItem = null;
+        self.deliveryCost(order.shipping.price);
+        self.currency(order.currency);
 
-        for (var i = 0; i < order.line_items.length; i++) {
-          items[i] = {};
-          items[i].productIdentifier = order.line_items[i].product_id;
-          items[i].itemCount = order.line_items[i].quantity;
-        }
-
-        // Has to be a delivery address at this point in time
-        for (var j = 0; j < address.length; j++) {
-          if (address[j].name === "DELIVERY") {
-            addressItem = address[j];
-            break;
-          }
-        }
-
-        var logisticsPaylaod = {
-          "nameAddressee": shipping.first_name + " " + shipping.last_name,
-          "destination": {
-            "houseNumber": "",
-            "street": addressItem.line_1,
-            "city": addressItem.city,
-            "postCode": addressItem.postcode,
-            "county": addressItem.county,
-            "country": addressItem.country
-          },
-          "shippingMethod": shipping.shipping_method,
-          "desiredDeliveryDate": shipping.eta,
-          "giftWrapping": order.special_details.gift_wrapping,
-          "personalMessage": order.special_details.personal_message,
-          "items": items
-        };
-
-        console.log("logistics paylaod:" + JSON.stringify(logisticsPaylaod));
-
-        logisticsValidation.set(logisticsPaylaod);
-
-        // TODO - This oj.AJAX override needs to be deleted when logistic API supports CORS
-        oj.ajax = function(ajaxOptions) {
-          //ajaxOptions.type = "GET";
-          //Changed to POST as logistics expects it
-          ajaxOptions.type = "POST";
-          return $.ajax(ajaxOptions);
-        };
-
-        logisticsValidation.save(null, {
-          success: function(model, response, options) {
-            if(response.status == "NOK"){
-              var validateError = response.validationFindings[0].findingType;
-              console.log("stock validation response:" + JSON.stringify(response));
-              switch (validateError) {
-                case "invalidDestination":
-                  alert("There is a mistake in the destination address. Please correct the address details and try again");
-                  self.onPreviousStep();
-                  break;
-                case "outOfStockItem":
-                  alert("There is no stock available. We apologize for the inconvenience");
-                  break;
-                default:
-                  alert(validateError);
-              }
-            }else{
-              self.deliveryCost(parseFloat(response.shippingCosts).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
-              self.currency(order.currency);
-              document.getElementById("confirmationDialog").open();
-            }
-          }
-        });
-      }
-    };
-
-    self.confirmCost = function() {
-
-      rootViewModel.order.get("order").shipping.price = parseFloat(self.deliveryCost());
-      self.hasValidatedLogistics(true);
-      document.getElementById("confirmationDialog").close();
-
-    };
-
-    self.cancelCost = function() {
-      document.getElementById("confirmationDialog").close();
-    };
-
-    self.onDialogClose = function(event) {
-      if (self.hasValidatedLogistics()) {
-        self.displayValidate(false);
+        self.hasValidatedLogistics(true);
         self.onNextStep();
+
       }
     };
+
+    ///////////////////////////////////////////////
+    ///////////////////////////////////////////////
+
+    //Commited code as it was re-implemented in support of Shipping Offers Feature
+    // self.onLogisticsNext = function() {
+    //   var valid = true;
+    //   //alert(document.getElementById("firstName").valid);
+    //   var error = "Following fields missing or entered incorrectly: ";
+    //   if (document.getElementById("eta").valid.indexOf("invalid") == 0) {
+    //     error = error + "ETA ";
+    //     valid = false;
+    //   }
+    //   if (document.getElementById("deliveryMethodOptions").valid.indexOf("invalid") == 0) {
+    //     error = error + "Delivery Method ";
+    //     valid = false;
+    //   }
+    //   if (document.getElementById("firstName").valid.indexOf("invalid") == 0) {
+    //     error = error + "First Name ";
+    //     valid = false;
+    //   }
+    //   if (document.getElementById("lastName").valid.indexOf("invalid") == 0) {
+    //     error = error + "Last Name ";
+    //     valid = false;
+    //   }
+    //   if (document.getElementById("personalMessage").valid.indexOf("invalid") == 0) {
+    //     error = error + "Personal Message ";
+    //     valid = false;
+    //   }
+    //   if (!valid) {
+    //     //present error message
+    //     console.log(error);
+    //     alert("Please correct the errors in the form");
+    //     document.getElementById("firstName").showMessages();
+    //     document.getElementById("lastName").showMessages();
+    //     document.getElementById("eta").showMessages();
+    //     document.getElementById("deliveryMethodOptions").showMessages();
+    //     document.getElementById("personalMessage").showMessages();
+    //   }
+    //
+    //   //only validate if fields are properly entered
+    //   //changed from (valid) for Shipping Offers feature
+    //   if (valid) {
+    //     var logisticsValidation = LogisticsFactory.createLogisticsModel();
+    //     var order = rootViewModel.order.get("order");
+    //     var shipping = order.shipping;
+    //     var address = order.address;
+    //     var items = [];
+    //     var addressItem = null;
+    //
+    //     for (var i = 0; i < order.line_items.length; i++) {
+    //       items[i] = {};
+    //       items[i].productIdentifier = order.line_items[i].product_id;
+    //       items[i].itemCount = order.line_items[i].quantity;
+    //     }
+    //
+    //     // Has to be a delivery address at this point in time
+    //     for (var j = 0; j < address.length; j++) {
+    //       if (address[j].name === "DELIVERY") {
+    //         addressItem = address[j];
+    //         break;
+    //       }
+    //     }
+    //
+    //     var logisticsPaylaod = {
+    //       "nameAddressee": shipping.first_name + " " + shipping.last_name,
+    //       "destination": {
+    //         "houseNumber": "",
+    //         "street": addressItem.line_1,
+    //         "city": addressItem.city,
+    //         "postCode": addressItem.postcode,
+    //         "county": addressItem.county,
+    //         "country": addressItem.country
+    //       },
+    //       "shippingMethod": shipping.shipping_method,
+    //       "desiredDeliveryDate": shipping.eta,
+    //       "giftWrapping": order.special_details.gift_wrapping,
+    //       "personalMessage": order.special_details.personal_message,
+    //       "items": items
+    //     };
+    //
+    //     console.log("logistics paylaod:" + JSON.stringify(logisticsPaylaod));
+    //
+    //     logisticsValidation.set(logisticsPaylaod);
+    //
+    //     // TODO - This oj.AJAX override needs to be deleted when logistic API supports CORS
+    //     oj.ajax = function(ajaxOptions) {
+    //       //ajaxOptions.type = "GET";
+    //       //Changed to POST as logistics expects it
+    //       ajaxOptions.type = "POST";
+    //       return $.ajax(ajaxOptions);
+    //     };
+    //
+    //     logisticsValidation.save(null, {
+    //       success: function(model, response, options) {
+    //         if (response.status == "NOK") {
+    //           var validateError = response.validationFindings[0].findingType;
+    //           console.log("stock validation response:" + JSON.stringify(response));
+    //           switch (validateError) {
+    //             case "invalidDestination":
+    //               alert("There is a mistake in the destination address. Please correct the address details and try again");
+    //               self.onPreviousStep();
+    //               break;
+    //             case "outOfStockItem":
+    //               alert("There is no stock available. We apologize for the inconvenience");
+    //               break;
+    //             default:
+    //               alert(validateError);
+    //           }
+    //         } else {
+    //           self.deliveryCost(parseFloat(response.shippingCosts).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    //           self.currency(order.currency);
+    //           document.getElementById("confirmationDialog").open();
+    //         }
+    //       }
+    //     });
+    //   }
+    // };
+
+    //Commented as functionality was re-implemnted in support of Shipping Offers Feature
+    // self.confirmCost = function() {
+    //
+    //   rootViewModel.order.get("order").shipping.price = parseFloat(self.deliveryCost());
+    //   self.hasValidatedLogistics(true);
+    //   document.getElementById("confirmationDialog").close();
+    //
+    // };
+    //
+    // self.cancelCost = function() {
+    //   document.getElementById("confirmationDialog").close();
+    // };
+    //
+    // self.onDialogClose = function(event) {
+    //   if (self.hasValidatedLogistics()) {
+    //     self.displayValidate(false);
+    //     self.onNextStep();
+    //   }
+    // };
 
     self.onPayNow = function() {
 
@@ -453,8 +709,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
       //This has to be fixed either by adding "CREDIT" as type
       //in the order-created Avro schema or by aligning types in
       //customer address in customer BC
-      if(rootViewModel.order.get("order").payment.card_type=="CREDIT"){
-        rootViewModel.order.get("order").payment.card_type="VISA_CREDIT";
+      if (rootViewModel.order.get("order").payment.card_type == "CREDIT") {
+        rootViewModel.order.get("order").payment.card_type = "VISA_CREDIT";
       }
       //////////////////////////////////////////////////////////////
 

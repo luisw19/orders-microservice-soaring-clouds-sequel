@@ -15,7 +15,7 @@ function (oj) {
           //modify apiGW to test locally
           //temp pointing to Lucas K8s
           //apiGW = "http://129.213.11.15"
-          apiGW = "https://129.213.126.223:9022";
+          apiGW = "http://129.213.126.223:8011";
         }
         console.log("apiGW in LogisticsFactory: " + apiGW);
         //temp pointing to Lucas K8s

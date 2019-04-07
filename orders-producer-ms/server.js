@@ -194,6 +194,8 @@ function produceOrderEvent(inOrder,response) {
               "firstName": {"string": inOrder.order.shipping.first_name},
               "lastName": {"string": inOrder.order.shipping.last_name},
               "shippingMethod": inOrder.order.shipping.shipping_method,
+              "shippingCompany": {"string": inOrder.order.shipping.shipping_company},
+              "shippingId": {"string": inOrder.order.shipping.shipping_id},
               "price": {"double": inOrder.order.shipping.price},
               "ETA": inOrder.order.shipping.ETA,
             },

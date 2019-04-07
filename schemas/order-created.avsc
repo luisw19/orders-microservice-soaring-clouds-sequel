@@ -77,7 +77,10 @@
                 "VISA_DEBIT",
                 "MASTER_CREDIT",
                 "MASTER_DEBIT",
-                "AMEX_CREDIT"
+                "AMEX_CREDIT",
+                "DINERS_CREDIT",
+                "PAYPAL",
+                "POINTS"
               ]
             },
             "doc": "Credit card payment methods supported"
@@ -272,9 +275,24 @@
               "doc": "Shipping methods supported",
               "symbols": [
                 "ECONOMY",
-                "PREMIUM"
+                "PREMIUM",
+                "MARKETPLACE"
               ]
             }
+          },
+          {
+            "name": "shippingCompany",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          {
+            "name": "shippingId",
+            "type": [
+              "string",
+              "null"
+            ]
           },
           {
             "name": "price",

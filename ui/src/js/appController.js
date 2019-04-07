@@ -18,6 +18,32 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
       self.yyyy = self.today.getFullYear();
       self.tomorrow = new Date(self.yyyy, self.mm, self.dd);
 
+      ///////////////////////////////////////////////
+      //////// Added for Shipping Offers Feature
+      self.disabledLogisticsNextStep = ko.observable(true);
+      //Display the offers div
+      self.displayOffersBlock = ko.observable(false);
+      //Display the offers div
+      self.displayOffers = ko.observable(false);
+      //Display loading div
+      self.displayLoading = ko.observable(false);
+      //Display the loading bar
+      self.offersLoadProgress = ko.observable(0);
+      //dataSet
+      // self.offersDataSet =
+      //    [{id: 1, name: '', deliveryDate: '', 'price': 0},
+      //     {id: 2, name: 'Fedex', deliveryDate: '12/04/2019', 'price': 3.0},
+      //     {id: 3, name: 'Royal Mail', deliveryDate: '12/04/2019', 'price': 3.55},
+      //     {id: 4, name: 'DHL', deliveryDate: '13/04/2019', 'price': 3.10},
+      //     {id: 5, name: 'UPS', deliveryDate: '11/04/2019', 'price': 4.0}
+      //    ];
+
+      self.offersDataSet = [];
+
+      //create observable for the list
+      self.shippingOffers = ko.observableArray(self.offersDataSet);
+      ///////////////////////////////////////////////
+
       //for making customer fields editable in orders_summary page if not using anonymous
       self.isAnonymousMode = ko.observable(false);
 
@@ -139,7 +165,7 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
         oj.Logger.error(location);
         self.init();
         console.log("Event payload in document.ready=  " + JSON.stringify(event));
-        
+
         //added to test only if run in localhost or event is not present
         var servingHost = window.location.host;
         console.log("servingHost: " + servingHost);

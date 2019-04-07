@@ -73,6 +73,8 @@ var shippingVar = {
   first_name: String,
   last_name: String,
   shipping_method: String,
+  shipping_company: String,
+  shipping_id: String,
   price: Number,
   ETA: String
 };

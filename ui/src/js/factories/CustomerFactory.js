@@ -22,7 +22,7 @@ define(['ojs/ojcore','knockout'],
           var apiGW = "API-GW-PLACEHOLDER";
           if (servingHost.indexOf("localhost") !== -1) {
             //modify apiGW to test locally
-            apiGW = "https://129.213.126.223:9022";
+            apiGW = "http://129.213.126.223:8011";
           }
           console.log("apiGW in CustomerFactory: " + apiGW);
           return apiGW + "/customer/profile/" + customerId;

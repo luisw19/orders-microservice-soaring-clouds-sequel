@@ -33,7 +33,7 @@
           </div>
         </div>
         <div data-bind="if: displayValidate">
-          <div id="dialogWrapper">
+          <!-- <div id="dialogWrapper">
             <oj-dialog style="display:none" id="confirmationDialog" cancel-behavior="none" title="Confirmation" on-oj-close="[[onDialogClose]]">
               <div slot="body">
                   Do you accept the delivery cost of <span data-bind="text: deliveryCost"></span> <span data-bind="text: currency"></span>
@@ -47,9 +47,12 @@
               </oj-button>
               </div>
             </oj-dialog>
-          </div>
-          <oj-button id="validateLogistics" data-bind="click: onLogisticsValidate">
-            Validate
+          </div> -->
+          <oj-button id="validateLogistics" data-bind="click: onFindOffers">
+            Find Delivery Offers
+          </oj-button>
+          <oj-button id="validateLogistics" data-bind="click: onLogisticsNext" disabled=[[$root.disabledLogisticsNextStep]]>
+            Next
           </oj-button>
         </div>
         <div data-bind="if: displayPay">

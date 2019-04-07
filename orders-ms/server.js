@@ -302,6 +302,14 @@ router.route("/orders/:id")
                 valError = valError + " shipping.shipping_method";
                 validation = false;
               }
+              if (updatedOrder.shipping.shipping_company == undefined) {
+                valError = valError + " shipping.shipping_company";
+                validation = false;
+              }
+              if (updatedOrder.shipping.shipping_id == undefined) {
+                valError = valError + " shipping.shipping_id";
+                validation = false;
+              }
               if (updatedOrder.shipping.price <= 0) {
                 valError = valError + " shipping.price<=0";
                 validation = false;
@@ -1084,6 +1092,14 @@ router.route("/orders/:id/process")
           }
           if (data.order.shipping.shipping_method == undefined) {
             valError = valError + " shipping.shipping_method";
+            validation = false;
+          }
+          if (data.order.shipping.shipping_company == undefined) {
+            valError = valError + " shipping.shipping_company";
+            validation = false;
+          }
+          if (data.order.shipping.shipping_id == undefined) {
+            valError = valError + " shipping.shipping_id";
             validation = false;
           }
           if (data.order.shipping.price <= 0) {
