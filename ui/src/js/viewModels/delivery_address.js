@@ -94,8 +94,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout',
                     }
                 }
 
-                self.addressLine1(address.streetNumber + " " + address.streetName);
-                self.addressLine2(address.line_2);
+                self.addressLine1(address.streetNumber);
+                self.addressLine2(address.streetName);
                 self.city(address.city);
                 self.county(address.county);
                 self.postCode(address.postcode);

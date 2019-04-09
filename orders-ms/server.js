@@ -51,8 +51,8 @@ router.route("/orders")
 
     //construct dynamic query
     //search by customer id
-    if (req.query.customer !== undefined) {
-      query['order.customer.customer_id'] = req.query.customer;
+    if (req.query.customer_id !== undefined) {
+      query['order.customer.customer_id'] = req.query.customer_id;
     }
     //search by shoppingCart_id
     if (req.query.shoppingCart_id !== undefined) {

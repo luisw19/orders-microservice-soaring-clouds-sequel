@@ -216,6 +216,10 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
           error = error + "Address Line 1 ";
           move = false;
         }
+        if (document.getElementById("addressLine2").valid.indexOf("invalid") == 0) {
+          error = error + "Address Line 2 ";
+          move = false;
+        }
         if (document.getElementById("city").valid.indexOf("invalid") == 0) {
           error = error + "City ";
           move = false;
@@ -233,6 +237,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
           console.log(error);
           alert("Please correct the errors in the form");
           document.getElementById("addressLine1").showMessages();
+          document.getElementById("addressLine2").showMessages();
           document.getElementById("city").showMessages();
           document.getElementById("postCode").showMessages();
           document.getElementById("country").showMessages();
@@ -394,10 +399,10 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
               console.log("requestShipping: " + JSON.stringify(requestShipment));
               //Request a new Shipment
               shipmentCM.set(requestShipment);
-              shipmentCM.save(order.order_id, {
+              shipmentCM.save(null, {
                 success: function(model, response, options) {
                   console.log("requestShipping response:" + response.returnCode);
-                  if(response.returnCode !== "Success"){
+                  if(response.returnCode=="Failure XX"){
                     alert("There was an error when contacting the shippers market. Only standard delivery options will be displayed");
                   }else{
 
@@ -419,7 +424,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
                       //pull 3 times
                       if (rootViewModel.offersLoadProgress() == 10 || rootViewModel.offersLoadProgress() == 40 || rootViewModel.offersLoadProgress() == 90) {
                         //if the shipping request is successfully created, then we can get the list of offers
-                        offersCM.save(null, {
+                        offersCM.fetch({
                           success: function(model, response, options) {
                             //display the response of the call
                             console.log("Offers response:" + JSON.stringify(response));
@@ -718,6 +723,10 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
       if (valid & document.getElementById("sameAddressAsDeliveryCheckbox").value != "deliveryAddress") {
         //alert(document.getElementById("firstName").valid);
         var error = "Following fields missing or entered incorrectly: ";
+        if (document.getElementById("addressLine1").valid.indexOf("invalid") == 0) {
+          error = error + "Address Line 1 ";
+          valid = false;
+        }
         if (document.getElementById("addressLine1").valid.indexOf("invalid") == 0) {
           error = error + "Address Line 1 ";
           valid = false;

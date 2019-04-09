@@ -2,11 +2,11 @@ version: '2'
 services:
   orders-ui:
       #Image
-      image: luisw19/orders-ui:4.0.0
+      image: luisw19/orders-ui:4.0.1
       #Uncomment "build" if you wish to build from source code, otherwise it'll pull from registry
       build: ./ui
       environment:
-        API_HOST: 'https://129.213.126.223:9022'
+        API_HOST: 'http://129.213.126.223:8011'
         API_KEY: '351801a3-0c02-41c1-b261-d0e5aaa4a0e6'
       ports:
         - "8080:8080"
@@ -29,7 +29,7 @@ services:
 
   orders-ms:
       #Image
-      image: luisw19/orders-ms:4.0.0
+      image: luisw19/orders-ms:4.0.1
       #Uncomment "build" if you wish to build from source code, otherwise it'll pull from registry
       build: ./orders-ms
       environment:
