@@ -5,8 +5,10 @@
 /*
  * Your application specific code will go here
  */
-define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerFactory', 'ojs/ojknockout', 'ojs/ojmodel'],
-  function(oj, ko, OrderFactory, CustomerFactory) {
+define(['ojs/ojcore', 'knockout', 'factories/OrderFactory',
+  'factories/CustomerFactory', 'ojs/ojarraydataprovider',
+  'ojs/ojknockout', 'ojs/ojmodel', 'ojs/ojlabel', 'ojs/ojlistview'],
+  function(oj, ko, OrderFactory, CustomerFactory, ArrayDataProvider) {
     function ControllerViewModel() {
       var self = this;
 
@@ -38,10 +40,25 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
       //     {id: 5, name: 'UPS', deliveryDate: '11/04/2019', 'price': 4.0}
       //    ];
 
-      self.offersDataSet = [];
-
       //create observable for the list
       self.shippingOffers = ko.observableArray(self.offersDataSet);
+      ///////////////////////////////////////////////
+      ///////////////////////////////////////////////
+
+
+      ///////////////////////////////////////////////
+      //Display the offers div
+      self.displayOrdersBlock = ko.observable(false);
+
+      //create observable for the list
+      self.allOrders = ko.observableArray([]);
+
+      self.ordersDataProvider = new ArrayDataProvider(self.allOrders, {
+        keys: self.allOrders().map(function(value) {
+          return value.orders.order_id;
+        })
+      });
+      ///////////////////////////////////////////////
       ///////////////////////////////////////////////
 
       //for making customer fields editable in orders_summary page if not using anonymous
@@ -56,6 +73,7 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
       self.customer = new oj.Model();
       self.contentLoaded = ko.observable(false);
       self.noShoppingBasket = ko.observable(false);
+      self.displayOrdersBlock = ko.observable(false);
 
       self.init = function() {
 
@@ -98,6 +116,20 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory', 'factories/CustomerF
 
                       self.noShoppingBasket(true);
                       self.contentLoaded(false);
+
+                      //cretae model to obtain orders history
+                      self.order = OrderFactory.createOrderModel(event.data.payload.globalContext.customer.customerIdentifier, "HISTORY");
+
+                      self.order.fetch({
+                        success: function(model, response, options) {
+                          //display the block
+                          self.displayOrdersBlock(true);
+                          //create observable for the list
+                          self.allOrders(response.orders);
+
+                        }
+                      });
+
                     } else {
 
                       self.order = OrderFactory.createOrderModel(self.order.get("orders")[0].order.order_id);

@@ -401,8 +401,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
               shipmentCM.set(requestShipment);
               shipmentCM.save(null, {
                 success: function(model, response, options) {
-                  console.log("requestShipping response:" + response.returnCode);
-                  if(response.returnCode=="Failure XX"){
+                  console.log("requestShipping response:" + JSON.stringify(response));
+                  if(response.returnCode=="Failure"){
                     alert("There was an error when contacting the shippers market. Only standard delivery options will be displayed");
                   }else{
 

@@ -3,7 +3,7 @@ define(['ojs/ojcore'],
 
     var OrderFactory = {
 
-      setOrderURI: function(orderId, type) {
+      setOrderURI: function(inputId, type) {
         ///Added to test locally
         var servingHost = window.location.host;
         var apiGW = "API-GW-PLACEHOLDER";
@@ -17,14 +17,16 @@ define(['ojs/ojcore'],
         ///
 
         if (type === "SHOPPING") {
-          return apiGW + prefix + "/orders?shoppingCart_id=" + orderId + "&status=SHOPPING_CART";
+          return apiGW + prefix + "/orders?shoppingCart_id=" + inputId + "&status=SHOPPING_CART";
+        } else if (type === "HISTORY") {
+          return apiGW + prefix + "/orders?customer_id=" + inputId;
         } else {
-          return apiGW + prefix + "/orders/" + orderId;
+          return apiGW + prefix + "/orders/" + inputId;
         }
       },
-      createOrderModel: function(orderId, type) {
+      createOrderModel: function(inputId, type) {
         var Order = oj.Model.extend({
-          urlRoot: this.setOrderURI(orderId, type),
+          urlRoot: this.setOrderURI(inputId, type),
           parseSave: function(request) {
             if (request.order.payment != null) {
               //alert(JSON.stringify(request.order.payment));

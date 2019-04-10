@@ -53,7 +53,47 @@
       <div role="main" class="oj-web-applayout-max-width oj-web-applayout-content">
         <h2>Shopping Basket</h2>
         <div data-bind="if: noShoppingBasket">
-          <h4>No orders found</h4>
+          <h4>No shopping cart items found</h4>
+
+          <!-- added for Shipping Offers -->
+          <div data-bind="if: displayOrdersBlock">
+
+            <div class="oj-flex-item oj-panel oj-sm-margin-2x">
+              <h3 id="header" slot="header">Previous Orders:</h3>
+              <oj-list-view id="ordersList" aria-label="Previous Orders"
+                        data="[[ordersDataProvider]]"
+                        selection-required=false
+                        selection-mode="single">
+                    <template slot="itemTemplate">
+                        <div class="oj-flex">
+                            <div class="oj-flex-item" style="width:75%">
+                                <div class="oj-lg-10 oj-md-10 oj-sm-12">
+                                    <div class="oj-flex row">
+                                        <div class="oj-lg-12">
+                                            <span class="header"><b>Order Id: </b><oj-bind-text value="[[$current.data.order.order_id]]"></oj-bind-text></span>
+                                        </div>
+                                    </div>
+                                    <div class="oj-flex row">
+                                        <div class="oj-lg-4 oj-md-4 oj-sm-12">
+                                            <span class="data"><b>Total price: </b><span><oj-bind-text value="[[$current.data.order.total_price]]"></oj-bind-text><b> </b><oj-bind-text value="[[$current.data.order.currency]]"></oj-bind-text></span></span>
+                                        </div>
+                                        <div class="oj-lg-4 oj-md-4 oj-sm-12">
+                                            <span class="data"><b>Creation date: </b><span><oj-bind-text value="[[$current.data.order.created_at]]"></oj-bind-text></span></span>
+                                        </div>
+                                        <div class="oj-lg-4 oj-md-4 oj-sm-12">
+                                            <span class="data"><b>Logistics URL: </b><span><a
+                                              data-bind='attr: {href:"http://129.213.11.15/soaring/logistics/shippingUI/forOrder/"+$current.data.order.order_id}'>http://129.213.11.15/soaring/logistics/shippingUI/forOrder/<oj-bind-text value="[[$current.data.order.order_id]]"></oj-bind-text></a></span>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </template>
+              </oj-list-view>
+            </div>
+
+          </div>
+
         </div>
         <div data-bind="ifnot: noShoppingBasket">
           <div data-bind="ifnot: contentLoaded">
