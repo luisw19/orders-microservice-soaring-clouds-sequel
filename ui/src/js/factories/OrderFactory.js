@@ -13,16 +13,18 @@ define(['ojs/ojcore'],
           //apiGW = "http://localhost:3000";
           //prefix = "";
         }
-        console.log("apiGW in OrderFactory: " + apiGW);
-        ///
 
         if (type === "SHOPPING") {
-          return apiGW + prefix + "/orders?shoppingCart_id=" + inputId + "&status=SHOPPING_CART";
+          apiGW = apiGW + prefix + "/orders?shoppingCart_id=" + inputId + "&status=SHOPPING_CART";
         } else if (type === "HISTORY") {
-          return apiGW + prefix + "/orders?customer_id=" + inputId;
+          apiGW = apiGW + prefix + "/orders?customer_id=" + inputId;
         } else {
-          return apiGW + prefix + "/orders/" + inputId;
+          apiGW = apiGW + prefix + "/orders/" + inputId;
         }
+        console.log("apiGW in OrderFactory: " + apiGW);
+        return apiGW;
+
+        ///
       },
       createOrderModel: function(inputId, type) {
         var Order = oj.Model.extend({

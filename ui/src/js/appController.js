@@ -101,10 +101,8 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory',
 
           if (event.data.eventType === "globalContext") {
 
-            if (event.data.payload.globalContext != null) {
-
-              // if (event.data.payload.globalContext.customer != null && event.data.payload.globalContext.customer.customerIdentifier != null) {
-              if (event.data.payload.globalContext != null) {
+            // if (event.data.payload.globalContext.customer != null && event.data.payload.globalContext.customer.customerIdentifier != null) {
+            if (event.data.payload.globalContext != null && event.data.payload.globalContext.sessionId) {
 
                 self.order = OrderFactory.createOrderModel(event.data.payload.globalContext.customer.customerIdentifier, "SHOPPING");
                 // self.order = OrderFactory.createOrderModel(event.data.payload.globalContext.orderId, "SHOPPING");
@@ -176,10 +174,6 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory',
 
                 });
 
-              }
-
-            } else {
-              alert("Error - No Order ID passed into the application");
             }
 
           }
@@ -201,7 +195,7 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory',
         //added to test only if run in localhost or event is not present
         var servingHost = window.location.host;
         console.log("servingHost: " + servingHost);
-         if ( (servingHost.indexOf("localhost") !== -1) || (event == undefined)) {
+         if ( (servingHost.indexOf("localhost") !== -1) ) {
           if (location.search != null) {
             var cartId = location.search.substr(location.search.indexOf("cartId=") + 7);
             console.log("setting customerIdentifier in event to URI value:" + cartId);
@@ -213,7 +207,8 @@ define(['ojs/ojcore', 'knockout', 'factories/OrderFactory',
                   "globalContext": {
                     "customer": {
                       "customerIdentifier": cartId
-                    }
+                    },
+                    "sessionId":"avalue"
                   }
                 }
               }
