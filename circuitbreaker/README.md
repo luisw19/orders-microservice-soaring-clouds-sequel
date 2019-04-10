@@ -68,5 +68,6 @@ fortio load -c 10 -qps 0 -n 100 -loglevel Warning http://129.213.66.232/orders-m
 ```
 
 Notice that this time around there a good percentage of calls failed with a **Code 503**.
+This is because the Istio Circuit Breaker destination policy.
 
 - Now delete the destination rule by running `kubectl delete DestinationRule orders-ms-dr`. Run the same test again. Notice that again result is 100% success.
