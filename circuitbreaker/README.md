@@ -53,10 +53,10 @@ brew install fortio
 
 - Now we execute a test. First execute 100 sequential "read orders" requests with no concurrency.
 
-> Note that the **host/ip** and **Order ID** should be adjusted based on the environment where test is taking place.
+> Note that the **host/ip** should be adjusted based on the environment where test is taking place.
 
 ```bash
-fortio load -c 1 -qps 0 -n 100 -loglevel Warning http://129.213.66.232/orders-ms/api/orders/u8tozfl1z
+fortio load -c 1 -qps 0 -n 30 -loglevel Warning http://<ip:port>/orders-ms/api/orders
 ```
 
 Look for a `Code 200: 20 (100%)` meaning test succeeded.
@@ -64,7 +64,7 @@ Look for a `Code 200: 20 (100%)` meaning test succeeded.
 - Now run a similar test but with 3 concurrent requests instead.
 
 ```bash
-fortio load -c 10 -qps 0 -n 100 -loglevel Warning http://129.213.66.232/orders-ms/api/orders/u8tozfl1z
+fortio load -c 5 -qps 0 -n 30 -loglevel Warning http://<ip:port>/orders-ms/api/orders
 ```
 
 Notice that this time around there a good percentage of calls failed with a **Code 503**.
