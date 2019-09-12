@@ -74,7 +74,7 @@ called *orders* and then switch to it:
 
 ```bash
 kubectl create namespace orders-ms
-kubectl config set-context orders --user=user-c3tayteg5st --cluster=cluster-c3tayteg5st --namespace=orders-ms
+kubectl config set-context orders --user=oke-k8s-admin --cluster=oke-personal --namespace=orders-ms
 kubectl config use-context orders
 ```
 
@@ -97,7 +97,7 @@ Common Name (eg, fully qualified host name) []:orders.sttc.com
 Email Address []:me@sttc.com
 ```
 
-Once completed this should generate the **httpbin.adomain.com.crt** and **httpbin.adomain.com.key** files.
+Once completed this should generate the **orders.sttc.com.crt** and **orders.sttc.com.key** files.
 
 > Note that **Common Name** is a domain name and should match
 > the **Hosts** value in the Ingress Gateway.
