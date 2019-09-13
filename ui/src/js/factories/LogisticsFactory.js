@@ -1,4 +1,4 @@
-define(['ojs/ojcore'],
+define(['ojs/ojcore','knockout'],
 function (oj) {
 
     var LogisticsFactory = {
@@ -13,13 +13,10 @@ function (oj) {
         var apiGW = "API-GW-PLACEHOLDER";
         if (servingHost.indexOf("localhost") !== -1) {
           //modify apiGW to test locally
-          //temp pointing to Lucas K8s
-          //apiGW = "http://129.213.11.15"
-          apiGW = "http://130.61.20.66:8011";
+          //apiGW = "http://130.61.20.66:8011";
+          return "data/logisticData.json";
         }
         console.log("apiGW in LogisticsFactory: " + apiGW);
-        //temp pointing to Lucas K8s
-        //return apiGW + "/soaring/logistics/shipping/validate";
         return apiGW + "/logistics-ms/shipping/validate";
         },
         createLogisticsModel: function() {

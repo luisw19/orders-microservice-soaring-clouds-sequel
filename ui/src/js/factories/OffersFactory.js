@@ -8,8 +8,8 @@ define(['ojs/ojcore', 'knockout'],
         var servingHost = window.location.host;
         var apiGW = "API-GW-PLACEHOLDER";
         if (servingHost.indexOf("localhost") !== -1) {
-          //var apiGW = "http://private-c7255-shipment4.apiary-mock.com";
-          apiGW = "http://130.61.20.66:8011";
+          apiGW = "http://private-c7255-shipment4.apiary-mock.com";
+          //apiGW = "http://130.61.20.66:8011";
         }
         var apiGW = apiGW + "/shippermarketplace/offers?orderId=" + orderId;
         console.log("apiGW in OffersFactory: " + apiGW);
