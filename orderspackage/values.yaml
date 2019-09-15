@@ -27,7 +27,7 @@ ui:
     image:
         repo: luisw19/orders-ui
         #tag: 3.0.4 #last working version without shipping offers
-        tag: 4.0.5
+        tag: 4.0.6
     port: 8080
 
 mongo:
