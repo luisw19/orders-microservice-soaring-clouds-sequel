@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:11.11.0-alpine
 
 # Create Orders API directory and copy source to it
 RUN mkdir -p /usr/src/api

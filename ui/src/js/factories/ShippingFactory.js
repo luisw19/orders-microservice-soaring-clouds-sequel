@@ -6,8 +6,12 @@ define(['ojs/ojcore', 'knockout'],
       setShippingURI: function() {
         ///Added to test locally
         var servingHost = window.location.host;
-        //var apiGW = "http://private-c7255-shipment4.apiary-mock.com/shippermarketplace/shipments";
-        var apiGW = "http://129.213.126.223:8011/shippermarketplace/shipments";
+        var apiGW = "API-GW-PLACEHOLDER";
+        if (servingHost.indexOf("localhost") !== -1) {
+          apiGW = "http://private-c7255-shipment4.apiary-mock.com";
+          //apiGW = "http://130.61.20.66:8011";
+        }
+        var apiGW = apiGW + "/shippermarketplace/shipments";
         console.log("apiGW in ShippingFactory: " + apiGW);
         return apiGW;
       },

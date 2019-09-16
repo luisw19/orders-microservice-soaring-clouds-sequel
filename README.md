@@ -176,7 +176,7 @@ helm install orderspackage -n orderspackage \
 > Add the flags `--dry-run --debug` to verity the installation before applying it.
 
 > After installing, **helm upgrade** can be run instead to only apply changes.
-> e.g. `helm upgrade orderspackage orderspackage`.
+> e.g. `helm upgrade orderspackage orderspackage --set ingress.istio.enabled=true`.
 
 7) Test the service as following:
 
@@ -188,6 +188,7 @@ export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressga
 ```
 
 First try with HTTP:
+
 ```bash
 curl -I http://$INGRESS_HOST/orders-ms/api/health
 curl -I http://$INGRESS_HOST/orders-ms/ui/
@@ -196,6 +197,7 @@ curl -I http://$INGRESS_HOST/orders-ms/ui/
 Both should respond with a **HTTP/1.1 200 OK**
 
 Then HTTPS:
+
 ```bash
 curl -I --insecure https://$ORDERS_DOMAIN/orders-ms/api/health --resolve $ORDERS_DOMAIN:$SECURE_INGRESS_PORT:$INGRESS_HOST
 curl -I --insecure https://$ORDERS_DOMAIN/orders-ms/ui/ --resolve $ORDERS_DOMAIN:$SECURE_INGRESS_PORT:$INGRESS_HOST

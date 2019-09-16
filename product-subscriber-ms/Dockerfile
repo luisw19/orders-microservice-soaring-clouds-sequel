@@ -1,5 +1,5 @@
 #  Node based on Debian GNU/Linux 8 -must be used as kafka-avro errors with non-debian based distros
-FROM node
+FROM node:11.11.0
 
 # Create Subscriber Service directory and copy source to it
 RUN mkdir -p /usr/src/ms

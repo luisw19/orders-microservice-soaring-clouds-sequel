@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:11.11.0-alpine
 
 # Copy source of UI into container
 RUN mkdir -p /usr/src/ui

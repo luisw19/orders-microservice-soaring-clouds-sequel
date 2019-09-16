@@ -324,12 +324,16 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
         console.log("logistics paylaod:" + JSON.stringify(logisticsPaylaod));
 
         logisticsCM.set(logisticsPaylaod);
-
+        
         //Just in case there is no CORS support in the Shipment API
         oj.ajax = function(ajaxOptions) {
-          //ajaxOptions.type = "GET";
-          //Changed to POST as logistics expects it
-          ajaxOptions.type = "POST";
+          // we check if response is mocked using local json file, if so we do a GET instead of POST
+          if(LogisticsFactory.setLogisticsURI().indexOf(".json")>0){
+            ajaxOptions.type = "GET";
+          }else{
+            // actual logistics endpoint expects POST
+            ajaxOptions.type = "POST";
+          }
           return $.ajax(ajaxOptions);
         };
 
@@ -398,6 +402,10 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
               //log the payload
               console.log("requestShipping: " + JSON.stringify(requestShipment));
               //Request a new Shipment
+              oj.ajax = function(ajaxOptions) {
+                ajaxOptions.type = "POST";
+                return $.ajax(ajaxOptions);
+              };
               shipmentCM.set(requestShipment);
               shipmentCM.save(null, {
                 success: function(model, response, options) {

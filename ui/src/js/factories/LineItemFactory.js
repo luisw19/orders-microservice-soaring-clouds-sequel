@@ -9,7 +9,7 @@ define(['ojs/ojcore'],
         var servingHost = window.location.host;
         var apiGW = "API-GW-PLACEHOLDER";
         if (servingHost.indexOf("localhost") !== -1) {
-          apiGW = "http://129.213.126.223:8011";
+          apiGW = "http://130.61.20.66:8011";
           //apiGW = "http://localhost:3000";
         }
         console.log("apiGW in LineItemFactory: " + apiGW);
