@@ -402,6 +402,10 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'factories/AddressFactory',
               //log the payload
               console.log("requestShipping: " + JSON.stringify(requestShipment));
               //Request a new Shipment
+              oj.ajax = function(ajaxOptions) {
+                ajaxOptions.type = "POST";
+                return $.ajax(ajaxOptions);
+              };
               shipmentCM.set(requestShipment);
               shipmentCM.save(null, {
                 success: function(model, response, options) {

@@ -176,7 +176,7 @@ helm install orderspackage -n orderspackage \
 > Add the flags `--dry-run --debug` to verity the installation before applying it.
 
 > After installing, **helm upgrade** can be run instead to only apply changes.
-> e.g. `helm upgrade orderspackage orderspackage`.
+> e.g. `helm upgrade orderspackage orderspackage --set ingress.istio.enabled=true`.
 
 7) Test the service as following:
 

@@ -17,7 +17,9 @@ function (oj) {
           return "data/logisticData.json";
         }
         console.log("apiGW in LogisticsFactory: " + apiGW);
-        return apiGW + "/logistics-ms/shipping/validate";
+        // mocking logistics
+        return "data/logisticData.json";
+        //return apiGW + "/logistics-ms/shipping/validate";
         },
         createLogisticsModel: function() {
             var Logistics = oj.Model.extend({
