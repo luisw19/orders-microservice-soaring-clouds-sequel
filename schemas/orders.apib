@@ -1,0 +1,472 @@
+FORMAT: 1A
+HOST: http://oc-129-156-113-240.compute.oraclecloud.com:8011/api
+
+# STTC Orders MS
+The Soaring Through The Clouds Orders Microservice allows to search, read, create and delete orders.
+This service is part of the Soaring Through The Clouds Sequel.
+
+# Group Order Resources
+Order related resources.
+
+## Search and Create Orders [/orders{?customer_id,shoppingCart_id,status,date_from,date_to}]
+
++ Parameters
+
+    + customer_id (string, optional)
+
+        Filter by Customer ID
+
+    + shoppingCart_id (string, optional)
+
+        Filter by shoppingCart_idd
+
+        + Sample: CUST0001
+
+    + status (string, optional)
+
+        Filter by Order Status
+
+        + Sample: SHOPPING_CART
+
+    + date_from (string, optional)
+
+        Filter by oders created greater or equal to date provided
+
+    + date_to (string, optional)
+
+        Filter by oders created before or equal to date provided
+
+### Search Orders [GET]
+Returns Orders that match the specified criteria.
+
++ Request (text/plain)
+
+    + Headers
+
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes
+
+        + metadata (Search Metadata)
+
+        + orders (array[Order])
+
+### Create Order [POST]
+Creates an Order.
+
++ Request (application/json)
+
+    + Headers
+
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
+
+    + Attributes (Order)
+
+    + Body
+
+            {
+                "currency":"GBP",
+                "customer":{
+                    "customer_id":"CUST0001"
+                }
+            }
+
++ Response 201 (application/json; charset=utf-8)
+
+    + Attributes (Response Metadata)
+
+## Read and Update Orders [/orders/{order_id}]
+
++ Parameters
+
+    + order_id: `unittest` (string, required)
+
+### Read Order [GET]
+Returns the details for a specific Order
+
++ Request (text/plain)
+
+    + Headers
+
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Order)
+
+### Update Order [PUT]
+Updates only those details which are allowed to be updated.
+At present only Order Status (excluding SUCCESS and CANCELED),
+Payment Details and Customer Details (excluding ID)
+
++ Request (application/json; charset=utf-8)
+
+    + Headers
+
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
+
+    + Attributes (Order)
+
+    + Body
+
+            {
+                "customer": {
+                    "loyalty_level": "GOLD",
+                    "first_name": "Luis",
+                    "last_name": "Weir",
+                    "phone": "+44 (0) 757 5333 777",
+                    "email": "myemail@email.com"
+                },
+                "shipping": {
+                    "first_name": "Lucas",
+                    "last_name": "Jellema",
+                    "shipping_method": "ECONOMY",
+                    "price": 15
+                },
+                "special_details": {
+                    "personal_message": "From Luis with Love!",
+                    "gift_wrapping": true,
+                    "delivery_notes": "Please try to deliver in the morning"
+                }
+            }
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Metadata)
+
+### Delete Order [DELETE]
+ONLY FOR INTERNAL USE. Deletes an Order.
+
++ Request (text/plain)
+
+    + Headers
+
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Metadata)
+
+## Add and Remove Line Items [/orders/{order_id}/lines]
+
++ Parameters
+
+    + order_id: `unittest` (string, required)
+
+### Add Line Item [POST]
+Add an individual line item.
+
++ Request (application/json; charset=utf-8)
+
+    + Headers
+
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
+
+    + Attributes (Order Lines)
+
+    + Body
+
+            {
+                "product_id": "AX330T",
+                "product_code": "abbfc4f9-83d5-49ac-9fa5-2909c5dc86e6",
+                "product_name": "Light Brown Men Shoe 1",
+                "description": "Light Brown Men Shoe 1",
+                "quantity": 2,
+                "price": 68.39,
+                "size": 43,
+                "weight": 0,
+                "dimensions": {
+                    "unit": "cm",
+                    "length": 10.2,
+                    "height": 10.4,
+                    "width": 5.4
+                },
+                "color": "White",
+                "sku": "S15T-Flo-RS"
+            }
+
++ Response 201 (application/json; charset=utf-8)
+
+    + Attributes (Response Metadata)
+
+### Update Line Item [PUT /orders/{order_id}/lines/{line_id}]
+Update the quantity of an individual line item.
+
++ Request (application/json; charset=utf-8)
+
+    + Headers
+
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
+
+    + Attributes (Order Lines)
+
+    + Body
+
+            {
+                "quantity": 2
+            }
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Metadata)
+
+### Remove Line Item [DELETE /orders/{order_id}/lines/{line_id}]
+Remove a line item from an order
+
++ Parameters
+
+    + line_id: 1 (number, required)
+
++ Request (text/plain)
+
+    + Headers
+
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Metadata)
+
+## Add and Remove Address [/orders/{order_id}/address]
+
++ Parameters
+
+    + order_id: `unittest` (string, required)
+
+### Add Address [POST]
+Add an individual address.
+
++ Request (application/json; charset=utf-8)
+
+    + Headers
+
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
+
+    + Attributes (Address)
+
+    + Body
+
+            {
+                "name": "BILLING_DELIVERY",
+                "line_1": "22",
+                "line_2": "King street",
+                "city": "Leamington Spa",
+                "county": "Warkwickshire",
+                "postcode": "CV31",
+                "country": "GB"
+            }
+
++ Response 201 (application/json; charset=utf-8)
+
+    + Attributes (Response Metadata)
+
+### Remove Address [DELETE /orders/{order_id}/address/{address_name}]
+Remove address from an order
+
++ Parameters
+
+    + address_name: `BILLING` (string, required)
+
++ Request (text/plain)
+
+    + Headers
+
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Metadata)
+
+
+## Process Order [/orders/{order_id}/process]
+Resource for processing an order an existing order.
+
++ Parameters
+
+    + order_id: `unittest` (string, required)
+
+### Process [POST]
+Submits an Order of status = SHOPPING_CART for processing. Several validations will take place
+so if the Order doesn't have all required details, it will error.
+
++ Request (application/json)
+
+    + Headers
+
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
+
++ Response 201 (application/json; charset=utf-8)
+
+    + Attributes (Process Event Metadata)
+
+## Cancel Order [/orders/{order_id}/cancel]
+Resource for cancelling an order an existing order.
+
++ Parameters
+
+    + order_id: `unittest` (string, required)
+
+### Cancel [POST]
+Cancels an existing Order of status = SUCCESS
+
++ Request (application/json)
+
+    + Headers
+
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
+
++ Response 201 (application/json; charset=utf-8)
+
+    + Attributes (Process Event Metadata)
+
+# Group Control Plane
+Control plane resources
+
+## Health Checks [/orders/health]
+
+### Health Status [GET]
+Check the health status of the service
+
++ Request (text/plain)
+
+    + Headers
+
+            api-key: 351801a3-0c02-41c1-b261-d0e5aaa4a0e6
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Health Metadata)
+
+# Data Structures
+
+## Health Metadata (object)
+- status: `OK` (string, required)
+- uptime: 28.094 (number, required)
+- version: `1.0.0` (string, required)
+
+## Search Metadata (object)
+- result_count: 1 (number, required)
+
+## Response Metadata (object)
+- error: false (boolean, required)
+- message: `success` (string, optional)
+- _links (optional)
+    - self
+        - href: /orders/unittest (string, required)
+
+## Process Event Metadata (object)
+- error: false (boolean, required)
+- message (required)
+    - message delivery report (required)
+        - topic: `a516817-soaring-order-created` (string, optional)
+        - partition: 0 (number, optional)
+        - offset: 47 (number, optional)
+        - key: `unittest` (string, optional)
+        - size: 649 (number, optional)
+
+## Address (object)
+- name (enum, required)
+    - `BILLING` (string) - Billing address
+    - `DELIVERY` (string) - Delivery
+- line_1: `22` (string, required)
+- line_2: `King street` (string, optional)
+- city: `Leamington Spa` (string, required)
+- county:  `Warkwickshire` (string, required)
+- postcode:  `CV31` (string, required)
+- country:  `GB` (string, required)
+
+    The country code an artists belongs to. Note that MRA uses ISO 3166-1 alpha-2 for country codes
+
+- _id: `59d0966c2d57fd00125548a6` (string, optional) - Database generated record ID
+
+## Order Lines (object)
+- line_id: 1 (number, required)
+- product_id: `abbfc4f9-83d5-49ac-9fa5-2909c5dc86e6` (string, required)
+- product_code: `AX330T` (string, required)
+- product_name: `Light Brown Men Shoe 1` (string, optional)
+- description: `Light Brown Men Shoe 1` (string, optional)
+- quantity: 2 (number, required)
+- price: 68.39 (number, required)
+- size: 43 (number, required)
+- weight: 0.0 (number, required)
+- dimensions (optional)
+    - unit: `cm` (string, optional)
+    - length: 10.2 (number, optional)
+    - height: 10.4 (number, optional)
+    - width: 5.4 (number, optional)
+- color: `White` (string, optional)
+- sku: `S15T-Flo-RS` (string, optional)
+- _links (optional)
+    - self
+        - href: /products/AX330T (string, required)
+- _id: `59d0966c2d57fd00125548a6` (string, optional) - Database generated record IDo
+
+## Customer (object)
+- customer_id: `CUST0001` (string, required)
+- loyalty_level (enum, required) - Loyalty level of the IF customer has a Loyalty Account
+    - `NONE` (string) - Customer doesn't have a loyalty account
+    - `BRONZE` (string) - If Bronze customer will get 2% discount
+    - `SILVER` (string) - If Bronze customer will get 3% discount
+    - `GOLD` (string) - If Bronze customer will get 5% discount
+- first_name: `Luis` (string, required)
+- last_name: `Weir` (string, required)
+- phone: `+44 (0) 757 5333 777` (string, optional)
+- email: `myemail@email.com` (string, required)
+
+## Payment (object)
+- card_type (enum, required) - Credit card payment methods supported
+    - `VISA_CREDIT` (string)
+    - `VISA_DEBIT` (string)
+    - `MASTER_CREDIT` (string)
+    - `MASTER_DEBIT` (string)
+    - `AMEX_CREDIT` (string)
+- card_number: `**** **** **** 1111` (string, optional) - Credit card number
+- start_year: 2018 (number, required) - Credit Card issue year
+- start_month: 1 (number, required) - Credit Card issue month
+- expiry_year: 2020 (number, required) - Credit Card expiry year
+- expiry_month: 6 (number, required) - Credit Card expiry month
+
+## Shipping Details (object)
+- first_name: `Lucas` (string, required)
+- last_name: `Jellema` (string, required)
+- shipping_method (enum, required) - Shipping methods supported
+    - `ECONOMY` (string) -  Reduced cost Shipping Method
+    - `PREMIUM` (string) - Fast delivery method
+- price: 0.0 (number, required) - Price for the shipping depending on the method
+- ETA: `2018-06-05T07:11:00.000Z` (string, optional) - Target/estimated delivery date
+
+## Special Details (object)
+- personal_message: `From Luis with Love!` (string, optional) - Special message on delivery
+- gift_wrapping: true (boolean, optional) - Whether or not the order items should be gift-wrapped
+- delivery_notes: `Please try to deliver in the morning` (string, optional) - Any delivery notes
+
+## Order (object)
+- order_id: `unittest` (string, optional) - System generated Order ID
+- shoppingCart_id: `CUST0001` (string, optional) - ID for the shopping cart. At present is the same as the customerID.
+- status (enum, optional)
+    - `SHOPPING_CART` (string) - Order is in the store Shopping Cart
+    - `PROCESSING` (string) - Sales Order has been created, yayment is being processed
+    - `SUCCESS` (string) - Payment successfully processed and order is now created
+    - `DELIVERING` (string) - Order is being delivered
+    - `DELIVERED` (string) - Order has been delivered
+    - `CANCELED` (string) - Order has been canceled
+- created_at: `2018-02-05T07:17:00.442Z` (string, optional)
+- updated_at: `2018-02-05T07:17:00.442Z` (string, optional)
+- total_price: 100 (number, optional) - total price excluding discount
+- discount: 0 (number, optional) - discount level in % based on loyalty or something else.
+- currency (enum, optional)
+    - `GBP` (string) - British Pounds
+    - `USD` (string) - US Dollars
+    - `EUR` (string) - Euros
+- payment (Payment, optional)
+- customer (Customer, optional)
+- address (array[Address], optional)
+- shipping (Shipping Details, optional)
+- special_details (Special Details, optional)
+- line_items (array[Order Lines], optional)
+- _links (optional)
+    - self
+        - href: /orders/unittest (string, required)
+- _id: `59d0966c2d57fd00125548a6` (string, optional) - Database generated record ID
